@@ -21,6 +21,12 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [allProducts, setAllProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(12);
+
+  // Reset pagination when search or category changes
+  useEffect(() => {
+    setVisibleCount(12);
+  }, [searchQuery, activeCategory]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -135,7 +141,7 @@ export default function Home() {
             Cargando productos...
           </div>
         ) : filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
+          filteredProducts.slice(0, visibleCount).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))
         ) : (
@@ -144,6 +150,26 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      {filteredProducts.length > visibleCount && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '3rem', width: '100%', zIndex: 10, position: 'relative' }}>
+          <button 
+            className="btn btn-primary"
+            onClick={() => setVisibleCount(filteredProducts.length)}
+            style={{ 
+              padding: '1rem 3rem', 
+              borderRadius: '30px', 
+              fontSize: '1.2rem',
+              boxShadow: '0 8px 25px rgba(165, 226, 203, 0.4)',
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
+          >
+            Ver más
+          </button>
+        </div>
+      )}
 
       <section id="referencias" style={{ marginTop: '6rem', width: '100%', maxWidth: '1000px' }}>
         <h2 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '3rem', color: 'var(--text-main)' }}>
