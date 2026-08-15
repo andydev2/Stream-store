@@ -101,16 +101,16 @@ export default function AdminProductList() {
 
   return (
     <>
-      <div style={{ background: '#fff', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border)', marginTop: '2rem' }}>
+      <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border)', marginTop: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.5rem', color: '#111' }}>Catálogo Actual ({products.length})</h3>
+          <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)' }}>Catálogo Actual ({products.length})</h3>
           <button onClick={fetchProducts} className="btn" style={{ padding: '0.5rem 1rem', background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1' }}>
             ↻ Actualizar
           </button>
         </div>
 
         {products.length === 0 ? (
-          <p style={{ color: '#666' }}>No hay productos en la base de datos.</p>
+          <p style={{ color: 'var(--text-muted)' }}>No hay productos en la base de datos.</p>
         ) : (
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
@@ -137,7 +137,7 @@ export default function AdminProductList() {
                     <td style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
                       {product.category.replace('_', ' ')}
                     </td>
-                    <td style={{ padding: '1rem 0.5rem', color: '#0f172a' }}>
+                    <td style={{ padding: '1rem 0.5rem', color: '#1C5F5C' }}>
                       ${product.price}
                     </td>
                     <td style={{ padding: '1rem 0.5rem', color: product.stock > 0 ? '#16a34a' : '#dc2626', fontWeight: 'bold' }}>
@@ -171,9 +171,9 @@ export default function AdminProductList() {
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
           backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
         }}>
-          <div style={{ background: '#fff', padding: '2rem', borderRadius: '12px', width: '90%', maxWidth: '500px' }}>
-            <h3 style={{ fontSize: '1.4rem', marginBottom: '0.5rem', color: '#111' }}>Añadir Stock</h3>
-            <p style={{ color: '#666', marginBottom: '1.5rem' }}>Agregando cuentas a: <strong>{selectedProduct.name}</strong></p>
+          <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: '12px', width: '90%', maxWidth: '500px' }}>
+            <h3 style={{ fontSize: '1.4rem', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Añadir Stock</h3>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Agregando cuentas a: <strong>{selectedProduct.name}</strong></p>
             
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, color: '#333' }}>
               Pega los datos de las cuentas (Una cuenta por línea)
@@ -183,7 +183,7 @@ export default function AdminProductList() {
               value={accountsText}
               onChange={(e) => setAccountsText(e.target.value)}
               placeholder="correo1@gmail.com:contraseña1&#10;correo2@gmail.com:contraseña2"
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc', marginBottom: '1.5rem', fontFamily: 'monospace' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', marginBottom: '1.5rem', fontFamily: 'monospace' }}
             ></textarea>
             
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
@@ -197,7 +197,7 @@ export default function AdminProductList() {
               <button 
                 onClick={handleSaveInventory}
                 disabled={savingInventory}
-                style={{ padding: '0.75rem 1.5rem', background: 'var(--primary)', color: '#0f172a', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}
+                style={{ padding: '0.75rem 1.5rem', background: 'var(--primary)', color: '#1C5F5C', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}
               >
                 {savingInventory ? 'Guardando...' : 'Guardar Cuentas'}
               </button>

@@ -162,7 +162,7 @@ export default function Navbar() {
           ) : (
             <button 
               onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-              style={{ background: 'var(--primary)', color: '#0f172a', border: 'none', padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 700, cursor: 'pointer', transition: 'transform 0.2s', boxShadow: '0 4px 10px rgba(165, 226, 203, 0.3)' }}
+              style={{ background: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 700, cursor: 'pointer', transition: 'transform 0.2s', boxShadow: '0 4px 10px rgba(62, 213, 204, 0.3)' }}
               onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             >
@@ -179,7 +179,7 @@ export default function Navbar() {
             {totalItems > 0 && (
               <span style={{
                 position: 'absolute', top: '-8px', right: '-8px',
-                background: 'var(--primary)', color: '#0f172a',
+                background: 'var(--primary)', color: '#1C5F5C',
                 fontSize: '0.7rem', fontWeight: 'bold',
                 width: '18px', height: '18px',
                 borderRadius: '50%',
@@ -243,7 +243,7 @@ export default function Navbar() {
                 {totalItems > 0 && (
                   <span style={{
                     position: 'absolute', top: '-8px', right: '-8px',
-                    background: 'var(--primary)', color: '#0f172a',
+                    background: 'var(--primary)', color: '#1C5F5C',
                     fontSize: '0.7rem', fontWeight: 'bold',
                     width: '18px', height: '18px',
                     borderRadius: '50%',
@@ -308,7 +308,7 @@ export default function Navbar() {
             ) : (
               <button 
                 onClick={() => { setIsMobileMenuOpen(false); signIn('google', { callbackUrl: '/dashboard' }); }}
-                style={{ textAlign: 'left', background: 'var(--primary)', color: '#0f172a', border: 'none', padding: '1rem', borderRadius: '12px', fontSize: '1.2rem', fontWeight: 700, cursor: 'pointer' }}
+                style={{ textAlign: 'left', background: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '12px', fontSize: '1.2rem', fontWeight: 700, cursor: 'pointer' }}
               >
                 {t('nav.login')}
               </button>

@@ -67,7 +67,7 @@ export default function ProductCard({ product }: { product: Product }) {
         onMouseEnter={(e) => {
           if (!hasStock) return;
           e.currentTarget.style.transform = 'translateY(-8px)';
-          e.currentTarget.style.boxShadow = '0 20px 40px rgba(165, 226, 203, 0.15)';
+          e.currentTarget.style.boxShadow = '0 20px 40px rgba(62, 213, 204, 0.15)';
         }}
         onMouseLeave={(e) => {
           if (!hasStock) return;
@@ -140,11 +140,11 @@ export default function ProductCard({ product }: { product: Product }) {
             disabled={!hasStock}
             style={{ 
               background: hasStock ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : '#cbd5e1', 
-              color: '#0f172a', border: 'none', padding: '1rem', borderRadius: '16px', 
+              color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '16px', 
               fontWeight: 700, 
               cursor: hasStock ? 'pointer' : 'not-allowed',
               fontSize: '1.1rem',
-              boxShadow: hasStock ? '0 4px 15px rgba(165, 226, 203, 0.3)' : 'none',
+              boxShadow: hasStock ? '0 4px 15px rgba(62, 213, 204, 0.3)' : 'none',
               transition: 'transform 0.2s'
             }}
             onClick={handleAddToCart}
@@ -260,9 +260,9 @@ export default function ProductCard({ product }: { product: Product }) {
               <button 
                 style={{ 
                   background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)', 
-                  color: '#0f172a', border: 'none', padding: '1rem', borderRadius: '16px', 
+                  color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '16px', 
                   fontWeight: 700, cursor: 'pointer', fontSize: '1.2rem', width: '100%',
-                  boxShadow: '0 4px 15px rgba(165, 226, 203, 0.3)'
+                  boxShadow: '0 4px 15px rgba(62, 213, 204, 0.3)'
                 }}
                 onClick={(e) => { handleAddToCart(e); setIsModalOpen(false); setCurrentImage(0); }}
               >

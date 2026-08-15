@@ -72,7 +72,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
             <div key={order._id} style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                 <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', margin: 0 }}>{order.productName}</h3>
-                <span style={{ background: 'var(--primary)', color: '#0f172a', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>Activa</span>
+                <span style={{ background: 'var(--primary)', color: '#1C5F5C', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>Activa</span>
               </div>
               <div style={{ background: 'var(--search-bg)', padding: '1rem', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -97,7 +97,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
           <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', marginBottom: '1rem' }}>
             {t('dashboard.purchases.empty')}
           </p>
-          <a href="/" className="btn btn-primary" style={{ padding: '0.75rem 1.5rem', borderRadius: '20px', textDecoration: 'none', color: '#0f172a', background: 'var(--primary)', display: 'inline-block', fontWeight: 'bold' }}>
+          <a href="/" className="btn btn-primary" style={{ padding: '0.75rem 1.5rem', borderRadius: '20px', textDecoration: 'none', color: '#1C5F5C', background: 'var(--primary)', display: 'inline-block', fontWeight: 'bold' }}>
             {t('nav.catalog')}
           </a>
         </div>

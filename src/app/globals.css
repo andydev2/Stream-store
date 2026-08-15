@@ -1,40 +1,42 @@
 :root {
   --background: #fdfbfb; 
-  --foreground: #1e1e2f; 
+  --foreground: #1C5F5C; 
   
   /* New Palette */
-  --primary: #A5E2CB;
-  --primary-hover: #91d2ba;
-  --secondary: #B8E2EA;
-  --accent: #D3E2EE;
+  --primary: #3ED5CC;
+  --primary-hover: #2CBEA4;
+  --secondary: #8AE3CD;
+  --accent: #D3F2ED;
+  --dark-teal: #1C5F5C;
   
   --card-bg: #ffffff;
-  --card-border: #D1EBE7;
+  --card-border: #D3F2ED;
   --navbar-bg: rgba(255, 255, 255, 0.85);
   --search-bg: #f8fafc;
-  --text-main: #111111;
-  --text-muted: #64748b;
-  --border: #D9E1EE;
+  --text-main: #1C5F5C; /* Using dark teal for main text instead of black for harmony */
+  --text-muted: #5e8b89;
+  --border: #D3F2ED;
   
   --radius: 24px; /* Very rounded, modern feel */
 }
 
 .dark {
-  --background: #0b1120; 
+  --background: #091615; /* Super dark teal */
   --foreground: #f8fafc; 
   
-  --primary: #A5E2CB; 
-  --primary-hover: #B8E2EA;
-  --secondary: #D3E2EE; 
-  --accent: #D1EBE7; 
+  --primary: #3ED5CC; 
+  --primary-hover: #8AE3CD;
+  --secondary: #2CBEA4; 
+  --accent: #1C5F5C; 
+  --dark-teal: #D3F2ED;
   
-  --card-bg: rgba(30, 41, 59, 0.7);
-  --card-border: rgba(165, 226, 203, 0.15);
-  --navbar-bg: rgba(11, 17, 32, 0.85);
-  --search-bg: rgba(255, 255, 255, 0.05);
+  --card-bg: rgba(28, 95, 92, 0.15); /* Tinted dark teal cards */
+  --card-border: rgba(62, 213, 204, 0.15);
+  --navbar-bg: rgba(9, 22, 21, 0.85);
+  --search-bg: rgba(255, 255, 255, 0.03);
   --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --border: rgba(255, 255, 255, 0.1);
+  --text-muted: #8AE3CD;
+  --border: rgba(62, 213, 204, 0.15);
 }
 
 * {
@@ -54,7 +56,7 @@ body {
 }
 
 .dark body {
-  background: radial-gradient(circle at top right, #1e293b, #0b1120);
+  background: radial-gradient(circle at top right, #0f2422, #091615);
 }
 
 /* Ocultar barra de desplazamiento agresivamente */
@@ -94,7 +96,7 @@ a:hover {
 
 .btn-primary {
   background-color: var(--primary);
-  color: #0f172a; /* Dark text for contrast on light pastel background */
+  color: #1C5F5C; /* Dark text for contrast on light pastel background */
 }
 
 .btn-primary:hover {
@@ -102,11 +104,11 @@ a:hover {
 }
 
 .dark .btn-primary {
-  box-shadow: 0 0 15px rgba(165, 226, 203, 0.2);
+  box-shadow: 0 0 15px rgba(62, 213, 204, 0.2);
 }
 
 .dark .btn-primary:hover {
-  box-shadow: 0 0 25px rgba(165, 226, 203, 0.4);
+  box-shadow: 0 0 25px rgba(62, 213, 204, 0.4);
 }
 
 .btn-outline {
@@ -116,7 +118,7 @@ a:hover {
 }
 
 .btn-outline:hover {
-  background-color: rgba(165, 226, 203, 0.1);
+  background-color: rgba(62, 213, 204, 0.1);
 }
 
 .container {

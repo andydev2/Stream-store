@@ -75,10 +75,10 @@ export default function ReviewSection() {
         <button 
           onClick={() => setIsFormOpen(true)}
           style={{ 
-            background: 'var(--primary)', color: '#0f172a', border: 'none', 
+            background: 'var(--primary)', color: '#1C5F5C', border: 'none', 
             padding: '0.8rem 1.5rem', borderRadius: '24px', fontWeight: 700, 
             cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem',
-            boxShadow: '0 4px 15px rgba(165, 226, 203, 0.3)'
+            boxShadow: '0 4px 15px rgba(62, 213, 204, 0.3)'
           }}
         >
           <MessageSquare size={18} /> {t('review.leave')}
@@ -131,7 +131,7 @@ export default function ReviewSection() {
             />
 
             <button type="submit" style={{ 
-              width: '100%', background: 'var(--primary)', color: '#0f172a', border: 'none', 
+              width: '100%', background: 'var(--primary)', color: '#1C5F5C', border: 'none', 
               padding: '1rem', borderRadius: '12px', fontWeight: 700, cursor: 'pointer', fontSize: '1.1rem' 
             }}>
               {t('review.submit')}

@@ -63,7 +63,7 @@ export default function SupportPage() {
             Escríbenos para dudas generales, facturación o consultas de negocios.
           </p>
           <button style={{ 
-            backgroundColor: 'var(--primary)', color: '#0f172a', border: 'none', padding: '0.8rem 1.5rem', 
+            backgroundColor: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '0.8rem 1.5rem', 
             borderRadius: '12px', fontWeight: 700, fontSize: '1rem', cursor: 'pointer', width: '100%'
           }}>
             soporte@diegoventas.com
@@ -93,7 +93,17 @@ export default function SupportPage() {
               a: "Depende del producto. Algunas cuentas son compartidas para ofrecer el mejor precio (no se debe cambiar la clave), pero otras cuentas como las de Free Fire son 100% tuyas y puedes cambiar todos los datos de acceso."
             }
           ].map((faq, index) => (
-            <div key={index} style={{ backgroundColor: 'var(--card-bg)', padding: '1.5rem', borderRadius: '16px', border: '1px solid #f1f5f9' }}>
+            <div key={index} style={{ 
+              backgroundColor: 'var(--card-bg)', 
+              padding: '1.5rem', 
+              borderRadius: '16px', 
+              border: '1px solid var(--border)',
+              transition: 'transform 0.2s',
+              cursor: 'default'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateX(5px)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
+            >
               <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.5rem' }}>{faq.q}</h3>
               <p style={{ color: 'var(--text-muted)', lineHeight: 1.6 }}>{faq.a}</p>
             </div>

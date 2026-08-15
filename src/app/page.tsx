@@ -107,7 +107,7 @@ export default function Home() {
                   minWidth: '90px',
                   backdropFilter: 'blur(10px)',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: isActive ? '0 8px 25px rgba(165, 226, 203, 0.2)' : 'none',
+                  boxShadow: isActive ? '0 8px 25px rgba(62, 213, 204, 0.2)' : 'none',
                   transform: isActive ? 'translateY(-5px)' : 'none'
                 }}
                 onMouseEnter={(e) => {
@@ -125,7 +125,7 @@ export default function Home() {
                   }
                 }}
               >
-                <div style={{ fontSize: '1.8rem', filter: isActive ? 'drop-shadow(0 2px 8px rgba(165, 226, 203, 0.4))' : 'none', transition: 'all 0.3s' }}>
+                <div style={{ fontSize: '1.8rem', filter: isActive ? 'drop-shadow(0 2px 8px rgba(62, 213, 204, 0.4))' : 'none', transition: 'all 0.3s' }}>
                   {cat.icon}
                 </div>
                 <span style={{ fontSize: '0.85rem', letterSpacing: '0.5px' }}>{t(cat.labelKey)}</span>
@@ -160,7 +160,7 @@ export default function Home() {
               padding: '1rem 3rem', 
               borderRadius: '30px', 
               fontSize: '1.2rem',
-              boxShadow: '0 8px 25px rgba(165, 226, 203, 0.4)',
+              boxShadow: '0 8px 25px rgba(62, 213, 204, 0.4)',
               transition: 'transform 0.2s ease, box-shadow 0.2s ease'
             }}
             onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}

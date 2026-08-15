@@ -72,8 +72,8 @@ export default function AdminProductForm() {
   };
 
   return (
-    <div style={{ background: '#fff', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
-      <h3 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: '#111' }}>Añadir Nuevo Producto</h3>
+    <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
+      <h3 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--text-main)' }}>Añadir Nuevo Producto</h3>
       
       {message && (
         <div style={{ padding: '1rem', marginBottom: '1.5rem', borderRadius: '8px', background: message.includes('Error') ? '#fee2e2' : '#dcfce7', color: message.includes('Error') ? '#991b1b' : '#166534' }}>
@@ -84,18 +84,18 @@ export default function AdminProductForm() {
       <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
         <div>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Nombre del Producto</label>
-          <input required name="name" type="text" placeholder="Ej: Cuenta de Free Fire" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
+          <input required name="name" type="text" placeholder="Ej: Cuenta de Free Fire" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)' }} />
         </div>
         
         <div>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Descripción</label>
-          <textarea required name="description" rows={3} placeholder="Detalles de la cuenta o producto..." style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}></textarea>
+          <textarea required name="description" rows={3} placeholder="Detalles de la cuenta o producto..." style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)' }}></textarea>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Precio (USD)</label>
-            <input required name="price" type="number" step="0.01" placeholder="Ej: 9.99" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
+            <input required name="price" type="number" step="0.01" placeholder="Ej: 9.99" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)' }} />
           </div>
           
           <div>
@@ -105,7 +105,7 @@ export default function AdminProductForm() {
               name="category" 
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc', backgroundColor: '#fff' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', backgroundColor: 'var(--card-bg)' }}
             >
               <option value="streaming">Streaming</option>
               <option value="ai">Inteligencia Artificial</option>
@@ -121,7 +121,7 @@ export default function AdminProductForm() {
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Color de Fondo</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <input required name="color" type="color" defaultValue="#E50914" style={{ width: '50px', height: '45px', padding: '0', border: 'none', borderRadius: '8px', cursor: 'pointer' }} title="Elige un color" />
-              <span style={{ fontSize: '0.9rem', color: '#666' }}>El icono se generará automáticamente con la primera letra.</span>
+              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>El icono se generará automáticamente con la primera letra.</span>
             </div>
           </div>
           
@@ -134,17 +134,17 @@ export default function AdminProductForm() {
                   type="file" 
                   accept="image/*"
                   onChange={handleImageChange}
-                  style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px dashed #ccc', background: '#f9fafb' }} 
+                  style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px dashed var(--border)', background: 'var(--search-bg)' }} 
                 />
                 
-                <span style={{ textAlign: 'center', fontSize: '0.9rem', color: '#666' }}>O</span>
+                <span style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>O</span>
                 
                 <input 
                   name="imageUrl" 
                   type="url" 
                   disabled={!!imageBase64}
                   placeholder={imageBase64 ? "Archivo seleccionado (Ignorando URL)" : "Pegar URL externa..."} 
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc', opacity: imageBase64 ? 0.5 : 1 }} 
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', opacity: imageBase64 ? 0.5 : 1 }} 
                 />
               </div>
             </div>
