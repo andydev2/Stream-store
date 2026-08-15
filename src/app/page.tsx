@@ -212,7 +212,7 @@ export default function Home() {
       </section>
 
       {/* About Me Section */}
-      <section style={{ width: '100%', maxWidth: '1000px', padding: '0 1rem', marginTop: '6rem' }}>
+      <section id="sobre-mi" style={{ width: '100%', maxWidth: '1000px', padding: '0 1rem', marginTop: '6rem' }}>
         <div style={{ background: 'var(--card-bg)', borderRadius: 'var(--radius)', border: '1px solid var(--border)', overflow: 'hidden', display: 'flex', flexWrap: 'wrap', boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
           <div style={{ flex: '1 1 400px', padding: 'clamp(2rem, 5vw, 4rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <h4 style={{ color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
@@ -231,24 +231,6 @@ export default function Home() {
           <div style={{ flex: '1 1 300px', minHeight: '350px', background: 'url(https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80) center/cover' }}>
             {/* Image Placeholder */}
           </div>
-        </div>
-      </section>
-
-      <section id="referencias" style={{ marginTop: '6rem', width: '100%', maxWidth: '1000px' }}>
-        <h2 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '3rem', color: 'var(--text-main)' }}>
-          {t('ref.title')}
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
-          <img 
-            src="/testimonial_1.jpg" 
-            alt="Testimonio de cliente 1" 
-            style={{ width: '100%', borderRadius: 'var(--radius)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }} 
-          />
-          <img 
-            src="/testimonial_2.jpg" 
-            alt="Testimonio de cliente 2" 
-            style={{ width: '100%', borderRadius: 'var(--radius)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }} 
-          />
         </div>
       </section>
 

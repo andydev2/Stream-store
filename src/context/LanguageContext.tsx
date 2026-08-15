@@ -14,6 +14,7 @@ const translations = {
   ES: {
     'nav.search': 'Descubre tu próxima suscripción...',
     'nav.catalog': 'Catálogo',
+    'nav.about': 'Sobre Mí',
     'nav.support': 'Soporte',
     'nav.login': 'Entrar',
     'nav.dashboard': 'Mi Panel',
@@ -72,6 +73,7 @@ const translations = {
   EN: {
     'nav.search': 'Discover your next subscription...',
     'nav.catalog': 'Catalog',
+    'nav.about': 'About Me',
     'nav.support': 'Support',
     'nav.login': 'Login',
     'nav.dashboard': 'My Dashboard',

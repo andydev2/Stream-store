@@ -148,6 +148,7 @@ export default function Navbar() {
           >
             {t('nav.catalog')}
           </button>
+          <Link href="/#sobre-mi" style={{ color: 'var(--text-main)', fontWeight: 600, fontSize: '0.95rem', textDecoration: 'none' }}>{t('nav.about')}</Link>
           <Link href="/support" style={{ color: 'var(--text-main)', fontWeight: 600, fontSize: '0.95rem', textDecoration: 'none' }}>{t('nav.support')}</Link>
           
           {/* Auth Button */}
@@ -318,6 +319,7 @@ export default function Navbar() {
         }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', fontSize: '1.2rem', fontWeight: 600 }}>
             <button onClick={() => { setIsCatalogModalOpen(true); setIsMobileMenuOpen(false); }} style={{ textAlign: 'left', background: 'none', border: 'none', fontSize: '1.2rem', fontWeight: 600, color: 'var(--text-muted)', cursor: 'pointer' }}>{t('nav.catalog')}</button>
+            <Link href="/#sobre-mi" onClick={() => setIsMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>{t('nav.about')}</Link>
             <Link href="/support" onClick={() => setIsMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>{t('nav.support')}</Link>
             <hr style={{ borderTop: '1px solid var(--border)', margin: '0.5rem 0' }} />
             
