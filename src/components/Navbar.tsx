@@ -93,7 +93,7 @@ export default function Navbar() {
             alt="Diego Ventas Logo" 
             style={{ height: '40px', width: 'auto', borderRadius: '8px' }} 
           />
-          <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.5px' }}>
+          <span className="desktop-only-text" style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.5px' }}>
             Diego Ventas
           </span>
         </Link>
@@ -281,7 +281,32 @@ export default function Navbar() {
         .search-animate {
           animation: expandSearchSmooth 0.3s ease-out forwards;
         }
+        @media (max-width: 768px) {
+          .desktop-only-text { display: none !important; }
+          .mobile-theme-toggle { display: flex !important; }
+        }
+        @media (min-width: 769px) {
+          .mobile-theme-toggle { display: none !important; }
+        }
       `}</style>
+
+      {/* Floating Theme Toggle (Mobile Only) */}
+      {mounted && (
+        <button
+          className="mobile-theme-toggle"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          style={{ 
+            position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 100,
+            background: 'var(--primary)', color: '#1C5F5C', border: 'none',
+            width: '56px', height: '56px', borderRadius: '50%',
+            alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+            boxShadow: '0 4px 15px rgba(62, 213, 204, 0.4)'
+          }}
+          aria-label="Cambiar Tema"
+        >
+          {theme === 'dark' ? <Sun size={26} /> : <Moon size={26} />}
+        </button>
+      )}
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
