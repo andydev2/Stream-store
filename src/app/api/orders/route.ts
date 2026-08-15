@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
 import connectToDatabase from "@/lib/mongodb";
-import { Product } from "@/models/Product";
+import Product from "@/models/Product";
 import { Order } from "@/models/Order";
 
 // GET /api/orders
@@ -55,6 +55,7 @@ export async function POST(request: Request) {
       // We need to fulfill 'quantity' accounts for this product
       for (let i = 0; i < item.quantity; i++) {
         // Find an unsold account
+        if (!product.accounts) product.accounts = [];
         const accountIndex = product.accounts.findIndex((acc: any) => acc.isSold === false);
         
         if (accountIndex === -1) {
@@ -62,19 +63,24 @@ export async function POST(request: Request) {
           continue; // Ideally, we should refund or notify admin, but for now we skip
         }
 
-        const accountToSell = product.accounts[accountIndex];
+        const accountToSell = product.accounts[accountIndex] as any;
         
         // Mark as sold
         product.accounts[accountIndex].isSold = true;
+        
+        // Split credentials into username/password if possible
+        const creds = accountToSell.credentials || "";
+        const [username, ...passParts] = creds.includes(':') ? creds.split(':') : [creds, ""];
+        const password = passParts.join(':') || "N/A";
         
         // Create the order record
         const newOrder = await Order.create({
           userEmail: session.user.email,
           productId: product.id,
           productName: product.name,
-          accountId: accountToSell._id.toString(),
-          accountUsername: accountToSell.username,
-          accountPassword: accountToSell.password,
+          accountId: accountToSell._id ? accountToSell._id.toString() : Date.now().toString(),
+          accountUsername: username || "N/A",
+          accountPassword: password || "N/A",
           price: product.price,
           paymentId: paymentId
         });
