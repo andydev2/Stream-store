@@ -133,6 +133,13 @@ export default function Home() {
             );
           })}
         </div>
+
+        {/* Elegant Wave Divider */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', overflow: 'hidden', lineHeight: 0, transform: 'translateY(1px)' }}>
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" style={{ position: 'relative', display: 'block', width: 'calc(100% + 1.3px)', height: '60px' }}>
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.08,130.83,123.63,196.36,108.92c57.5-13.06,108.68-35.32,166.42-45.74z" fill="var(--background)"></path>
+          </svg>
+        </div>
       </div>
 
       <div className={styles.grid}>

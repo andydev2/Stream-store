@@ -1,5 +1,5 @@
 :root {
-  --background: #fdfbfb; 
+  --background: #f0fbfa; /* Soft mint off-white instead of pure white */
   --foreground: #1C5F5C; 
   
   /* New Palette */
@@ -9,9 +9,9 @@
   --accent: #D3F2ED;
   --dark-teal: #1C5F5C;
   
-  --card-bg: #ffffff;
-  --card-border: #D3F2ED;
-  --navbar-bg: rgba(255, 255, 255, 0.85);
+  --card-bg: #D3F2ED; /* No more pure white cards */
+  --card-border: #8AE3CD;
+  --navbar-bg: rgba(211, 242, 237, 0.85); /* Tinted transparent mint */
   --search-bg: #f8fafc;
   --text-main: #1C5F5C; /* Using dark teal for main text instead of black for harmony */
   --text-muted: #5e8b89;
