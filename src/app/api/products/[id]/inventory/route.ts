@@ -30,6 +30,10 @@ export async function POST(
 
     // Agregar las cuentas al inventario
     const newAccounts = body.accounts.map((credentials: string) => ({ credentials, isSold: false }));
+    
+    if (!product.accounts) {
+      product.accounts = [];
+    }
     product.accounts.push(...newAccounts);
     
     await product.save();
