@@ -5,11 +5,11 @@ import { useLanguage } from '../context/LanguageContext';
 import { Star, MessageSquare } from 'lucide-react';
 
 type Review = {
-  id: string;
+  _id: string;
   name: string;
   rating: number;
   comment: string;
-  date: string;
+  createdAt: string;
 };
 
 export default function ReviewSection() {
@@ -19,52 +19,52 @@ export default function ReviewSection() {
   const [name, setName] = useState('');
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(5);
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    // Cargar reviews de localStorage
-    const saved = localStorage.getItem('streamstore_reviews');
-    if (saved) {
-      setReviews(JSON.parse(saved));
-    } else {
-      // Reviews de prueba iniciales
-      const initial: Review[] = [
-        { id: '1', name: 'Carlos M.', rating: 5, comment: 'Excelente servicio, recibí la cuenta de Netflix en 2 minutos. Muy recomendado.', date: new Date().toLocaleDateString() },
-        { id: '2', name: 'Laura G.', rating: 5, comment: 'Súper rápido y seguro. Compre los diamantes de Free Fire y todo perfecto.', date: new Date().toLocaleDateString() },
-        { id: '3', name: 'Miguel A.', rating: 4, comment: 'Todo bien con Spotify, la atención fue rápida por WhatsApp.', date: new Date().toLocaleDateString() }
-      ];
-      setReviews(initial);
-      localStorage.setItem('streamstore_reviews', JSON.stringify(initial));
-    }
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch('/api/reviews');
+        const json = await res.json();
+        if (json.success) {
+          setReviews(json.data);
+        }
+      } catch (err) {
+        console.error('Error fetching reviews:', err);
+      }
+    };
+    fetchReviews();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !comment.trim()) return;
+    if (!name.trim() || !comment.trim() || isSubmitting) return;
 
-    const newReview: Review = {
-      id: Date.now().toString(),
-      name: name.trim(),
-      rating,
-      comment: comment.trim(),
-      date: new Date().toLocaleDateString()
-    };
-
-    const updated = [newReview, ...reviews];
-    setReviews(updated);
-    localStorage.setItem('streamstore_reviews', JSON.stringify(updated));
-    
-    // Reset y cerrar form
-    setName('');
-    setComment('');
-    setRating(5);
-    setIsFormOpen(false);
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name.trim(), rating, comment: comment.trim() }),
+      });
+      const json = await res.json();
+      
+      if (json.success) {
+        setReviews([json.data, ...reviews]);
+        setName('');
+        setComment('');
+        setRating(5);
+        setIsFormOpen(false);
+      }
+    } catch (err) {
+      console.error('Error posting review:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Duplicamos las reviews para el efecto de carrusel infinito
-  const infiniteReviews = [...reviews, ...reviews, ...reviews]; // Triplicamos por si hay muy pocas
+  const infiniteReviews = reviews.length > 0 ? [...reviews, ...reviews, ...reviews] : [];
 
   return (
     <section style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '0' }}>
@@ -157,7 +157,7 @@ export default function ReviewSection() {
               }}
             >
               {infiniteReviews.map((review, idx) => (
-                <div key={`${review.id}-${idx}`} style={{ 
+                <div key={`${review._id}-${idx}`} style={{ 
                   width: '320px', 
                   flexShrink: 0,
                 }}>
@@ -174,7 +174,9 @@ export default function ReviewSection() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                       <div>
                         <h4 style={{ margin: '0 0 0.25rem 0', color: 'var(--text-main)', fontSize: '1.1rem', fontWeight: 800 }}>{review.name}</h4>
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{review.date}</span>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </span>
                       </div>
                       <div style={{ display: 'flex', gap: '2px' }}>
                         {[...Array(5)].map((_, i) => (

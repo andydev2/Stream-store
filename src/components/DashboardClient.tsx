@@ -3,6 +3,7 @@
 import { useLanguage } from "@/context/LanguageContext";
 import AdminProductForm from "@/components/AdminProductForm";
 import AdminProductList from "@/components/AdminProductList";
+import AdminReviewList from "@/components/AdminReviewList";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Key } from "lucide-react";
@@ -20,6 +21,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
   const { t } = useLanguage();
   const [orders, setOrders] = useState<any[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
+  const [activeAdminTab, setActiveAdminTab] = useState<'products' | 'reviews'>('products');
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -105,11 +107,44 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
 
       {isAdmin && (
         <>
-          <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', color: '#dc2626' }}>
-            {t('dashboard.admin')}
-          </h2>
-          <AdminProductForm />
-          <AdminProductList />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
+            <h2 style={{ fontSize: '1.8rem', color: '#dc2626', margin: 0 }}>
+              {t('dashboard.admin')}
+            </h2>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button 
+                onClick={() => setActiveAdminTab('products')}
+                style={{ 
+                  background: activeAdminTab === 'products' ? '#dc2626' : 'transparent',
+                  color: activeAdminTab === 'products' ? 'white' : 'var(--text-muted)',
+                  border: activeAdminTab === 'products' ? 'none' : '1px solid var(--border)',
+                  padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 600, cursor: 'pointer'
+                }}
+              >
+                Productos
+              </button>
+              <button 
+                onClick={() => setActiveAdminTab('reviews')}
+                style={{ 
+                  background: activeAdminTab === 'reviews' ? '#dc2626' : 'transparent',
+                  color: activeAdminTab === 'reviews' ? 'white' : 'var(--text-muted)',
+                  border: activeAdminTab === 'reviews' ? 'none' : '1px solid var(--border)',
+                  padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 600, cursor: 'pointer'
+                }}
+              >
+                Opiniones
+              </button>
+            </div>
+          </div>
+
+          {activeAdminTab === 'products' ? (
+            <>
+              <AdminProductForm />
+              <AdminProductList />
+            </>
+          ) : (
+            <AdminReviewList />
+          )}
         </>
       )}
     </div>
