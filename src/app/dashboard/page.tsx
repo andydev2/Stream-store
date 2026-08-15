@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import AdminProductForm from "@/components/AdminProductForm";
+import AdminProductList from "@/components/AdminProductList";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export default async function Dashboard() {
@@ -30,14 +31,22 @@ export default async function Dashboard() {
         Mis Suscripciones
       </h2>
       
-      <div style={{ background: '#fff', padding: '3rem', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+      <div style={{ background: '#fff', padding: '3rem', borderRadius: '12px', border: '1px solid #e2e8f0', textAlign: 'center', marginBottom: '3rem' }}>
         <p style={{ color: '#666', fontSize: '1.2rem', marginBottom: '1rem' }}>
           Aún no tienes suscripciones activas.
         </p>
         <a href="/" className="btn btn-primary">Explorar Catálogo</a>
       </div>
 
-      {isAdmin && <AdminProductForm />}
+      {isAdmin && (
+        <>
+          <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.5rem', color: '#dc2626' }}>
+            Panel de Administrador
+          </h2>
+          <AdminProductForm />
+          <AdminProductList />
+        </>
+      )}
     </div>
   );
 }
