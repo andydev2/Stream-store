@@ -89,7 +89,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           <img 
-            src="/logo.jpg" 
+            src="/logo.svg" 
             alt="Diego Ventas Logo" 
             style={{ height: '40px', width: 'auto', borderRadius: '8px' }} 
           />

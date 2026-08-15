@@ -18,7 +18,7 @@
   --radius: 24px; /* Very rounded, modern feel */
 }
 
-[data-theme='dark'] {
+.dark {
   --background: #0f172a; 
   --foreground: #f8fafc; 
   

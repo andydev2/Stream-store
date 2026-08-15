@@ -24,9 +24,10 @@ export default function Footer() {
       }}>
         {/* Brand Col */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <Link href="/" style={{ textDecoration: 'none' }}>
+          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <img src="/logo.svg" alt="Logo" style={{ height: '40px', width: 'auto' }} />
             <div style={{ fontSize: '1.8rem', fontWeight: 900, color: 'white', letterSpacing: '-0.5px' }}>
-              Stream<span style={{ color: 'var(--primary)' }}>Store</span>
+              DV
             </div>
           </Link>
           <p style={{ color: '#94a3b8', lineHeight: 1.6, fontSize: '0.95rem' }}>
