@@ -4,11 +4,13 @@ import { useCart } from "../context/CartContext";
 import { useLanguage } from "../context/LanguageContext";
 import { X, Trash2, ShoppingCart } from "lucide-react";
 import { useState, useEffect } from "react";
+import CheckoutModal from "./CheckoutModal";
 
 export default function CartDrawer() {
   const { cart, removeFromCart, isCartOpen, setIsCartOpen, cartTotal } = useCart();
   const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   useEffect(() => {
     if (isCartOpen) {
@@ -30,36 +32,32 @@ export default function CartDrawer() {
 
   if (!isCartOpen) return null;
 
-  const handleCheckout = async () => {
+  const handleCheckoutClick = () => {
     if (cart.length === 0) return;
-    setLoading(true);
-    
-    try {
-      // Create a mock payment ID
-      const mockPaymentId = `PAY-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+    setIsCheckoutOpen(true);
+  };
 
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: cart, paymentId: mockPaymentId }),
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        // Clear cart manually (or we need a clearCart function in context)
-        cart.forEach(item => removeFromCart(item.id));
-        alert("¡Pago exitoso! Tus cuentas han sido asignadas en tu Dashboard.");
+  const processPayment = async () => {
+    const mockPaymentId = `PAY-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
+
+    const response = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: cart, paymentId: mockPaymentId }),
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      cart.forEach(item => removeFromCart(item.id));
+      // Wait a moment so the user sees the success animation before redirecting
+      setTimeout(() => {
+        setIsCheckoutOpen(false);
         setIsCartOpen(false);
         window.location.href = '/dashboard';
-      } else {
-        alert(data.error || "Hubo un error al procesar la orden");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Hubo un error al conectar con el servidor.");
-    } finally {
-      setLoading(false);
+      }, 2000);
+    } else {
+      throw new Error(data.error || "Hubo un error al procesar la orden");
     }
   };
 
@@ -139,7 +137,7 @@ export default function CartDrawer() {
             </div>
             
             <button 
-              onClick={handleCheckout}
+              onClick={handleCheckoutClick}
               disabled={loading}
               style={{ 
                 width: '100%', padding: '1rem', 
@@ -150,14 +148,18 @@ export default function CartDrawer() {
                 opacity: loading ? 0.7 : 1
               }}
             >
-              {loading ? "Procesando..." : "Finalizar Compra"}
+              Finalizar Compra
             </button>
-            <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>
-              El cobro se simulará con propósitos de prueba
-            </p>
           </div>
         )}
       </div>
+
+      <CheckoutModal 
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        cartTotal={cartTotal}
+        onConfirmPayment={processPayment}
+      />
 
       <style>{`
         @keyframes slideInRight {

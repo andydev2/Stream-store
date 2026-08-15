@@ -118,20 +118,24 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', zIndex: 1, marginTop: 'auto' }}>
           <button 
+            disabled={!hasStock}
             style={{ 
               background: 'transparent', 
-              color: 'var(--text-muted)', 
-              border: '2px solid #e2e8f0', 
+              color: hasStock ? 'var(--text-muted)' : '#cbd5e1', 
+              border: `2px solid ${hasStock ? '#e2e8f0' : '#f1f5f9'}`, 
               padding: '0.75rem', 
               borderRadius: '16px', 
               fontWeight: 700, 
-              cursor: 'pointer',
+              cursor: hasStock ? 'pointer' : 'not-allowed',
               fontSize: '1rem',
               transition: 'all 0.2s'
             }}
-            onClick={(e) => { e.stopPropagation(); setIsModalOpen(true); }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.color = 'var(--primary)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.color = '#475569'; }}
+            onClick={(e) => { 
+              e.stopPropagation(); 
+              if (hasStock) setIsModalOpen(true); 
+            }}
+            onMouseEnter={(e) => { if (hasStock) { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.color = 'var(--primary)'; } }}
+            onMouseLeave={(e) => { if (hasStock) { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.color = '#475569'; } }}
           >
             {t('product.details')}
           </button>
