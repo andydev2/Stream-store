@@ -162,7 +162,7 @@ export default function Navbar() {
           ) : (
             <button 
               onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-              style={{ background: 'var(--primary)', color: '#0f172a', border: 'none', padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 700, cursor: 'pointer', transition: 'transform 0.2s', boxShadow: '0 4px 10px rgba(255,107,107,0.3)' }}
+              style={{ background: 'var(--primary)', color: '#0f172a', border: 'none', padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 700, cursor: 'pointer', transition: 'transform 0.2s', boxShadow: '0 4px 10px rgba(165, 226, 203, 0.3)' }}
               onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             >

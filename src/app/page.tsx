@@ -86,10 +86,10 @@ export default function Home() {
                 key={cat.id} 
                 onClick={() => setActiveCategory(cat.id)}
                 style={{
-                  background: isActive ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.1)',
-                  color: isActive ? 'var(--primary)' : 'white',
+                  background: isActive ? 'var(--card-bg)' : 'transparent',
+                  color: isActive ? 'var(--primary)' : 'var(--text-muted)',
                   border: '1px solid',
-                  borderColor: isActive ? 'white' : 'rgba(255, 255, 255, 0.2)',
+                  borderColor: isActive ? 'var(--primary)' : 'var(--border)',
                   padding: '0.75rem 1.5rem',
                   borderRadius: '20px',
                   fontWeight: 700,
@@ -100,17 +100,26 @@ export default function Home() {
                   gap: '0.4rem',
                   minWidth: '90px',
                   backdropFilter: 'blur(10px)',
-                  transition: 'all 0.2s',
-                  boxShadow: isActive ? '0 8px 20px rgba(0,0,0,0.1)' : 'none'
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: isActive ? '0 8px 25px rgba(165, 226, 203, 0.2)' : 'none',
+                  transform: isActive ? 'translateY(-5px)' : 'none'
                 }}
                 onMouseEnter={(e) => {
-                  if (!isActive) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                  if (!isActive) {
+                    e.currentTarget.style.borderColor = 'var(--primary)';
+                    e.currentTarget.style.color = 'var(--text-main)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }
                 }}
                 onMouseLeave={(e) => {
-                  if (!isActive) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  if (!isActive) {
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                    e.currentTarget.style.color = 'var(--text-muted)';
+                    e.currentTarget.style.transform = 'none';
+                  }
                 }}
               >
-                <div style={{ fontSize: '1.8rem', filter: isActive ? 'none' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}>
+                <div style={{ fontSize: '1.8rem', filter: isActive ? 'drop-shadow(0 2px 8px rgba(165, 226, 203, 0.4))' : 'none', transition: 'all 0.3s' }}>
                   {cat.icon}
                 </div>
                 <span style={{ fontSize: '0.85rem', letterSpacing: '0.5px' }}>{t(cat.labelKey)}</span>

@@ -78,7 +78,7 @@ export default function ReviewSection() {
             background: 'var(--primary)', color: '#0f172a', border: 'none', 
             padding: '0.8rem 1.5rem', borderRadius: '24px', fontWeight: 700, 
             cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem',
-            boxShadow: '0 4px 15px rgba(255, 107, 107, 0.3)'
+            boxShadow: '0 4px 15px rgba(165, 226, 203, 0.3)'
           }}
         >
           <MessageSquare size={18} /> {t('review.leave')}

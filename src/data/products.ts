@@ -58,7 +58,7 @@ export const allProducts: Product[] = [
     description: 'Cuenta con 5000 diamantes y 3 armas evolutivas al máximo.', 
     price: 24.99, 
     icon: 'FF', 
-    color: '#FF8E53',
+    color: 'var(--secondary)',
     category: 'games',
     details: ['Nivel de la cuenta: 50+', '5000 Diamantes disponibles en la cuenta', 'MP40 Cobra y AK Dragón al máximo nivel', 'Múltiples personajes desbloqueados', 'Garantía de recuperación de 100% segura'],
     images: [
