@@ -9,8 +9,31 @@
   
   --card-bg: #ffffff;
   --card-border: rgba(255, 107, 107, 0.1);
+  --navbar-bg: rgba(255, 255, 255, 0.9);
+  --search-bg: #f8fafc;
+  --text-main: #111111;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
   
   --radius: 24px; /* Very rounded, modern feel */
+}
+
+[data-theme='dark'] {
+  --background: #0f172a; 
+  --foreground: #f8fafc; 
+  
+  --primary: #FF6B6B; 
+  --primary-hover: #FF5252;
+  --secondary: #4ECDC4; 
+  --accent: #FFE66D; 
+  
+  --card-bg: #1e293b;
+  --card-border: rgba(255, 107, 107, 0.2);
+  --navbar-bg: rgba(15, 23, 42, 0.9);
+  --search-bg: #334155;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border: #334155;
 }
 
 * {

@@ -66,7 +66,7 @@ export default function SupportPage() {
             backgroundColor: 'var(--primary)', color: 'white', border: 'none', padding: '0.8rem 1.5rem', 
             borderRadius: '12px', fontWeight: 700, fontSize: '1rem', cursor: 'pointer', width: '100%'
           }}>
-            soporte@streamstore.com
+            soporte@diegoventas.com
           </button>
         </div>
 

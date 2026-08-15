@@ -70,7 +70,7 @@ export default function Footer() {
         flexWrap: 'wrap', gap: '1rem', color: '#64748b', fontSize: '0.9rem'
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <div>&copy; {new Date().getFullYear()} StreamStore. {t('footer.rights')}</div>
+          <div>&copy; {new Date().getFullYear()} Diego Ventas. {t('footer.rights')}</div>
           <div style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
             {t('footer.developed')} <a href="https://akira-itzt.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 700, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'} onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}>AKIRA</a>
           </div>

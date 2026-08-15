@@ -1,16 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { Search, ShoppingCart, Menu, X, Globe } from "lucide-react";
+import { Search, ShoppingCart, Menu, X, Globe, Moon, Sun } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
 import { useLanguage } from "../context/LanguageContext";
 import { allProducts } from "../data/products";
 import ProductCard from "./ProductCard";
 import { useSession, signIn } from "next-auth/react";
+import { useTheme } from "next-themes";
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -22,6 +25,7 @@ export default function Navbar() {
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -76,7 +80,7 @@ export default function Navbar() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        background: isScrolled ? 'rgba(255, 255, 255, 0.9)' : 'var(--card-bg)',
+        background: isScrolled ? 'var(--navbar-bg)' : 'var(--card-bg)',
         backdropFilter: isScrolled ? 'blur(10px)' : 'none',
         boxShadow: isScrolled ? '0 4px 20px rgba(0,0,0,0.05)' : 'none',
         zIndex: 50,
@@ -86,7 +90,7 @@ export default function Navbar() {
         <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
           <img 
             src="/logo.jpg" 
-            alt="StreamStore Logo" 
+            alt="Diego Ventas Logo" 
             style={{ height: '40px', width: 'auto', borderRadius: '8px' }} 
           />
         </Link>
@@ -99,7 +103,7 @@ export default function Navbar() {
           margin: '0 2rem',
           position: 'relative'
         }}>
-          <Search size={18} color="#94a3b8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+          <Search size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
           <input 
             type="text" 
             placeholder={t('nav.search')}
@@ -109,36 +113,39 @@ export default function Navbar() {
               width: '100%',
               padding: '0.75rem 1rem 0.75rem 3rem',
               borderRadius: '24px',
-              border: '1px solid #e2e8f0',
-              backgroundColor: '#f8fafc',
+              border: '1px solid var(--border)',
+              backgroundColor: 'var(--search-bg)',
+              color: 'var(--text-main)',
               fontSize: '0.95rem',
               outline: 'none',
               transition: 'all 0.2s',
             }}
-            onFocus={(e) => e.target.style.backgroundColor = 'white'}
-            onBlur={(e) => e.target.style.backgroundColor = '#f8fafc'}
           />
         </form>
 
         {/* Links (Desktop) */}
         <div className="desktop-links" style={{ display: 'none', alignItems: 'center', gap: '2rem' }}>
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+            >
+              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+          )}
           <button 
             onClick={toggleLanguage}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#64748b', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.2s' }}
-            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
-            onMouseLeave={(e) => e.currentTarget.style.color = '#64748b'}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.2s' }}
           >
             <Globe size={18} /> {language}
           </button>
           <button 
             onClick={() => setIsCatalogModalOpen(true)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#475569', fontWeight: 600, fontSize: '0.95rem', transition: 'color 0.2s' }}
-            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
-            onMouseLeave={(e) => e.currentTarget.style.color = '#475569'}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-main)', fontWeight: 600, fontSize: '0.95rem', transition: 'color 0.2s' }}
           >
             {t('nav.catalog')}
           </button>
-          <Link href="/support" style={{ color: '#475569', fontWeight: 600, fontSize: '0.95rem' }}>{t('nav.support')}</Link>
+          <Link href="/support" style={{ color: 'var(--text-main)', fontWeight: 600, fontSize: '0.95rem', textDecoration: 'none' }}>{t('nav.support')}</Link>
           
           {/* Auth Button */}
           {session ? (
