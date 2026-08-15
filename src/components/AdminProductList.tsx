@@ -112,55 +112,56 @@ export default function AdminProductList() {
         {products.length === 0 ? (
           <p style={{ color: 'var(--text-muted)' }}>No hay productos en la base de datos.</p>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ borderBottom: '2px solid #e2e8f0' }}>
-                  <th style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)' }}>Producto</th>
-                  <th style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)' }}>Categoría</th>
-                  <th style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)' }}>Precio</th>
-                  <th style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)' }}>Stock</th>
-                  <th style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)', textAlign: 'right' }}>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((product) => (
-                  <tr key={product.id || product._id} style={{ borderBottom: '1px solid var(--border)' }}>
-                    <td style={{ padding: '1rem 0.5rem', fontWeight: '500' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <div style={{ width: '30px', height: '30px', background: product.color || '#ccc', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold', fontSize: '0.8rem' }}>
-                          {product.icon}
-                        </div>
-                        {product.name}
-                      </div>
-                    </td>
-                    <td style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {products.map((product) => (
+              <div key={product.id || product._id} style={{ 
+                display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', 
+                padding: '1rem', background: 'var(--search-bg)', borderRadius: '12px', border: '1px solid var(--border)', gap: '1rem' 
+              }}>
+                {/* Info principal */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: '1 1 250px' }}>
+                  <div style={{ width: '40px', height: '40px', background: product.color || '#ccc', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold', fontSize: '1rem', flexShrink: 0 }}>
+                    {product.icon}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: '700', color: 'var(--text-main)', fontSize: '1.1rem' }}>{product.name}</div>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textTransform: 'capitalize' }}>
                       {product.category.replace('_', ' ')}
-                    </td>
-                    <td style={{ padding: '1rem 0.5rem', color: '#1C5F5C' }}>
-                      ${product.price}
-                    </td>
-                    <td style={{ padding: '1rem 0.5rem', color: product.stock > 0 ? '#16a34a' : '#dc2626', fontWeight: 'bold' }}>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Precio y Stock */}
+                <div style={{ display: 'flex', gap: '2rem', flex: '1 1 150px' }}>
+                  <div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Precio</div>
+                    <div style={{ color: '#1C5F5C', fontWeight: '700' }}>${product.price}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Stock</div>
+                    <div style={{ color: product.stock > 0 ? '#16a34a' : '#dc2626', fontWeight: '800' }}>
                       {product.stock !== undefined ? `${product.stock} disp.` : 'N/A'}
-                    </td>
-                    <td style={{ padding: '1rem 0.5rem', textAlign: 'right' }}>
-                      <button 
-                        onClick={() => handleOpenInventoryModal(product.id || product._id, product.name)}
-                        style={{ background: '#dbeafe', color: '#2563eb', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', marginRight: '0.5rem' }}
-                      >
-                        Inventario
-                      </button>
-                      <button 
-                        onClick={() => handleDelete(product.id || product._id, product.name)}
-                        style={{ background: '#fee2e2', color: '#ef4444', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Acciones */}
+                <div style={{ display: 'flex', gap: '0.5rem', flex: '1 1 100%', justifyContent: 'flex-end' }}>
+                  <button 
+                    onClick={() => handleOpenInventoryModal(product.id || product._id, product.name)}
+                    style={{ background: '#dbeafe', color: '#2563eb', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', flex: 1, maxWidth: '150px' }}
+                  >
+                    Inventario
+                  </button>
+                  <button 
+                    onClick={() => handleDelete(product.id || product._id, product.name)}
+                    style={{ background: '#fee2e2', color: '#ef4444', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', flex: 1, maxWidth: '150px' }}
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
