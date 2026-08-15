@@ -178,6 +178,62 @@ export default function Home() {
         </div>
       )}
 
+      {/* Why Choose Us Section */}
+      <section style={{ width: '100%', maxWidth: '1200px', padding: '0 1rem', marginTop: '6rem' }}>
+        <h2 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '3rem', color: 'var(--text-main)', fontWeight: 900, letterSpacing: '-1px' }}>
+          {t('why.title')}
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
+          {/* Card 1 */}
+          <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏆</div>
+            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', marginBottom: '1rem', fontWeight: 800 }}>{t('why.exp.title')}</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('why.exp.desc')}</p>
+          </div>
+          {/* Card 2 */}
+          <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚡</div>
+            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', marginBottom: '1rem', fontWeight: 800 }}>{t('why.delivery.title')}</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('why.delivery.desc')}</p>
+          </div>
+          {/* Card 3 */}
+          <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🛡️</div>
+            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', marginBottom: '1rem', fontWeight: 800 }}>{t('why.warranty.title')}</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('why.warranty.desc')}</p>
+          </div>
+          {/* Card 4 */}
+          <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎧</div>
+            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', marginBottom: '1rem', fontWeight: 800 }}>{t('why.support.title')}</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('why.support.desc')}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* About Me Section */}
+      <section style={{ width: '100%', maxWidth: '1000px', padding: '0 1rem', marginTop: '6rem' }}>
+        <div style={{ background: 'var(--card-bg)', borderRadius: 'var(--radius)', border: '1px solid var(--border)', overflow: 'hidden', display: 'flex', flexWrap: 'wrap', boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
+          <div style={{ flex: '1 1 400px', padding: 'clamp(2rem, 5vw, 4rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <h4 style={{ color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+              {t('about.subtitle')}
+            </h4>
+            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 2.5rem)', color: 'var(--text-main)', marginBottom: '1.5rem', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-1px' }}>
+              {t('about.title')}
+            </h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '1.5rem', lineHeight: 1.7 }}>
+              {t('about.desc1')}
+            </p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: 1.7 }}>
+              {t('about.desc2')}
+            </p>
+          </div>
+          <div style={{ flex: '1 1 300px', minHeight: '350px', background: 'url(https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80) center/cover' }}>
+            {/* Image Placeholder */}
+          </div>
+        </div>
+      </section>
+
       <section id="referencias" style={{ marginTop: '6rem', width: '100%', maxWidth: '1000px' }}>
         <h2 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '3rem', color: 'var(--text-main)' }}>
           {t('ref.title')}
