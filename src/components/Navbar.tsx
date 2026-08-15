@@ -87,12 +87,15 @@ export default function Navbar() {
         transition: 'all 0.3s ease'
       }}>
         {/* Logo */}
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
           <img 
             src="/logo.svg" 
             alt="Diego Ventas Logo" 
             style={{ height: '40px', width: 'auto', borderRadius: '8px' }} 
           />
+          <span style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.5px' }}>
+            Diego Ventas
+          </span>
         </Link>
 
         {/* Search Bar (Desktop) */}
