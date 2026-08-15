@@ -109,7 +109,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
         {/* Stock Indicator */}
         <div style={{ zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 600, color: hasStock ? '#16a34a' : '#dc2626', background: hasStock ? '#dcfce7' : '#fee2e2', padding: '0.3rem 0.6rem', borderRadius: '20px', width: 'fit-content' }}>
-          {hasStock ? `🟢 ${product.stock} cuentas disponibles` : '🔴 Agotado'}
+          {hasStock ? `🟢 ${product.stock} ${t('product.stock.available')}` : `🔴 ${t('product.stock.out')}`}
         </div>
 
         <p style={{ color: '#64748b', fontSize: '1rem', lineHeight: 1.6, zIndex: 1, flex: 1 }}>
@@ -154,7 +154,7 @@ export default function ProductCard({ product }: { product: Product }) {
             onMouseDown={(e) => { if (hasStock) e.currentTarget.style.transform = 'scale(0.98)' }}
             onMouseUp={(e) => { if (hasStock) e.currentTarget.style.transform = 'scale(1)' }}
           >
-            {hasStock ? t('cart.add') : 'Sin Stock'}
+            {hasStock ? t('cart.add') : t('product.stock.none')}
           </button>
         </div>
       </div>

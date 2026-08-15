@@ -7,8 +7,10 @@ import { useCart } from "../context/CartContext";
 import { useLanguage } from "../context/LanguageContext";
 import { allProducts } from "../data/products";
 import ProductCard from "./ProductCard";
+import { useSession, signIn } from "next-auth/react";
 
 export default function Navbar() {
+  const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -138,6 +140,26 @@ export default function Navbar() {
           </button>
           <Link href="/support" style={{ color: '#475569', fontWeight: 600, fontSize: '0.95rem' }}>{t('nav.support')}</Link>
           
+          {/* Auth Button */}
+          {session ? (
+            <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
+              <img 
+                src={session.user?.image || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} 
+                alt="Profile" 
+                style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid var(--primary)' }}
+              />
+            </Link>
+          ) : (
+            <button 
+              onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+              style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 700, cursor: 'pointer', transition: 'transform 0.2s', boxShadow: '0 4px 10px rgba(255,107,107,0.3)' }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              {t('nav.login')}
+            </button>
+          )}
+
           {/* Cart Toggle Button */}
           <button 
             onClick={() => setIsCartOpen(true)}
@@ -261,7 +283,26 @@ export default function Navbar() {
         }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', fontSize: '1.2rem', fontWeight: 600 }}>
             <button onClick={() => { setIsCatalogModalOpen(true); setIsMobileMenuOpen(false); }} style={{ textAlign: 'left', background: 'none', border: 'none', fontSize: '1.2rem', fontWeight: 600, color: '#475569', cursor: 'pointer' }}>{t('nav.catalog')}</button>
-            <Link href="/support" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#475569' }}>{t('nav.support')}</Link>
+            <Link href="/support" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none' }}>{t('nav.support')}</Link>
+            <hr style={{ borderTop: '1px solid #e2e8f0', margin: '0.5rem 0' }} />
+            
+            {session ? (
+              <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: '#1e1e2f', textDecoration: 'none' }}>
+                <img 
+                  src={session.user?.image || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} 
+                  alt="Profile" 
+                  style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid var(--primary)' }}
+                />
+                <span>{t('nav.dashboard')}</span>
+              </Link>
+            ) : (
+              <button 
+                onClick={() => { setIsMobileMenuOpen(false); signIn('google', { callbackUrl: '/dashboard' }); }}
+                style={{ textAlign: 'left', background: 'var(--primary)', color: 'white', border: 'none', padding: '1rem', borderRadius: '12px', fontSize: '1.2rem', fontWeight: 700, cursor: 'pointer' }}
+              >
+                {t('nav.login')}
+              </button>
+            )}
           </div>
         </div>
       )}
