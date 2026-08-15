@@ -141,7 +141,11 @@ export default function ReviewSection() {
       )}
 
       {/* Carrusel Infinito de Opiniones */}
-      <div style={{ position: 'relative', overflow: 'hidden', width: '100%', padding: '1rem 0' }}>
+      <div style={{ 
+        position: 'relative', overflow: 'hidden', width: '100%', padding: '1rem 0',
+        WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+        maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
+      }}>
         {reviews.length > 0 ? (
           <>
             <div 

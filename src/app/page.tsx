@@ -234,7 +234,7 @@ export default function Home() {
         </div>
       </section>
 
-      <div style={{ width: '100%', marginBottom: '4rem' }}>
+      <div style={{ width: '100%', marginTop: '8rem', marginBottom: '4rem' }}>
         <ReviewSection />
       </div>
     </main>
