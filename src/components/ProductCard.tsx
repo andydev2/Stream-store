@@ -11,6 +11,7 @@ type Product = {
   price: number;
   icon: string;
   color: string;
+  stock?: number;
   details?: string[];
   images?: string[];
 };
@@ -44,6 +45,8 @@ export default function ProductCard({ product }: { product: Product }) {
     addToCart(product);
   };
 
+  const hasStock = product.stock !== undefined ? product.stock > 0 : true;
+
   return (
     <>
       <div 
@@ -59,12 +62,15 @@ export default function ProductCard({ product }: { product: Product }) {
           border: '1px solid rgba(0,0,0,0.02)',
           position: 'relative',
           overflow: 'hidden',
+          opacity: hasStock ? 1 : 0.6,
         }}
         onMouseEnter={(e) => {
+          if (!hasStock) return;
           e.currentTarget.style.transform = 'translateY(-8px)';
           e.currentTarget.style.boxShadow = '0 20px 40px rgba(255, 107, 107, 0.15)';
         }}
         onMouseLeave={(e) => {
+          if (!hasStock) return;
           e.currentTarget.style.transform = 'translateY(0)';
           e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.06)';
         }}
@@ -81,22 +87,29 @@ export default function ProductCard({ product }: { product: Product }) {
           zIndex: 0
         }} />
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', zIndex: 1 }}>
-          <div style={{ 
-            width: '56px', height: '56px', borderRadius: '16px', 
-            background: product.color, color: 'white', 
-            display: 'flex', alignItems: 'center', justifyContent: 'center', 
-            fontWeight: 800, fontSize: '1.8rem',
-            boxShadow: `0 8px 20px ${product.color}40`
-          }}>
-            {product.icon}
-          </div>
-          <div>
-            <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#1e1e2f', margin: 0 }}>{product.name}</h3>
-            <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem' }}>
-              ${product.price.toFixed(2)} <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: 500 }}>{t('product.month')}</span>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ 
+              width: '56px', height: '56px', borderRadius: '16px', 
+              background: product.color, color: 'white', 
+              display: 'flex', alignItems: 'center', justifyContent: 'center', 
+              fontWeight: 800, fontSize: '1.8rem',
+              boxShadow: `0 8px 20px ${product.color}40`
+            }}>
+              {product.icon}
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#1e1e2f', margin: 0 }}>{product.name}</h3>
+              <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem' }}>
+                ${product.price.toFixed(2)} <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: 500 }}>{t('product.month')}</span>
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* Stock Indicator */}
+        <div style={{ zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 600, color: hasStock ? '#16a34a' : '#dc2626', background: hasStock ? '#dcfce7' : '#fee2e2', padding: '0.3rem 0.6rem', borderRadius: '20px', width: 'fit-content' }}>
+          {hasStock ? `🟢 ${product.stock} cuentas disponibles` : '🔴 Agotado'}
         </div>
 
         <p style={{ color: '#64748b', fontSize: '1rem', lineHeight: 1.6, zIndex: 1, flex: 1 }}>
@@ -124,23 +137,24 @@ export default function ProductCard({ product }: { product: Product }) {
           </button>
           
           <button 
+            disabled={!hasStock}
             style={{ 
-              background: 'linear-gradient(135deg, var(--primary) 0%, #FF8E53 100%)', 
+              background: hasStock ? 'linear-gradient(135deg, var(--primary) 0%, #FF8E53 100%)' : '#cbd5e1', 
               color: 'white', 
               border: 'none', 
               padding: '1rem', 
               borderRadius: '16px', 
               fontWeight: 700, 
-              cursor: 'pointer',
+              cursor: hasStock ? 'pointer' : 'not-allowed',
               fontSize: '1.1rem',
-              boxShadow: '0 4px 15px rgba(255, 107, 107, 0.3)',
+              boxShadow: hasStock ? '0 4px 15px rgba(255, 107, 107, 0.3)' : 'none',
               transition: 'transform 0.2s'
             }}
             onClick={handleAddToCart}
-            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
-            onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            onMouseDown={(e) => { if (hasStock) e.currentTarget.style.transform = 'scale(0.98)' }}
+            onMouseUp={(e) => { if (hasStock) e.currentTarget.style.transform = 'scale(1)' }}
           >
-            {t('cart.add')}
+            {hasStock ? t('cart.add') : 'Sin Stock'}
           </button>
         </div>
       </div>

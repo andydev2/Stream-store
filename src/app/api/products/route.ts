@@ -8,7 +8,18 @@ export async function GET() {
   try {
     await dbConnect();
     const products = await Product.find({}).lean();
-    return NextResponse.json({ success: true, data: products });
+    
+    // Calcular el stock y eliminar las cuentas por seguridad (para no exponer contraseñas)
+    const sanitizedProducts = products.map((p: any) => {
+      const stockCount = p.accounts ? p.accounts.filter((a: any) => !a.isSold).length : 0;
+      const { accounts, ...productWithoutAccounts } = p;
+      return {
+        ...productWithoutAccounts,
+        stock: stockCount
+      };
+    });
+
+    return NextResponse.json({ success: true, data: sanitizedProducts });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 400 });
   }

@@ -1,5 +1,10 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
+export interface IAccount {
+  credentials: string;
+  isSold: boolean;
+}
+
 export interface IProduct extends Document {
   id: string; // We'll keep the string ID for backward compatibility with the old data structure
   name: string;
@@ -10,7 +15,13 @@ export interface IProduct extends Document {
   category: 'streaming' | 'ai' | 'music' | 'games' | 'free_fire';
   details?: string[];
   images?: string[];
+  accounts?: IAccount[];
 }
+
+const AccountSchema: Schema = new Schema({
+  credentials: { type: String, required: true },
+  isSold: { type: Boolean, default: false }
+}, { _id: true, timestamps: true });
 
 const ProductSchema: Schema = new Schema({
   id: { type: String, required: true, unique: true },
@@ -26,6 +37,7 @@ const ProductSchema: Schema = new Schema({
   },
   details: { type: [String] },
   images: { type: [String] },
+  accounts: { type: [AccountSchema], default: [] },
 }, {
   timestamps: true,
 });
