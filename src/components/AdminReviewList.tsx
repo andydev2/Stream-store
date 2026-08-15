@@ -39,19 +39,26 @@ export default function AdminReviewList() {
     fetchReviews();
   }, []);
 
-  const handleDelete = async (id: string, name: string) => {
-    if (confirm(`¿Estás seguro de eliminar la reseña de ${name}?`)) {
-      try {
-        const res = await fetch(`/api/reviews/${id}`, { method: 'DELETE' });
-        const json = await res.json();
-        if (json.success) {
-          setReviews(reviews.filter(r => r._id !== id));
-        } else {
-          alert('Error al eliminar la reseña');
-        }
-      } catch (err) {
-        console.error('Error deleting review:', err);
+  const [deletingReview, setDeletingReview] = useState<{ id: string, name: string } | null>(null);
+
+  const handleDeleteClick = (id: string, name: string) => {
+    setDeletingReview({ id, name });
+  };
+
+  const confirmDelete = async () => {
+    if (!deletingReview) return;
+    try {
+      const res = await fetch(`/api/reviews/${deletingReview.id}`, { method: 'DELETE' });
+      const json = await res.json();
+      if (json.success) {
+        setReviews(reviews.filter(r => r._id !== deletingReview.id));
+      } else {
+        alert('Error al eliminar la reseña');
       }
+    } catch (err) {
+      console.error('Error deleting review:', err);
+    } finally {
+      setDeletingReview(null);
     }
   };
 
@@ -129,7 +136,7 @@ export default function AdminReviewList() {
                   <Edit size={16} /> Editar
                 </button>
                 <button 
-                  onClick={() => handleDelete(review._id, review.name)}
+                  onClick={() => handleDeleteClick(review._id, review.name)}
                   style={{ background: '#fee2e2', color: '#ef4444', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', flex: 1, maxWidth: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
                 >
                   <Trash2 size={16} /> Borrar
@@ -199,6 +206,35 @@ export default function AdminReviewList() {
                 <button type="submit" style={{ flex: 1, padding: '1rem', background: 'var(--primary)', color: '#1C5F5C', border: 'none', borderRadius: '12px', fontWeight: 700, cursor: 'pointer' }}>Guardar Cambios</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Confirmación de Borrado */}
+      {deletingReview && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem'
+        }}>
+          <div style={{
+            background: 'var(--card-bg)', padding: '2rem', borderRadius: '24px',
+            width: '100%', maxWidth: '400px', boxShadow: '0 20px 50px rgba(0,0,0,0.1)',
+            textAlign: 'center'
+          }}>
+            <Trash2 size={48} color="#ef4444" style={{ marginBottom: '1rem' }} />
+            <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.4rem', color: 'var(--text-main)' }}>¿Estás seguro?</h3>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', fontSize: '1rem' }}>
+              ¿Deseas borrar esta reseña de <strong>{deletingReview.name}</strong>? Esta acción no se puede deshacer.
+            </p>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button onClick={() => setDeletingReview(null)} style={{ flex: 1, padding: '0.8rem', background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-muted)', borderRadius: '12px', fontWeight: 600, cursor: 'pointer' }}>
+                No, cancelar
+              </button>
+              <button onClick={confirmDelete} style={{ flex: 1, padding: '0.8rem', background: '#ef4444', color: 'white', border: 'none', borderRadius: '12px', fontWeight: 700, cursor: 'pointer' }}>
+                Sí, borrar
+              </button>
+            </div>
           </div>
         </div>
       )}
