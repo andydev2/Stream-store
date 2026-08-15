@@ -39,22 +39,22 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
   }, []);
 
   return (
-    <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
+    <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem', paddingLeft: '5%', paddingRight: '5%', maxWidth: '100vw', overflowX: 'hidden' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
           <img 
             src={user.image || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} 
             alt="Avatar" 
-            style={{ width: '80px', height: '80px', borderRadius: '50%', border: '3px solid var(--primary)' }} 
+            style={{ width: 'clamp(50px, 15vw, 80px)', height: 'clamp(50px, 15vw, 80px)', borderRadius: '50%', border: '3px solid var(--primary)' }} 
           />
-          <div>
-            <h1 style={{ fontSize: '2.5rem', color: 'var(--text-main)' }}>¡Hola, {user.name}!</h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>{user.email}</p>
+          <div style={{ maxWidth: '100%' }}>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 6vw, 2.5rem)', color: 'var(--text-main)', wordBreak: 'break-word', lineHeight: 1.2 }}>¡Hola, {user.name}!</h1>
+            <p style={{ color: 'var(--text-muted)', fontSize: 'clamp(0.9rem, 3vw, 1.1rem)', wordBreak: 'break-all', marginTop: '0.2rem' }}>{user.email}</p>
           </div>
         </div>
         <button 
           onClick={() => signOut({ callbackUrl: '/' })}
-          style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '12px', fontWeight: 600, cursor: 'pointer' }}
+          style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'none', padding: '0.6rem 1.2rem', borderRadius: '12px', fontWeight: 600, cursor: 'pointer', width: '100%', maxWidth: '200px' }}
         >
           {t('dashboard.logout')}
         </button>
@@ -67,7 +67,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
       {loadingOrders ? (
         <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>Cargando tus compras...</div>
       ) : orders.length > 0 ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
           {orders.map((order) => (
             <div key={order._id} style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>

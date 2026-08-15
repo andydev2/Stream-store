@@ -92,7 +92,7 @@ export default function AdminProductForm() {
           <textarea required name="description" rows={3} placeholder="Detalles de la cuenta o producto..." style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)' }}></textarea>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Precio (USD)</label>
             <input required name="price" type="number" step="0.01" placeholder="Ej: 9.99" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)' }} />
@@ -116,7 +116,7 @@ export default function AdminProductForm() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Color de Fondo</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

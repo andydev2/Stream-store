@@ -101,9 +101,9 @@ export default function AdminProductList() {
 
   return (
     <>
-      <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border)', marginTop: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)' }}>Catálogo Actual ({products.length})</h3>
+      <div style={{ background: 'var(--card-bg)', padding: 'clamp(1rem, 3vw, 2rem)', borderRadius: '12px', border: '1px solid var(--border)', marginTop: '2rem', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <h3 style={{ fontSize: 'clamp(1.2rem, 4vw, 1.5rem)', color: 'var(--text-main)' }}>Catálogo Actual ({products.length})</h3>
           <button onClick={fetchProducts} className="btn" style={{ padding: '0.5rem 1rem', background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1' }}>
             ↻ Actualizar
           </button>
