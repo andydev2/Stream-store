@@ -1,7 +1,7 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "mock-client-id",
@@ -13,6 +13,8 @@ const handler = NextAuth({
     // pero por defecto NextAuth proveerá una en /api/auth/signin
   },
   secret: process.env.NEXTAUTH_SECRET || "mock-secret-para-desarrollo",
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

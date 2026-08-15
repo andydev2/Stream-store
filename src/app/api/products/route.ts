@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Product from '@/models/Product';
 import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET() {
   try {
@@ -16,7 +17,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     // Verificar que el usuario es administrador
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session || !session.user || session.user.email !== process.env.ADMIN_EMAIL) {
       return NextResponse.json({ success: false, error: 'No autorizado. Solo el administrador puede crear productos.' }, { status: 401 });
     }
