@@ -6,7 +6,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -15,6 +15,8 @@ export async function DELETE(
     }
 
     await dbConnect();
+    
+    const params = await props.params;
     
     // El id que viene de los params puede ser el "id" string que creamos o el _id de Mongo
     // Vamos a intentar borrar por el campo "id" de nuestro esquema
