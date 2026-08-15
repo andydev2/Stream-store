@@ -122,7 +122,7 @@ export default function Home() {
 
       <div className={styles.grid}>
         {loading ? (
-          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: '#666' }}>
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
             Cargando productos...
           </div>
         ) : filteredProducts.length > 0 ? (
@@ -130,14 +130,14 @@ export default function Home() {
             <ProductCard key={product.id} product={product} />
           ))
         ) : (
-          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: '#666' }}>
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
             {t('empty.search')}
           </div>
         )}
       </div>
 
       <section id="referencias" style={{ marginTop: '6rem', width: '100%', maxWidth: '1000px' }}>
-        <h2 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '3rem', color: '#111' }}>
+        <h2 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '3rem', color: 'var(--text-main)' }}>
           {t('ref.title')}
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>

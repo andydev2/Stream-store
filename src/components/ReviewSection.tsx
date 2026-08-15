@@ -69,13 +69,13 @@ export default function ReviewSection() {
   return (
     <section style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem', padding: '0 5%' }}>
-        <h2 style={{ fontSize: '2rem', color: '#1e1e2f', fontWeight: 900 }}>
+        <h2 style={{ fontSize: '2rem', color: 'var(--text-main)', fontWeight: 900 }}>
           {t('review.title')}
         </h2>
         <button 
           onClick={() => setIsFormOpen(true)}
           style={{ 
-            background: 'var(--primary)', color: 'white', border: 'none', 
+            background: 'var(--primary)', color: '#0f172a', border: 'none', 
             padding: '0.8rem 1.5rem', borderRadius: '24px', fontWeight: 700, 
             cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem',
             boxShadow: '0 4px 15px rgba(255, 107, 107, 0.3)'
@@ -88,14 +88,14 @@ export default function ReviewSection() {
       {isFormOpen && (
         <div style={{ padding: '0 5%' }}>
           <form onSubmit={handleSubmit} style={{ 
-            background: 'white', padding: '2rem', borderRadius: '24px', 
+            background: 'var(--card-bg)', padding: '2rem', borderRadius: '24px', 
             boxShadow: '0 10px 40px rgba(0,0,0,0.05)', marginBottom: '3rem',
             border: '1px solid #f1f5f9', animation: 'fadeInDown 0.3s ease',
             maxWidth: '1000px', margin: '0 auto 3rem auto'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h3 style={{ margin: 0, fontSize: '1.4rem', color: '#1e1e2f' }}>{t('review.leave')}</h3>
-              <button type="button" onClick={() => setIsFormOpen(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: '#94a3b8' }}>✕</button>
+              <h3 style={{ margin: 0, fontSize: '1.4rem', color: 'var(--text-main)' }}>{t('review.leave')}</h3>
+              <button type="button" onClick={() => setIsFormOpen(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--text-muted)' }}>✕</button>
             </div>
 
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
@@ -118,7 +118,7 @@ export default function ReviewSection() {
               placeholder={t('review.name')}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0', marginBottom: '1rem', outline: 'none', fontSize: '1rem' }}
+              style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border)', marginBottom: '1rem', outline: 'none', fontSize: '1rem' }}
               required
             />
             
@@ -126,12 +126,12 @@ export default function ReviewSection() {
               placeholder={t('review.comment')}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid #e2e8f0', marginBottom: '1.5rem', outline: 'none', fontSize: '1rem', minHeight: '100px', resize: 'none' }}
+              style={{ width: '100%', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border)', marginBottom: '1.5rem', outline: 'none', fontSize: '1rem', minHeight: '100px', resize: 'none' }}
               required
             />
 
             <button type="submit" style={{ 
-              width: '100%', background: '#1e1e2f', color: 'white', border: 'none', 
+              width: '100%', background: 'var(--primary)', color: '#0f172a', border: 'none', 
               padding: '1rem', borderRadius: '12px', fontWeight: 700, cursor: 'pointer', fontSize: '1.1rem' 
             }}>
               {t('review.submit')}
@@ -158,7 +158,7 @@ export default function ReviewSection() {
                   flexShrink: 0,
                 }}>
                   <div style={{ 
-                    background: 'white', 
+                    background: 'var(--card-bg)', 
                     padding: '2rem', 
                     borderRadius: '24px', 
                     boxShadow: '0 10px 30px rgba(0,0,0,0.04)', 
@@ -169,8 +169,8 @@ export default function ReviewSection() {
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                       <div>
-                        <h4 style={{ margin: '0 0 0.25rem 0', color: '#1e1e2f', fontSize: '1.1rem', fontWeight: 800 }}>{review.name}</h4>
-                        <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{review.date}</span>
+                        <h4 style={{ margin: '0 0 0.25rem 0', color: 'var(--text-main)', fontSize: '1.1rem', fontWeight: 800 }}>{review.name}</h4>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{review.date}</span>
                       </div>
                       <div style={{ display: 'flex', gap: '2px' }}>
                         {[...Array(5)].map((_, i) => (
@@ -178,7 +178,7 @@ export default function ReviewSection() {
                         ))}
                       </div>
                     </div>
-                    <p style={{ color: '#475569', lineHeight: 1.6, margin: 0, fontSize: '1rem', fontStyle: 'italic' }}>
+                    <p style={{ color: 'var(--text-muted)', lineHeight: 1.6, margin: 0, fontSize: '1rem', fontStyle: 'italic' }}>
                       "{review.comment}"
                     </p>
                   </div>
@@ -187,7 +187,7 @@ export default function ReviewSection() {
             </div>
           </>
         ) : (
-          <div style={{ width: '100%', textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
+          <div style={{ width: '100%', textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
             {t('review.empty')}
           </div>
         )}

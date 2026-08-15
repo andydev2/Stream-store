@@ -9,7 +9,7 @@ export default function Soporte() {
       </p>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-        <div style={{ background: '#fff', padding: '2rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+        <div style={{ background: '#fff', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
           <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Preguntas Frecuentes</h2>
           <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <li>
@@ -27,7 +27,7 @@ export default function Soporte() {
           </ul>
         </div>
 
-        <div style={{ background: '#fff', padding: '2rem', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+        <div style={{ background: '#fff', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
           <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Contáctanos</h2>
           <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div>

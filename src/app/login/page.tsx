@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Login() {
   return (
     <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-      <div style={{ background: '#fff', padding: '3rem', borderRadius: '12px', border: '1px solid #e2e8f0', width: '100%', maxWidth: '400px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+      <div style={{ background: '#fff', padding: '3rem', borderRadius: '12px', border: '1px solid var(--border)', width: '100%', maxWidth: '400px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
         <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem', color: '#111', textAlign: 'center' }}>Bienvenido de nuevo</h1>
         <p style={{ color: '#666', marginBottom: '2rem', textAlign: 'center' }}>Inicia sesión en tu cuenta</p>
         
@@ -24,7 +24,7 @@ export default function Login() {
           </button>
         </form>
 
-        <div style={{ margin: '2rem 0', display: 'flex', alignItems: 'center', textAlign: 'center', color: '#94a3b8' }}>
+        <div style={{ margin: '2rem 0', display: 'flex', alignItems: 'center', textAlign: 'center', color: 'var(--text-muted)' }}>
           <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>
           <span style={{ padding: '0 10px', fontSize: '0.9rem' }}>O continúa con</span>
           <div style={{ flex: 1, height: '1px', background: '#e2e8f0' }}></div>

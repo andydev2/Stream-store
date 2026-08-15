@@ -162,7 +162,7 @@ export default function Navbar() {
           ) : (
             <button 
               onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-              style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 700, cursor: 'pointer', transition: 'transform 0.2s', boxShadow: '0 4px 10px rgba(255,107,107,0.3)' }}
+              style={{ background: 'var(--primary)', color: '#0f172a', border: 'none', padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 700, cursor: 'pointer', transition: 'transform 0.2s', boxShadow: '0 4px 10px rgba(255,107,107,0.3)' }}
               onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             >
@@ -173,13 +173,13 @@ export default function Navbar() {
           {/* Cart Toggle Button */}
           <button 
             onClick={() => setIsCartOpen(true)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', color: '#475569' }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', color: 'var(--text-muted)' }}
           >
             <ShoppingCart size={22} />
             {totalItems > 0 && (
               <span style={{
                 position: 'absolute', top: '-8px', right: '-8px',
-                background: 'var(--primary)', color: 'white',
+                background: 'var(--primary)', color: '#0f172a',
                 fontSize: '0.7rem', fontWeight: 'bold',
                 width: '18px', height: '18px',
                 borderRadius: '50%',
@@ -204,12 +204,12 @@ export default function Navbar() {
                 onChange={handleSearchChange}
                 style={{
                   width: '100%', padding: '0.6rem 2.5rem 0.6rem 2.5rem',
-                  borderRadius: '20px', border: '1px solid #e2e8f0',
-                  backgroundColor: '#f8fafc', fontSize: '1rem', outline: 'none',
+                  borderRadius: '20px', border: '1px solid var(--border)',
+                  backgroundColor: 'var(--search-bg)', fontSize: '1rem', outline: 'none',
                 }}
                 autoFocus
               />
-              <button type="button" onClick={() => setIsMobileSearchOpen(false)} style={{ position: 'absolute', right: '0.5rem', background: 'none', border: 'none', color: '#94a3b8', display: 'flex' }}>
+              <button type="button" onClick={() => setIsMobileSearchOpen(false)} style={{ position: 'absolute', right: '0.5rem', background: 'none', border: 'none', color: 'var(--text-muted)', display: 'flex' }}>
                 <X size={20} />
               </button>
             </form>
@@ -218,7 +218,7 @@ export default function Navbar() {
               {/* Mobile Language Toggle (Solo icono) */}
               <button 
                 onClick={toggleLanguage}
-                style={{ display: 'flex', alignItems: 'center', color: '#475569', background: 'none', border: 'none', cursor: 'pointer' }}
+                style={{ display: 'flex', alignItems: 'center', color: 'var(--text-muted)', background: 'none', border: 'none', cursor: 'pointer' }}
                 aria-label="Cambiar Idioma"
               >
                 <Globe size={22} />
@@ -227,7 +227,7 @@ export default function Navbar() {
               {/* Mobile Search Toggle */}
               <button 
                 onClick={() => { setIsMobileSearchOpen(true); setIsMobileMenuOpen(false); }}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#475569', display: 'flex', alignItems: 'center' }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center' }}
                 aria-label="Buscar"
               >
                 <Search size={22} />
@@ -236,14 +236,14 @@ export default function Navbar() {
               {/* Cart Toggle */}
               <button 
                 onClick={() => setIsCartOpen(true)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', color: '#475569' }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', color: 'var(--text-muted)' }}
                 aria-label="Carrito"
               >
                 <ShoppingCart size={22} />
                 {totalItems > 0 && (
                   <span style={{
                     position: 'absolute', top: '-8px', right: '-8px',
-                    background: 'var(--primary)', color: 'white',
+                    background: 'var(--primary)', color: '#0f172a',
                     fontSize: '0.7rem', fontWeight: 'bold',
                     width: '18px', height: '18px',
                     borderRadius: '50%',
@@ -257,7 +257,7 @@ export default function Navbar() {
               {/* Hamburger Menu */}
               <button 
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1e1e2f', display: 'flex' }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-main)', display: 'flex' }}
                 aria-label="Menú"
               >
                 {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
@@ -287,17 +287,17 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div style={{
           position: 'fixed', top: '70px', left: 0, right: 0, bottom: 0,
-          backgroundColor: 'white', zIndex: 40,
+          backgroundColor: 'var(--card-bg)', zIndex: 40,
           padding: '2rem 5%', display: 'flex', flexDirection: 'column', gap: '2rem',
           animation: 'fadeInDown 0.3s ease'
         }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', fontSize: '1.2rem', fontWeight: 600 }}>
-            <button onClick={() => { setIsCatalogModalOpen(true); setIsMobileMenuOpen(false); }} style={{ textAlign: 'left', background: 'none', border: 'none', fontSize: '1.2rem', fontWeight: 600, color: '#475569', cursor: 'pointer' }}>{t('nav.catalog')}</button>
-            <Link href="/support" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#475569', textDecoration: 'none' }}>{t('nav.support')}</Link>
-            <hr style={{ borderTop: '1px solid #e2e8f0', margin: '0.5rem 0' }} />
+            <button onClick={() => { setIsCatalogModalOpen(true); setIsMobileMenuOpen(false); }} style={{ textAlign: 'left', background: 'none', border: 'none', fontSize: '1.2rem', fontWeight: 600, color: 'var(--text-muted)', cursor: 'pointer' }}>{t('nav.catalog')}</button>
+            <Link href="/support" onClick={() => setIsMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>{t('nav.support')}</Link>
+            <hr style={{ borderTop: '1px solid var(--border)', margin: '0.5rem 0' }} />
             
             {session ? (
-              <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: '#1e1e2f', textDecoration: 'none' }}>
+              <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-main)', textDecoration: 'none' }}>
                 <img 
                   src={session.user?.image || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} 
                   alt="Profile" 
@@ -308,7 +308,7 @@ export default function Navbar() {
             ) : (
               <button 
                 onClick={() => { setIsMobileMenuOpen(false); signIn('google', { callbackUrl: '/dashboard' }); }}
-                style={{ textAlign: 'left', background: 'var(--primary)', color: 'white', border: 'none', padding: '1rem', borderRadius: '12px', fontSize: '1.2rem', fontWeight: 700, cursor: 'pointer' }}
+                style={{ textAlign: 'left', background: 'var(--primary)', color: '#0f172a', border: 'none', padding: '1rem', borderRadius: '12px', fontSize: '1.2rem', fontWeight: 700, cursor: 'pointer' }}
               >
                 {t('nav.login')}
               </button>
@@ -334,7 +334,7 @@ export default function Navbar() {
             <h2 style={{ color: 'white', fontSize: '2rem', fontWeight: 900, margin: 0 }}>{t('nav.catalog')}</h2>
             <button 
               onClick={() => setIsCatalogModalOpen(false)}
-              style={{ background: 'white', color: 'black', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+              style={{ background: 'var(--card-bg)', color: 'var(--text-main)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
             >
               <X size={24} />
             </button>

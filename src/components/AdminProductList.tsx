@@ -101,7 +101,7 @@ export default function AdminProductList() {
 
   return (
     <>
-      <div style={{ background: '#fff', padding: '2rem', borderRadius: '12px', border: '1px solid #e2e8f0', marginTop: '2rem' }}>
+      <div style={{ background: '#fff', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border)', marginTop: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <h3 style={{ fontSize: '1.5rem', color: '#111' }}>Catálogo Actual ({products.length})</h3>
           <button onClick={fetchProducts} className="btn" style={{ padding: '0.5rem 1rem', background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1' }}>
@@ -116,16 +116,16 @@ export default function AdminProductList() {
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ borderBottom: '2px solid #e2e8f0' }}>
-                  <th style={{ padding: '1rem 0.5rem', color: '#64748b' }}>Producto</th>
-                  <th style={{ padding: '1rem 0.5rem', color: '#64748b' }}>Categoría</th>
-                  <th style={{ padding: '1rem 0.5rem', color: '#64748b' }}>Precio</th>
-                  <th style={{ padding: '1rem 0.5rem', color: '#64748b' }}>Stock</th>
-                  <th style={{ padding: '1rem 0.5rem', color: '#64748b', textAlign: 'right' }}>Acciones</th>
+                  <th style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)' }}>Producto</th>
+                  <th style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)' }}>Categoría</th>
+                  <th style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)' }}>Precio</th>
+                  <th style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)' }}>Stock</th>
+                  <th style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)', textAlign: 'right' }}>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {products.map((product) => (
-                  <tr key={product.id || product._id} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                  <tr key={product.id || product._id} style={{ borderBottom: '1px solid var(--border)' }}>
                     <td style={{ padding: '1rem 0.5rem', fontWeight: '500' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <div style={{ width: '30px', height: '30px', background: product.color || '#ccc', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold', fontSize: '0.8rem' }}>
@@ -134,7 +134,7 @@ export default function AdminProductList() {
                         {product.name}
                       </div>
                     </td>
-                    <td style={{ padding: '1rem 0.5rem', color: '#64748b', textTransform: 'capitalize' }}>
+                    <td style={{ padding: '1rem 0.5rem', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
                       {product.category.replace('_', ' ')}
                     </td>
                     <td style={{ padding: '1rem 0.5rem', color: '#0f172a' }}>
@@ -197,7 +197,7 @@ export default function AdminProductList() {
               <button 
                 onClick={handleSaveInventory}
                 disabled={savingInventory}
-                style={{ padding: '0.75rem 1.5rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}
+                style={{ padding: '0.75rem 1.5rem', background: 'var(--primary)', color: '#0f172a', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}
               >
                 {savingInventory ? 'Guardando...' : 'Guardar Cuentas'}
               </button>

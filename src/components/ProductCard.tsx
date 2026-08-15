@@ -51,7 +51,7 @@ export default function ProductCard({ product }: { product: Product }) {
     <>
       <div 
         style={{
-          background: 'white',
+          background: 'var(--card-bg)',
           borderRadius: 'var(--radius)',
           padding: '2rem',
           boxShadow: '0 10px 40px rgba(0,0,0,0.06)',
@@ -99,9 +99,9 @@ export default function ProductCard({ product }: { product: Product }) {
               {product.icon}
             </div>
             <div>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#1e1e2f', margin: 0 }}>{product.name}</h3>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>{product.name}</h3>
               <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem' }}>
-                ${product.price.toFixed(2)} <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: 500 }}>{t('product.month')}</span>
+                ${product.price.toFixed(2)} <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>{t('product.month')}</span>
               </div>
             </div>
           </div>
@@ -112,7 +112,7 @@ export default function ProductCard({ product }: { product: Product }) {
           {hasStock ? `🟢 ${product.stock} ${t('product.stock.available')}` : `🔴 ${t('product.stock.out')}`}
         </div>
 
-        <p style={{ color: '#64748b', fontSize: '1rem', lineHeight: 1.6, zIndex: 1, flex: 1 }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.6, zIndex: 1, flex: 1 }}>
           {product.description}
         </p>
 
@@ -120,7 +120,7 @@ export default function ProductCard({ product }: { product: Product }) {
           <button 
             style={{ 
               background: 'transparent', 
-              color: '#475569', 
+              color: 'var(--text-muted)', 
               border: '2px solid #e2e8f0', 
               padding: '0.75rem', 
               borderRadius: '16px', 
@@ -140,10 +140,7 @@ export default function ProductCard({ product }: { product: Product }) {
             disabled={!hasStock}
             style={{ 
               background: hasStock ? 'linear-gradient(135deg, var(--primary) 0%, #FF8E53 100%)' : '#cbd5e1', 
-              color: 'white', 
-              border: 'none', 
-              padding: '1rem', 
-              borderRadius: '16px', 
+              color: '#0f172a', border: 'none', padding: '1rem', borderRadius: '16px', 
               fontWeight: 700, 
               cursor: hasStock ? 'pointer' : 'not-allowed',
               fontSize: '1.1rem',
@@ -170,7 +167,7 @@ export default function ProductCard({ product }: { product: Product }) {
           padding: '6rem 1rem 2rem 1rem' /* Mayor padding superior para no tocar la navbar */
         }} onClick={() => { setIsModalOpen(false); setCurrentImage(0); }}>
           <div style={{
-            background: 'white',
+            background: 'var(--card-bg)',
             borderRadius: '24px',
             width: '100%', maxWidth: '500px',
             position: 'relative',
@@ -228,30 +225,30 @@ export default function ProductCard({ product }: { product: Product }) {
                   {product.icon}
                 </div>
                 <div>
-                  <h2 style={{ margin: 0, fontSize: '1.8rem', color: '#1e1e2f', fontWeight: 800 }}>{product.name}</h2>
+                  <h2 style={{ margin: 0, fontSize: '1.8rem', color: 'var(--text-main)', fontWeight: 800 }}>{product.name}</h2>
                 </div>
               </div>
             )}
 
             <div className="hide-scrollbar" style={{ padding: product.images ? '1.5rem 2.5rem 2.5rem 2.5rem' : '0 2.5rem 2.5rem 2.5rem', overflowY: 'auto', flex: 1 }}>
               {product.images && (
-                 <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.8rem', color: '#1e1e2f', fontWeight: 800 }}>{product.name}</h2>
+                 <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.8rem', color: 'var(--text-main)', fontWeight: 800 }}>{product.name}</h2>
               )}
               
               <div style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.6rem', marginBottom: '1.5rem' }}>
                 ${product.price.toFixed(2)}
               </div>
 
-              <p style={{ color: '#475569', fontSize: '1.1rem', marginBottom: '2rem', lineHeight: 1.6 }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '2rem', lineHeight: 1.6 }}>
                 {product.description}
               </p>
 
               {product.details && product.details.length > 0 && (
                 <div style={{ marginBottom: '2rem' }}>
-                  <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1e1e2f', marginBottom: '1rem' }}>{t('modal.includes')}</h4>
+                  <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '1rem' }}>{t('modal.includes')}</h4>
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     {product.details.map((detail, idx) => (
-                      <li key={idx} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', color: '#64748b' }}>
+                      <li key={idx} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', color: 'var(--text-muted)' }}>
                         <span style={{ color: 'var(--secondary)' }}>✓</span>
                         {detail}
                       </li>
@@ -263,7 +260,7 @@ export default function ProductCard({ product }: { product: Product }) {
               <button 
                 style={{ 
                   background: 'linear-gradient(135deg, var(--primary) 0%, #FF8E53 100%)', 
-                  color: 'white', border: 'none', padding: '1rem', borderRadius: '16px', 
+                  color: '#0f172a', border: 'none', padding: '1rem', borderRadius: '16px', 
                   fontWeight: 700, cursor: 'pointer', fontSize: '1.2rem', width: '100%',
                   boxShadow: '0 4px 15px rgba(255, 107, 107, 0.3)'
                 }}

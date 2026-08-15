@@ -143,7 +143,7 @@ export default function CartDrawer() {
               disabled={loading}
               style={{ 
                 width: '100%', padding: '1rem', 
-                backgroundColor: 'var(--primary)', color: 'white', 
+                backgroundColor: 'var(--primary)', color: '#0f172a', 
                 border: 'none', borderRadius: '12px', 
                 fontWeight: 700, fontSize: '1.1rem', cursor: loading ? 'not-allowed' : 'pointer',
                 display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem',

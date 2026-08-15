@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Register() {
   return (
     <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-      <div style={{ background: '#fff', padding: '3rem', borderRadius: '12px', border: '1px solid #e2e8f0', width: '100%', maxWidth: '400px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+      <div style={{ background: '#fff', padding: '3rem', borderRadius: '12px', border: '1px solid var(--border)', width: '100%', maxWidth: '400px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
         <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem', color: '#111', textAlign: 'center' }}>Crear Cuenta</h1>
         <p style={{ color: '#666', marginBottom: '2rem', textAlign: 'center' }}>Regístrate para guardar tus suscripciones</p>
         
