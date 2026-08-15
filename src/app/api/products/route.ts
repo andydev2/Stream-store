@@ -30,6 +30,16 @@ export async function POST(request: Request) {
       body.id = body.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     }
 
+    // Autogenerar icono si no viene
+    if (!body.icon) {
+      body.icon = body.name.substring(0, 1).toUpperCase();
+    }
+
+    // Convertir imageUrl a array de images si existe
+    if (body.imageUrl) {
+      body.images = [body.imageUrl];
+    }
+
     const product = await Product.create(body);
     return NextResponse.json({ success: true, data: product }, { status: 201 });
   } catch (error: any) {

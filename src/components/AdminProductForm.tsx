@@ -5,6 +5,7 @@ import { useState } from 'react';
 export default function AdminProductForm() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('streaming');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,9 +17,9 @@ export default function AdminProductForm() {
       name: formData.get('name'),
       description: formData.get('description'),
       price: Number(formData.get('price')),
-      icon: formData.get('icon'),
       color: formData.get('color'),
       category: formData.get('category'),
+      imageUrl: formData.get('imageUrl'), // Optional field
     };
 
     try {
@@ -32,6 +33,7 @@ export default function AdminProductForm() {
       if (res.ok) {
         setMessage('¡Producto agregado con éxito!');
         (e.target as HTMLFormElement).reset();
+        setSelectedCategory('streaming'); // reset category state
       } else {
         setMessage('Error: ' + result.error);
       }
@@ -55,44 +57,56 @@ export default function AdminProductForm() {
       <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
         <div>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Nombre del Producto</label>
-          <input required name="name" type="text" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
+          <input required name="name" type="text" placeholder="Ej: Cuenta de Free Fire" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
         </div>
         
         <div>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Descripción</label>
-          <textarea required name="description" rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}></textarea>
+          <textarea required name="description" rows={3} placeholder="Detalles de la cuenta o producto..." style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}></textarea>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Precio (USD)</label>
-            <input required name="price" type="number" step="0.01" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
+            <input required name="price" type="number" step="0.01" placeholder="Ej: 9.99" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
           </div>
           
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Categoría</label>
-            <select required name="category" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}>
+            <select 
+              required 
+              name="category" 
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc', backgroundColor: '#fff' }}
+            >
               <option value="streaming">Streaming</option>
-              <option value="ai">IA</option>
+              <option value="ai">Inteligencia Artificial</option>
               <option value="music">Música</option>
-              <option value="games">Juegos</option>
+              <option value="games">Juegos (Gral)</option>
+              <option value="free_fire">Juegos / Free Fire</option>
             </select>
           </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Icono (Texto corto Ej: N, AI)</label>
-            <input required name="icon" type="text" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Color de Fondo</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <input required name="color" type="color" defaultValue="#E50914" style={{ width: '50px', height: '45px', padding: '0', border: 'none', borderRadius: '8px', cursor: 'pointer' }} title="Elige un color" />
+              <span style={{ fontSize: '0.9rem', color: '#666' }}>El icono se generará automáticamente con la primera letra.</span>
+            </div>
           </div>
           
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Color (Hexadecimal Ej: #E50914)</label>
-            <input required name="color" type="text" defaultValue="#000000" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
-          </div>
+          {(selectedCategory === 'games' || selectedCategory === 'free_fire') && (
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Enlace de Imagen (Opcional)</label>
+              <input name="imageUrl" type="url" placeholder="https://ejemplo.com/imagen.jpg" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
+            </div>
+          )}
         </div>
 
-        <button type="submit" disabled={loading} className="btn btn-primary" style={{ marginTop: '1rem' }}>
+        <button type="submit" disabled={loading} className="btn btn-primary" style={{ marginTop: '1rem', width: '100%' }}>
           {loading ? 'Guardando...' : 'Guardar Producto'}
         </button>
       </form>
