@@ -1,22 +1,23 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import connectDB from '@/lib/mongodb';
 import Review from '@/models/Review';
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || session.user?.role !== 'admin') {
+    if (!session || (session.user as any)?.role !== 'admin') {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
     await connectDB();
     const body = await req.json();
     const { name, rating, comment } = body;
 
     const review = await Review.findByIdAndUpdate(
-      params.id,
+      id,
       { name, rating, comment },
       { new: true, runValidators: true }
     );
@@ -32,15 +33,16 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || session.user?.role !== 'admin') {
+    if (!session || (session.user as any)?.role !== 'admin') {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
     await connectDB();
-    const review = await Review.findByIdAndDelete(params.id);
+    const review = await Review.findByIdAndDelete(id);
 
     if (!review) {
       return NextResponse.json({ success: false, message: 'Review not found' }, { status: 404 });
