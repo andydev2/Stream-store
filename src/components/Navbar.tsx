@@ -1,0 +1,310 @@
+"use client";
+
+import Link from "next/link";
+import { Search, ShoppingCart, Menu, X, Globe } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useCart } from "../context/CartContext";
+import { useLanguage } from "../context/LanguageContext";
+import { allProducts } from "../data/products";
+import ProductCard from "./ProductCard";
+
+export default function Navbar() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
+  const { cart, setIsCartOpen } = useCart();
+  const { language, toggleLanguage, t } = useLanguage();
+
+  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (isCatalogModalOpen || isMobileMenuOpen) {
+      const count = parseInt(document.body.dataset.modalCount || '0') + 1;
+      document.body.dataset.modalCount = count.toString();
+      document.body.style.setProperty('overflow', 'hidden', 'important');
+      document.documentElement.style.setProperty('overflow', 'hidden', 'important');
+
+      return () => {
+        const newCount = Math.max(0, parseInt(document.body.dataset.modalCount || '0') - 1);
+        document.body.dataset.modalCount = newCount.toString();
+        if (newCount === 0) {
+          document.body.style.overflow = '';
+          document.documentElement.style.overflow = '';
+        }
+      };
+    }
+  }, [isCatalogModalOpen, isMobileMenuOpen]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      window.history.pushState({}, '', `/?q=${encodeURIComponent(searchQuery.trim())}`);
+      window.dispatchEvent(new Event('searchChanged'));
+      setIsMobileMenuOpen(false);
+      setIsMobileSearchOpen(false);
+    } else {
+      window.history.pushState({}, '', `/`);
+      window.dispatchEvent(new Event('searchChanged'));
+    }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    window.history.pushState(null, '', `?q=${e.target.value}`);
+    window.dispatchEvent(new Event('searchChanged'));
+  };
+
+  return (
+    <>
+      <nav style={{
+        position: 'sticky',
+        top: 0,
+        width: '100%',
+        padding: '1rem 5%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        background: isScrolled ? 'rgba(255, 255, 255, 0.9)' : 'var(--card-bg)',
+        backdropFilter: isScrolled ? 'blur(10px)' : 'none',
+        boxShadow: isScrolled ? '0 4px 20px rgba(0,0,0,0.05)' : 'none',
+        zIndex: 50,
+        transition: 'all 0.3s ease'
+      }}>
+        {/* Logo */}
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          <img 
+            src="/logo.jpg" 
+            alt="StreamStore Logo" 
+            style={{ height: '40px', width: 'auto', borderRadius: '8px' }} 
+          />
+        </Link>
+
+        {/* Search Bar (Desktop) */}
+        <form onSubmit={handleSearch} className="desktop-search" style={{
+          display: 'none',
+          flex: 1,
+          maxWidth: '500px',
+          margin: '0 2rem',
+          position: 'relative'
+        }}>
+          <Search size={18} color="#94a3b8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+          <input 
+            type="text" 
+            placeholder={t('nav.search')}
+            value={searchQuery}
+            onChange={handleSearchChange}
+            style={{
+              width: '100%',
+              padding: '0.75rem 1rem 0.75rem 3rem',
+              borderRadius: '24px',
+              border: '1px solid #e2e8f0',
+              backgroundColor: '#f8fafc',
+              fontSize: '0.95rem',
+              outline: 'none',
+              transition: 'all 0.2s',
+            }}
+            onFocus={(e) => e.target.style.backgroundColor = 'white'}
+            onBlur={(e) => e.target.style.backgroundColor = '#f8fafc'}
+          />
+        </form>
+
+        {/* Links (Desktop) */}
+        <div className="desktop-links" style={{ display: 'none', alignItems: 'center', gap: '2rem' }}>
+          <button 
+            onClick={toggleLanguage}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#64748b', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.2s' }}
+            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
+            onMouseLeave={(e) => e.currentTarget.style.color = '#64748b'}
+          >
+            <Globe size={18} /> {language}
+          </button>
+          <button 
+            onClick={() => setIsCatalogModalOpen(true)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#475569', fontWeight: 600, fontSize: '0.95rem', transition: 'color 0.2s' }}
+            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
+            onMouseLeave={(e) => e.currentTarget.style.color = '#475569'}
+          >
+            {t('nav.catalog')}
+          </button>
+          <Link href="/support" style={{ color: '#475569', fontWeight: 600, fontSize: '0.95rem' }}>{t('nav.support')}</Link>
+          
+          {/* Cart Toggle Button */}
+          <button 
+            onClick={() => setIsCartOpen(true)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', color: '#475569' }}
+          >
+            <ShoppingCart size={22} />
+            {totalItems > 0 && (
+              <span style={{
+                position: 'absolute', top: '-8px', right: '-8px',
+                background: 'var(--primary)', color: 'white',
+                fontSize: '0.7rem', fontWeight: 'bold',
+                width: '18px', height: '18px',
+                borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                {totalItems}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Mobile Toggle Button */}
+        <div className="mobile-toggle" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: isMobileSearchOpen ? 1 : 'none', justifyContent: 'flex-end', marginLeft: isMobileSearchOpen ? '1rem' : 0 }}>
+          
+          {isMobileSearchOpen ? (
+            <form className="search-animate" onSubmit={handleSearch} style={{ flex: 1, display: 'flex', alignItems: 'center', position: 'relative' }}>
+              <Search size={18} color="#94a3b8" style={{ position: 'absolute', left: '1rem' }} />
+              <input 
+                type="text" 
+                placeholder={t('nav.search')}
+                value={searchQuery}
+                onChange={handleSearchChange}
+                style={{
+                  width: '100%', padding: '0.6rem 2.5rem 0.6rem 2.5rem',
+                  borderRadius: '20px', border: '1px solid #e2e8f0',
+                  backgroundColor: '#f8fafc', fontSize: '1rem', outline: 'none',
+                }}
+                autoFocus
+              />
+              <button type="button" onClick={() => setIsMobileSearchOpen(false)} style={{ position: 'absolute', right: '0.5rem', background: 'none', border: 'none', color: '#94a3b8', display: 'flex' }}>
+                <X size={20} />
+              </button>
+            </form>
+          ) : (
+            <>
+              {/* Mobile Language Toggle (Solo icono) */}
+              <button 
+                onClick={toggleLanguage}
+                style={{ display: 'flex', alignItems: 'center', color: '#475569', background: 'none', border: 'none', cursor: 'pointer' }}
+                aria-label="Cambiar Idioma"
+              >
+                <Globe size={22} />
+              </button>
+
+              {/* Mobile Search Toggle */}
+              <button 
+                onClick={() => { setIsMobileSearchOpen(true); setIsMobileMenuOpen(false); }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#475569', display: 'flex', alignItems: 'center' }}
+                aria-label="Buscar"
+              >
+                <Search size={22} />
+              </button>
+
+              {/* Cart Toggle */}
+              <button 
+                onClick={() => setIsCartOpen(true)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', color: '#475569' }}
+                aria-label="Carrito"
+              >
+                <ShoppingCart size={22} />
+                {totalItems > 0 && (
+                  <span style={{
+                    position: 'absolute', top: '-8px', right: '-8px',
+                    background: 'var(--primary)', color: 'white',
+                    fontSize: '0.7rem', fontWeight: 'bold',
+                    width: '18px', height: '18px',
+                    borderRadius: '50%',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}>
+                    {totalItems}
+                  </span>
+                )}
+              </button>
+
+              {/* Hamburger Menu */}
+              <button 
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1e1e2f', display: 'flex' }}
+                aria-label="Menú"
+              >
+                {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+              </button>
+            </>
+          )}
+        </div>
+      </nav>
+
+      <style>{`
+        @keyframes expandSearchSmooth {
+          from { 
+            opacity: 0; 
+            transform: translateX(15px); 
+          }
+          to { 
+            opacity: 1; 
+            transform: translateX(0); 
+          }
+        }
+        .search-animate {
+          animation: expandSearchSmooth 0.3s ease-out forwards;
+        }
+      `}</style>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div style={{
+          position: 'fixed', top: '70px', left: 0, right: 0, bottom: 0,
+          backgroundColor: 'white', zIndex: 40,
+          padding: '2rem 5%', display: 'flex', flexDirection: 'column', gap: '2rem',
+          animation: 'fadeInDown 0.3s ease'
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', fontSize: '1.2rem', fontWeight: 600 }}>
+            <button onClick={() => { setIsCatalogModalOpen(true); setIsMobileMenuOpen(false); }} style={{ textAlign: 'left', background: 'none', border: 'none', fontSize: '1.2rem', fontWeight: 600, color: '#475569', cursor: 'pointer' }}>{t('nav.catalog')}</button>
+            <Link href="/support" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#475569' }}>{t('nav.support')}</Link>
+          </div>
+        </div>
+      )}
+
+      {/* Catalog Modal */}
+      {isCatalogModalOpen && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          backdropFilter: 'blur(8px)',
+          zIndex: 100,
+          display: 'flex', flexDirection: 'column',
+          animation: 'fadeIn 0.3s ease',
+          height: '100dvh', // Asegura que no exceda la pantalla en móviles
+          boxSizing: 'border-box'
+        }}>
+          {/* Header fijo */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '2rem 5%', flexShrink: 0 }}>
+            <h2 style={{ color: 'white', fontSize: '2rem', fontWeight: 900, margin: 0 }}>{t('nav.catalog')}</h2>
+            <button 
+              onClick={() => setIsCatalogModalOpen(false)}
+              style={{ background: 'white', color: 'black', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+            >
+              <X size={24} />
+            </button>
+          </div>
+          
+          {/* Área escroleable */}
+          <div className="hide-scrollbar" style={{ overflowY: 'auto', flex: 1, padding: '1rem 5% 4rem 5%', WebkitOverflowScrolling: 'touch' }}>
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
+              gap: '2rem',
+              maxWidth: '1200px',
+              margin: '0 auto'
+            }}>
+              {allProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
