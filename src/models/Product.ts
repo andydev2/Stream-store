@@ -1,11 +1,11 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-export interface IAccount {
+interface IAccount {
   credentials: string;
   isSold: boolean;
 }
 
-export interface IProduct extends Document {
+interface IProduct extends Document {
   id: string; // We'll keep the string ID for backward compatibility with the old data structure
   name: string;
   description: string;

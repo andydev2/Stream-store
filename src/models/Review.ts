@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-export interface IReview extends Document {
+interface IReview extends Document {
   name: string;
   rating: number;
   comment: string;

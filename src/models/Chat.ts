@@ -1,13 +1,13 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-export interface IMessage {
+interface IMessage {
   _id?: string;
   sender: 'user' | 'admin';
   text: string;
   createdAt?: Date;
 }
 
-export interface IChat extends Document {
+interface IChat extends Document {
   sessionId: string;
   productId: string;
   productName?: string;
