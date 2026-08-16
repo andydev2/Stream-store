@@ -111,9 +111,9 @@ export default function AdminChatList() {
   }
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 200px)', minHeight: '600px', background: 'var(--card-bg)', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.05)' }}>
+    <div className="admin-chat-container">
       {/* Sidebar - Chat List */}
-      <div style={{ width: '300px', borderRight: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(0,0,0,0.02)' }}>
+      <div className={`admin-sidebar ${selectedChat ? 'hidden-on-mobile' : ''}`}>
         <div style={{ padding: '1rem', borderBottom: '1px solid rgba(0,0,0,0.05)', fontWeight: 'bold' }}>
           Chats Activos ({chats.filter(c => c.status === 'open').length})
         </div>
@@ -153,13 +153,22 @@ export default function AdminChatList() {
 
       {/* Main Chat Area */}
       {selectedChat ? (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div className={`admin-main ${!selectedChat ? 'hidden-on-mobile' : ''}`}>
           {/* Chat Header */}
           <div style={{ padding: '1rem', borderBottom: '1px solid rgba(0,0,0,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <div style={{ fontWeight: 'bold' }}>{selectedChat.productName || selectedChat.productId}</div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                Cliente: {selectedChat.userName ? `${selectedChat.userName} (${selectedChat.userEmail})` : (selectedChat.userEmail || 'Invitado')} | Sesión: {selectedChat.sessionId.substring(0, 10)}...
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <button 
+                onClick={() => setSelectedChatId(null)}
+                style={{ background: 'none', border: 'none', color: 'var(--text-main)', fontSize: '1.2rem', cursor: 'pointer', padding: '0 0.5rem 0 0', display: 'flex' }}
+                title="Volver a la lista"
+              >
+                ←
+              </button>
+              <div>
+                <div style={{ fontWeight: 'bold' }}>{selectedChat.productName || selectedChat.productId}</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  Cliente: {selectedChat.userName ? `${selectedChat.userName} (${selectedChat.userEmail})` : (selectedChat.userEmail || 'Invitado')} | Sesión: {selectedChat.sessionId.substring(0, 10)}...
+                </div>
               </div>
             </div>
             {selectedChat.status === 'open' && (
@@ -275,7 +284,7 @@ export default function AdminChatList() {
           )}
         </div>
       ) : (
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', backgroundColor: 'var(--bg-main)' }}>
+        <div className={`admin-main ${!selectedChat ? 'hidden-on-mobile' : ''}`} style={{ alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', backgroundColor: 'var(--bg-main)' }}>
           Selecciona un chat de la lista para ver la conversación
         </div>
       )}

@@ -311,7 +311,7 @@ export default function Navbar() {
           className="mobile-theme-toggle"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           style={{ 
-            position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 100,
+            position: 'fixed', bottom: '2rem', left: '2rem', zIndex: 100,
             background: 'var(--primary)', color: '#1C5F5C', border: 'none',
             width: '56px', height: '56px', borderRadius: '50%',
             alignItems: 'center', justifyContent: 'center', cursor: 'pointer',

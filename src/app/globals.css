@@ -132,3 +132,68 @@ a:hover {
   .desktop-links { display: flex !important; }
   .mobile-toggle { display: none !important; }
 }
+
+/* Admin Chat Responsive Layout */
+.admin-chat-container {
+  display: flex;
+  height: calc(100vh - 200px);
+  min-height: 600px;
+  background: var(--card-bg);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.admin-sidebar {
+  width: 300px;
+  border-right: 1px solid rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0,0,0,0.02);
+}
+
+.admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .admin-chat-container {
+    height: auto;
+    min-height: calc(100vh - 100px);
+    flex-direction: column;
+  }
+  .admin-sidebar {
+    width: 100%;
+    border-right: none;
+    flex: 1;
+  }
+  .admin-sidebar.hidden-on-mobile {
+    display: none;
+  }
+  .admin-main.hidden-on-mobile {
+    display: none;
+  }
+  .admin-main {
+    height: calc(100vh - 100px);
+  }
+}
+
+/* ChatWidget Responsive Overlay */
+@media (max-width: 768px) {
+  .chat-widget-mobile {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    z-index: 99999 !important;
+    background-color: var(--bg-main) !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+}

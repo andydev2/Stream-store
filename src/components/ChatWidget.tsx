@@ -56,6 +56,18 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  useEffect(() => {
+    // Lock body scroll when chat is open on mobile
+    if (!isMinimized && window.innerWidth <= 768) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMinimized]);
+
   const fetchChat = async (sid: string) => {
     try {
       const res = await fetch(`/api/chat?sessionId=${sid}&productId=${product.id}&_t=${Date.now()}`);
@@ -172,7 +184,7 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
   }
 
   return (
-    <div style={{
+    <div className="chat-widget-mobile" style={{
       position: 'fixed',
       bottom: '20px',
       right: '20px',
@@ -183,7 +195,7 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
       boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
       display: 'flex',
       flexDirection: 'column',
-      zIndex: 1000,
+      zIndex: 10000,
       border: '1px solid rgba(255,255,255,0.1)',
       overflow: 'hidden',
       animation: 'slideUp 0.3s ease-out'
@@ -238,7 +250,7 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
         display: 'flex',
         flexDirection: 'column',
         gap: '0.8rem',
-        backgroundColor: 'rgba(0,0,0,0.02)'
+        backgroundColor: 'var(--bg-main)' // Usar fondo sólido en lugar de rgba transparente
       }}>
         {loading ? (
           <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>Cargando...</div>
