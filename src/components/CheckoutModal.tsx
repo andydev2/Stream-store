@@ -72,6 +72,7 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
   const [email, setEmail] = useState('');
   const [clientSecret, setClientSecret] = useState('');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Fetch client secret for Stripe when modal opens
   useEffect(() => {
@@ -95,17 +96,18 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
 
   const handlePaymentSuccess = async (paymentId: string, gateway: 'stripe' | 'paypal') => {
     setStep('processing');
+    setErrorMsg(null);
     try {
       await onConfirmPayment(paymentId, gateway);
       setStep('success');
     } catch (err: any) {
       setStep('form');
-      alert(err.message || t('checkout.error'));
+      setErrorMsg(err.message || t('checkout.error'));
     }
   };
 
   const handlePaymentError = (errMessage: string) => {
-    alert(errMessage);
+    setErrorMsg(errMessage);
   };
 
   return (
@@ -131,7 +133,7 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
             <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-main)', fontWeight: 700 }}>{t('checkout.title')}</h3>
           </div>
           {step === 'form' && (
-            <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
+            <button onClick={() => { setErrorMsg(null); onClose(); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
               <X size={24} />
             </button>
           )}
@@ -146,6 +148,27 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
                 <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary)' }}>${cartTotal.toFixed(2)}</div>
               </div>
 
+              {errorMsg && (
+                <div style={{ 
+                  backgroundColor: 'rgba(239, 68, 68, 0.1)', 
+                  border: '1px solid rgba(239, 68, 68, 0.3)', 
+                  color: '#ef4444', 
+                  padding: '1rem', 
+                  borderRadius: '12px', 
+                  fontSize: '0.9rem',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '0.5rem',
+                  animation: 'fadeIn 0.3s ease'
+                }}>
+                  <svg style={{ flexShrink: 0, marginTop: '2px' }} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                  <div style={{ flex: 1, lineHeight: '1.4' }}>{errorMsg}</div>
+                  <button onClick={() => setErrorMsg(null)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: 0, opacity: 0.7 }}>
+                    <X size={16} />
+                  </button>
+                </div>
+              )}
+
               <div>
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>{t('checkout.email')}</label>
                 <div style={{ position: 'relative' }}>
@@ -154,7 +177,7 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
                     type="email" 
                     required 
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => { setEmail(e.target.value); setErrorMsg(null); }}
                     placeholder={t('checkout.email.placeholder')}
                     style={{ width: '100%', padding: '0.8rem 1rem 0.8rem 2.5rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)', fontSize: '1rem' }}
                   />
