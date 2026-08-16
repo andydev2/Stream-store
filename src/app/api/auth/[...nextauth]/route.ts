@@ -17,6 +17,14 @@ export const authOptions: NextAuthOptions = {
     // Aquí podríamos definir páginas de login personalizadas, 
     // pero por defecto NextAuth proveerá una en /api/auth/signin
   },
+  callbacks: {
+    async session({ session, token }) {
+      if (session.user) {
+        (session.user as any).role = session.user.email === process.env.ADMIN_EMAIL ? 'admin' : 'user';
+      }
+      return session;
+    }
+  },
   secret: process.env.NEXTAUTH_SECRET || "mock-secret-para-desarrollo",
 };
 
