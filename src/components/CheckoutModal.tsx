@@ -79,11 +79,12 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const bankDetails: Record<string, any> = {
-    'España': { bank: 'BBVA', owner: 'Stream Store SL', iban: 'ES91 0182 0000 0000 0000 0000' },
-    'Ecuador': { bank: 'Banco Pichincha', owner: 'Stream Store', account: '2200000000', type: 'Ahorros' },
-    'USA': { bank: 'Bank of America', owner: 'Stream Store', routing: '026009593', account: '000000000000' },
-    'Colombia': { bank: 'Bancolombia', owner: 'Stream Store', account: '000-000000-00', type: 'Ahorros' },
-    'Otros Países': { bank: 'Binance Pay / USDT', id: '123456789', network: 'TRC20', address: 'TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' },
+    'España': { Banco: 'BBVA', Titular: 'Stream Store SL', IBAN: 'ES91 0182 0000 0000 0000 0000' },
+    'Ecuador - Pichincha': { Banco: 'Banco Pichincha', Titular: 'Johao Loor', Cédula: '1251051197', 'Tipo de Cuenta': 'Ahorro transaccional', Número: '2211758587' },
+    'Ecuador - Guayaquil': { Banco: 'Banco Guayaquil', Titular: 'Loor Bone Diego Johao', CI: '1251051197', Correo: 'bonejohao60@gmail.com', Ahorro: '0057353958' },
+    'USA': { Banco: 'Bank of America', Titular: 'Stream Store', Routing: '026009593', Cuenta: '000000000000' },
+    'Colombia': { Banco: 'Bancolombia', Titular: 'Stream Store', Cuenta: '000-000000-00', Tipo: 'Ahorros' },
+    'Otros Países': { Banco: 'Binance Pay / USDT', ID: '123456789', Red: 'TRC20', Dirección: 'TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' },
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
