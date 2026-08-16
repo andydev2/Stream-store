@@ -137,7 +137,7 @@ export default function AdminProductForm() {
           </div>
         </div>
 
-        {selectedCategory !== 'recharges' && (
+        {(selectedCategory !== 'recharges' && selectedCategory !== 'free_fire') && (
           <div>
             <label style={labelStyle}>Stock Inicial / Cuentas (Opcional)</label>
           <div style={{ background: 'rgba(0,0,0,0.02)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border)' }}>

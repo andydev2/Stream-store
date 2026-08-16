@@ -200,7 +200,7 @@ export default function AdminProductList() {
 
                 {/* Acciones */}
                 <div style={{ display: 'flex', gap: '0.5rem', flex: '1 1 100%', justifyContent: 'flex-end' }}>
-                  {product.category === 'recharges' ? (
+                  {product.category === 'recharges' || product.category === 'free_fire' ? (
                     <button 
                       onClick={() => handleAddRechargeStock(product.id || product._id)}
                       style={{ background: '#dcfce7', color: '#166534', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '800', flex: 1, maxWidth: '150px', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
