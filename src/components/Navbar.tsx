@@ -143,25 +143,25 @@ export default function Navbar() {
           {mounted && (
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', padding: 0 }}
             >
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
             </button>
           )}
           <button 
             onClick={toggleLanguage}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.2s' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.2s', padding: 0 }}
           >
             <Globe size={18} /> {language}
           </button>
           <button 
             onClick={() => setIsCatalogModalOpen(true)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-main)', fontWeight: 600, fontSize: '0.95rem', transition: 'color 0.2s' }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-main)', fontWeight: 600, fontSize: '0.95rem', transition: 'color 0.2s', display: 'flex', alignItems: 'center', padding: 0 }}
           >
             {t('nav.catalog')}
           </button>
-          <Link href="/#sobre-mi" style={{ color: 'var(--text-main)', fontWeight: 600, fontSize: '0.95rem', textDecoration: 'none' }}>{t('nav.about')}</Link>
-          <Link href="/support" style={{ color: 'var(--text-main)', fontWeight: 600, fontSize: '0.95rem', textDecoration: 'none' }}>{t('nav.support')}</Link>
+          <Link href="/#sobre-mi" style={{ color: 'var(--text-main)', fontWeight: 600, fontSize: '0.95rem', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>{t('nav.about')}</Link>
+          <Link href="/support" style={{ color: 'var(--text-main)', fontWeight: 600, fontSize: '0.95rem', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>{t('nav.support')}</Link>
           
           {/* Auth Button */}
           {session ? (
@@ -175,7 +175,7 @@ export default function Navbar() {
           ) : (
             <button 
               onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-              style={{ background: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 700, cursor: 'pointer', transition: 'transform 0.2s', boxShadow: '0 4px 10px rgba(62, 213, 204, 0.3)' }}
+              style={{ background: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 700, cursor: 'pointer', transition: 'transform 0.2s', boxShadow: '0 4px 10px rgba(62, 213, 204, 0.3)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
               onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
             >
@@ -186,7 +186,7 @@ export default function Navbar() {
           {/* Cart Toggle Button */}
           <button 
             onClick={() => setIsCartOpen(true)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', color: 'var(--text-muted)' }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', color: 'var(--text-muted)', padding: 0 }}
           >
             <ShoppingCart size={22} />
             {totalItems > 0 && (
