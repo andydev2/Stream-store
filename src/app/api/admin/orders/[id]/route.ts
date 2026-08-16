@@ -4,7 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import connectToDatabase from "@/lib/mongodb";
 import { Order } from "@/models/Order";
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.user?.email !== process.env.ADMIN_EMAIL) {
@@ -19,7 +19,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
     await connectToDatabase();
     
-    const orderId = params.id;
+    const resolvedParams = await params;
+    const orderId = resolvedParams.id;
     const order = await Order.findById(orderId);
     
     if (!order) {
