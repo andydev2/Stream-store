@@ -39,10 +39,8 @@ export default function CartDrawer() {
   const handleCheckoutClick = () => {
     if (cart.length === 0) return;
     if (!session) {
-      if (confirm('Debes iniciar sesión para proceder al pago. ¿Ir a iniciar sesión?')) {
-        setIsCartOpen(false);
-        router.push('/login');
-      }
+      window.dispatchEvent(new CustomEvent('open-auth-modal'));
+      setIsCartOpen(false);
       return;
     }
     setIsCheckoutOpen(true);

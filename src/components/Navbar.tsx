@@ -174,7 +174,7 @@ export default function Navbar() {
             </Link>
           ) : (
             <button 
-              onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+              onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}
               style={{ background: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 700, cursor: 'pointer', transition: 'transform 0.2s', boxShadow: '0 4px 10px rgba(62, 213, 204, 0.3)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
               onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
@@ -348,7 +348,7 @@ export default function Navbar() {
                 </Link>
               ) : (
                 <button 
-                  onClick={() => { setIsMobileMenuOpen(false); signIn('google', { callbackUrl: '/dashboard' }); }}
+                  onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}
                   style={{ textAlign: 'left', background: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '12px', fontSize: '1.2rem', fontWeight: 700, cursor: 'pointer', display: 'flex', justifyContent: 'center' }}
                 >
                   {t('nav.login')}

@@ -52,9 +52,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation(); // Evitar que abra el modal
     if (!session) {
-      if (confirm('Debes iniciar sesión para comprar productos. ¿Ir a iniciar sesión?')) {
-        router.push('/login');
-      }
+      window.dispatchEvent(new CustomEvent('open-auth-modal'));
       return;
     }
     addToCart(product);
@@ -64,9 +62,7 @@ export default function ProductCard({ product }: { product: Product }) {
     e.preventDefault();
     e.stopPropagation();
     if (!session) {
-      if (confirm('Debes iniciar sesión para contactar a soporte. ¿Ir a iniciar sesión?')) {
-        router.push('/login');
-      }
+      window.dispatchEvent(new CustomEvent('open-auth-modal'));
       return;
     }
     window.dispatchEvent(new CustomEvent('open-chat', { detail: { id: product.id, name: product.name } }));

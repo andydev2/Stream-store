@@ -72,8 +72,20 @@ export async function POST(request: Request) {
       });
     } catch (mailError) {
       console.error('Error enviando correo:', mailError);
-      // We still return success:true so they can see the code in console for development if mail fails
-      console.log(`[DEV MODE] Verification Code for ${email} is: ${verificationCode}`);
+      
+      // If the email fails, we should rollback the verificationCode and throw an error
+      if (existingUser) {
+        existingUser.verificationCode = undefined;
+        existingUser.verificationCodeExpiresAt = undefined;
+        await existingUser.save();
+      } else {
+        await User.deleteOne({ email });
+      }
+
+      return NextResponse.json({ 
+        success: false, 
+        error: 'No se pudo enviar el correo de verificación. Por favor verifica las variables EMAIL_USER y EMAIL_PASS en tu servidor.' 
+      }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, message: 'Código de verificación enviado' });
