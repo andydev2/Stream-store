@@ -434,7 +434,7 @@ export default function Home() {
         </div>
 
         {/* --- REVIEWS SECTION --- */}
-        <section style={{ marginBottom: '4rem' }}>
+        <section style={{ marginTop: '6rem', marginBottom: '4rem' }}>
           <ReviewSection />
         </section>
         
