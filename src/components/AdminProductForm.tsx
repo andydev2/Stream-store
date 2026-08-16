@@ -132,6 +132,7 @@ export default function AdminProductForm() {
               <option value="music">Música</option>
               <option value="games">Juegos (Gral)</option>
               <option value="free_fire">Juegos / Free Fire</option>
+              <option value="recharges">Diamantes de Free Fire</option>
             </select>
           </div>
         </div>
@@ -250,7 +251,7 @@ export default function AdminProductForm() {
             </div>
           </div>
           
-          {(selectedCategory === 'games' || selectedCategory === 'free_fire') && (
+          {(selectedCategory === 'games' || selectedCategory === 'free_fire' || selectedCategory === 'recharges') && (
             <div>
               <label style={labelStyle}>Imagen (Opcional)</label>
               
