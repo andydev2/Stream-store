@@ -14,6 +14,10 @@ export default function AdminProductList() {
   const [savingInventory, setSavingInventory] = useState(false);
   const [inventoryError, setInventoryError] = useState('');
 
+  // Delete Modal State
+  const [productToDelete, setProductToDelete] = useState<{id: string, name: string} | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -35,25 +39,29 @@ export default function AdminProductList() {
     fetchProducts();
   }, []);
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!window.confirm(`¿Estás seguro de que deseas eliminar "${name}"?`)) {
-      return;
-    }
+  const confirmDeleteProduct = (id: string, name: string) => {
+    setProductToDelete({ id, name });
+  };
 
+  const executeDelete = async () => {
+    if (!productToDelete) return;
+    setIsDeleting(true);
     try {
-      const res = await fetch(`/api/products/${id}`, {
+      const res = await fetch(`/api/products/${productToDelete.id}`, {
         method: 'DELETE',
       });
       const result = await res.json();
 
       if (res.ok && result.success) {
-        alert('Producto eliminado');
+        setProductToDelete(null);
         fetchProducts(); // Recargar lista
       } else {
         alert('Error: ' + result.error);
       }
     } catch (err) {
       alert('Error de red al eliminar el producto');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -166,7 +174,7 @@ export default function AdminProductList() {
                     Inventario
                   </button>
                   <button 
-                    onClick={() => handleDelete(product.id || product._id, product.name)}
+                    onClick={() => confirmDeleteProduct(product.id || product._id, product.name)}
                     style={{ background: '#fee2e2', color: '#ef4444', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', flex: 1, maxWidth: '150px' }}
                   >
                     Eliminar
@@ -222,6 +230,41 @@ export default function AdminProductList() {
                 style={{ padding: '0.75rem 1.5rem', background: 'var(--primary)', color: '#1C5F5C', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}
               >
                 {savingInventory ? 'Guardando...' : 'Guardar Cuentas'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Confirmación de Eliminación */}
+      {productToDelete && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
+        }}>
+          <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: '12px', width: '90%', maxWidth: '400px', textAlign: 'center' }}>
+            <div style={{ width: '60px', height: '60px', background: '#fee2e2', color: '#dc2626', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', margin: '0 auto 1.5rem auto' }}>
+              ⚠️
+            </div>
+            <h3 style={{ fontSize: '1.4rem', marginBottom: '1rem', color: 'var(--text-main)' }}>¿Eliminar Producto?</h3>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.5 }}>
+              Estás a punto de eliminar <strong>{productToDelete.name}</strong>. Esta acción borrará el producto de la tienda y no se puede deshacer.
+            </p>
+            
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+              <button 
+                onClick={() => setProductToDelete(null)}
+                disabled={isDeleting}
+                style={{ padding: '0.75rem 1.5rem', background: '#f1f5f9', color: '#334155', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, flex: 1 }}
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={executeDelete}
+                disabled={isDeleting}
+                style={{ padding: '0.75rem 1.5rem', background: '#ef4444', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, flex: 1 }}
+              >
+                {isDeleting ? 'Borrando...' : 'Sí, Eliminar'}
               </button>
             </div>
           </div>
