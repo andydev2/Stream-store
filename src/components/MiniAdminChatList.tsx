@@ -8,6 +8,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
   const [chats, setChats] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+  const [chatToDelete, setChatToDelete] = useState<string | null>(null);
   const [replyText, setReplyText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -38,18 +39,23 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
     };
   }, []);
 
-  const handleDeleteChat = async (id: string, e: React.MouseEvent) => {
+  const handleDeleteClick = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!confirm('¿Seguro que deseas eliminar este chat?')) return;
-    
+    setChatToDelete(id);
+  };
+
+  const confirmDeleteChat = async () => {
+    if (!chatToDelete) return;
     try {
-      const res = await fetch(`/api/admin/chats/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/admin/chats/${chatToDelete}`, { method: 'DELETE' });
       if (res.ok) {
-        setChats(prev => prev.filter(c => c._id !== id));
-        if (selectedChatId === id) setSelectedChatId(null);
+        setChats(prev => prev.filter(c => c._id !== chatToDelete));
+        if (selectedChatId === chatToDelete) setSelectedChatId(null);
       }
     } catch (error) {
       console.error('Error deleting chat:', error);
+    } finally {
+      setChatToDelete(null);
     }
   };
 
@@ -226,7 +232,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                       </span>
                       {chat.status === 'closed' && (
                         <button 
-                          onClick={(e) => handleDeleteChat(chat._id, e)}
+                          onClick={(e) => handleDeleteClick(chat._id, e)}
                           style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0.2rem' }}
                           title="Eliminar chat"
                         >
@@ -246,6 +252,47 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
             )}
           </div>
         </>
+      )}
+
+      {/* Delete Confirmation Overlay */}
+      {chatToDelete && (
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(3px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 10001, padding: '1rem', borderRadius: '20px'
+        }}>
+          <div style={{
+            background: 'var(--card-bg)', padding: '1.5rem', borderRadius: '16px',
+            textAlign: 'center', boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+            border: '1px solid var(--border)', width: '100%', maxWidth: '280px',
+            animation: 'slideUp 0.2s ease-out'
+          }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+              <Trash2 size={24} />
+            </div>
+            <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-main)', fontSize: '1.1rem' }}>
+              ¿Eliminar chat?
+            </h4>
+            <p style={{ margin: '0 0 1.5rem 0', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+              Esta acción es permanente y no se puede deshacer.
+            </p>
+            <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+              <button 
+                onClick={(e) => { e.stopPropagation(); setChatToDelete(null); }}
+                style={{ flex: 1, padding: '0.6rem', background: 'transparent', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-main)', cursor: 'pointer', fontWeight: 'bold' }}
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={(e) => { e.stopPropagation(); confirmDeleteChat(); }}
+                style={{ flex: 1, padding: '0.6rem', background: '#ef4444', border: 'none', borderRadius: '10px', color: 'white', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 4px 10px rgba(239, 68, 68, 0.3)' }}
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
