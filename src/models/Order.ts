@@ -35,7 +35,20 @@ const OrderSchema = new mongoose.Schema({
   },
   paymentId: {
     type: String,
-    required: true,
+    required: false,
+  },
+  paymentMethod: {
+    type: String,
+    enum: ['stripe', 'paypal', 'transfer'],
+    default: 'stripe',
+  },
+  status: {
+    type: String,
+    enum: ['completed', 'pending_verification'],
+    default: 'completed',
+  },
+  receiptBase64: {
+    type: String,
   },
   createdAt: {
     type: Date,

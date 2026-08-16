@@ -37,11 +37,11 @@ export default function CartDrawer() {
     setIsCheckoutOpen(true);
   };
 
-  const processPayment = async (paymentId: string, paymentGateway: 'stripe' | 'paypal') => {
+  const processPayment = async (paymentId: string, paymentGateway: 'stripe' | 'paypal' | 'transfer', receiptBase64?: string) => {
     const response = await fetch('/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: cart, paymentId, paymentGateway }),
+      body: JSON.stringify({ items: cart, paymentId, paymentGateway, receiptBase64 }),
     });
     
     const data = await response.json();

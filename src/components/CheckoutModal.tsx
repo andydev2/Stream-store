@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
-import { X, CreditCard, Mail, Lock, ShieldCheck, CheckCircle } from 'lucide-react';
+import { X, CreditCard, Mail, Lock, ShieldCheck, CheckCircle, Landmark, Upload } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
@@ -12,7 +12,7 @@ type CheckoutModalProps = {
   isOpen: boolean;
   onClose: () => void;
   cartTotal: number;
-  onConfirmPayment: (paymentId: string, gateway: 'stripe' | 'paypal') => Promise<void>;
+  onConfirmPayment: (paymentId: string, gateway: 'stripe' | 'paypal' | 'transfer', receiptBase64?: string) => Promise<void>;
 };
 
 function StripeForm({ cartTotal, onSuccess, onError }: { cartTotal: number, onSuccess: (id: string) => void, onError: (err: any) => void }) {
@@ -69,10 +69,15 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
   const { t, language } = useLanguage();
   const { cart } = useCart();
   const [step, setStep] = useState<'form' | 'processing' | 'success'>('form');
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'transfer'>('card');
   const [email, setEmail] = useState('');
   const [clientSecret, setClientSecret] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  
+  // Transfer state
+  const [transferCountry, setTransferCountry] = useState('España');
+  const [receiptBase64, setReceiptBase64] = useState<string>('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch client secret for Stripe when modal opens
   useEffect(() => {
@@ -92,13 +97,57 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
     }
   }, [isOpen, cart, paymentMethod]);
 
+  const bankDetails: Record<string, any> = {
+    'España': { bank: 'BBVA', owner: 'Stream Store SL', iban: 'ES91 0182 0000 0000 0000 0000' },
+    'Ecuador': { bank: 'Banco Pichincha', owner: 'Stream Store', account: '2200000000', type: 'Ahorros' },
+    'USA': { bank: 'Bank of America', owner: 'Stream Store', routing: '026009593', account: '000000000000' },
+    'Colombia': { bank: 'Bancolombia', owner: 'Stream Store', account: '000-000000-00', type: 'Ahorros' },
+    'Otros Países': { bank: 'Binance Pay / USDT', id: '123456789', network: 'TRC20', address: 'TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' },
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setErrorMsg('Por favor sube una imagen válida');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let MAX_WIDTH = 800;
+        let scaleSize = 1;
+        if (img.width > MAX_WIDTH) {
+          scaleSize = MAX_WIDTH / img.width;
+        } else {
+          MAX_WIDTH = img.width;
+        }
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
+        
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
+        const base64 = canvas.toDataURL('image/jpeg', 0.6);
+        setReceiptBase64(base64);
+        setErrorMsg(null);
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
   if (!isOpen) return null;
 
-  const handlePaymentSuccess = async (paymentId: string, gateway: 'stripe' | 'paypal') => {
+  const handlePaymentSuccess = async (paymentId: string, gateway: 'stripe' | 'paypal' | 'transfer') => {
     setStep('processing');
     setErrorMsg(null);
     try {
-      await onConfirmPayment(paymentId, gateway);
+      await onConfirmPayment(paymentId, gateway, receiptBase64);
       setStep('success');
     } catch (err: any) {
       setStep('form');
@@ -212,8 +261,92 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
                     <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z"/></svg>
                     PayPal
                   </button>
+                  <button 
+                    type="button"
+                    onClick={() => setPaymentMethod('transfer')}
+                    style={{ 
+                      flex: 1, padding: '1rem', borderRadius: '12px', border: `2px solid ${paymentMethod === 'transfer' ? '#10b981' : 'var(--border)'}`, 
+                      background: paymentMethod === 'transfer' ? 'rgba(16, 185, 129, 0.05)' : 'transparent',
+                      color: paymentMethod === 'transfer' ? '#10b981' : 'var(--text-muted)',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 600
+                    }}
+                  >
+                    <Landmark size={24} />
+                    Transfer
+                  </button>
                 </div>
               </div>
+
+              {paymentMethod === 'transfer' && (
+                <div style={{ marginTop: '0.5rem', animation: 'fadeIn 0.3s ease' }}>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>Selecciona tu País</label>
+                  <select 
+                    value={transferCountry}
+                    onChange={(e) => setTransferCountry(e.target.value)}
+                    style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)', fontSize: '1rem', marginBottom: '1rem' }}
+                  >
+                    {Object.keys(bankDetails).map(country => (
+                      <option key={country} value={country}>{country}</option>
+                    ))}
+                  </select>
+
+                  <div style={{ padding: '1rem', background: 'var(--search-bg)', borderRadius: '12px', border: '1px solid var(--border)', marginBottom: '1rem', fontSize: '0.95rem', color: 'var(--text-main)' }}>
+                    <div style={{ fontWeight: 800, marginBottom: '0.5rem', color: 'var(--primary)' }}>Datos Bancarios - {transferCountry}</div>
+                    {Object.entries(bankDetails[transferCountry]).map(([key, value]) => (
+                      <div key={key} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                        <span style={{ color: 'var(--text-muted)', textTransform: 'capitalize' }}>{key}:</span>
+                        <span style={{ fontWeight: 600 }}>{value as React.ReactNode}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>Subir Comprobante</label>
+                  <div 
+                    onClick={() => fileInputRef.current?.click()}
+                    style={{ 
+                      width: '100%', padding: '2rem', border: '2px dashed var(--border)', borderRadius: '12px', 
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                      cursor: 'pointer', color: receiptBase64 ? '#10b981' : 'var(--text-muted)',
+                      background: receiptBase64 ? 'rgba(16, 185, 129, 0.05)' : 'var(--search-bg)'
+                    }}
+                  >
+                    {receiptBase64 ? (
+                      <>
+                        <CheckCircle size={32} style={{ marginBottom: '0.5rem' }} />
+                        <span style={{ fontWeight: 600 }}>¡Comprobante subido!</span>
+                        <span style={{ fontSize: '0.8rem', marginTop: '0.2rem' }}>Clic para cambiar</span>
+                      </>
+                    ) : (
+                      <>
+                        <Upload size={32} style={{ marginBottom: '0.5rem' }} />
+                        <span style={{ fontWeight: 600 }}>Sube la captura de tu transferencia</span>
+                        <span style={{ fontSize: '0.8rem', marginTop: '0.2rem' }}>Formatos: JPG, PNG</span>
+                      </>
+                    )}
+                  </div>
+                  <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} />
+
+                  <button 
+                    onClick={() => {
+                      if (!email) { setErrorMsg('Ingresa tu correo'); return; }
+                      if (!receiptBase64) { setErrorMsg('Por favor sube tu comprobante'); return; }
+                      handlePaymentSuccess('transfer_manual', 'transfer');
+                    }}
+                    disabled={!receiptBase64 || !email}
+                    style={{ 
+                      marginTop: '1.5rem', width: '100%', padding: '1.2rem', 
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
+                      color: 'white', border: 'none', borderRadius: '16px', 
+                      fontWeight: 800, fontSize: '1.1rem', cursor: (!receiptBase64 || !email) ? 'not-allowed' : 'pointer',
+                      boxShadow: '0 10px 20px rgba(16, 185, 129, 0.2)',
+                      display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem',
+                      opacity: (!receiptBase64 || !email) ? 0.7 : 1
+                    }}
+                  >
+                    Enviar Comprobante
+                  </button>
+                </div>
+              )}
 
               {paymentMethod === 'card' && clientSecret && email ? (
                 <div style={{ marginTop: '0.5rem' }}>

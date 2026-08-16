@@ -5,6 +5,7 @@ import AdminProductForm from "@/components/AdminProductForm";
 import AdminProductList from "@/components/AdminProductList";
 import AdminReviewList from "@/components/AdminReviewList";
 import AdminChatList from "@/components/AdminChatList";
+import AdminOrderList from "@/components/AdminOrderList";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Key } from "lucide-react";
@@ -22,7 +23,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
   const { t } = useLanguage();
   const [orders, setOrders] = useState<any[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
-  const [activeAdminTab, setActiveAdminTab] = useState<'products' | 'reviews' | 'chats'>('products');
+  const [activeAdminTab, setActiveAdminTab] = useState<'products' | 'reviews' | 'chats' | 'orders'>('products');
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -75,17 +76,30 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
             <div key={order._id} style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.5rem', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                 <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', margin: 0 }}>{order.productName}</h3>
-                <span style={{ background: 'var(--primary)', color: '#1C5F5C', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>Activa</span>
+                {order.status === 'pending_verification' ? (
+                  <span style={{ background: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>Verificando Pago</span>
+                ) : (
+                  <span style={{ background: 'var(--primary)', color: '#1C5F5C', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>Activa</span>
+                )}
               </div>
               <div style={{ background: 'var(--search-bg)', padding: '1rem', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', flexShrink: 0 }}>Usuario:</span>
-                  <strong style={{ color: 'var(--text-main)', wordBreak: 'break-all', textAlign: 'right' }}>{order.accountUsername}</strong>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', flexShrink: 0 }}>Contraseña:</span>
-                  <strong style={{ color: 'var(--text-main)', letterSpacing: '1px', wordBreak: 'break-all', textAlign: 'right' }}>{order.accountPassword}</strong>
-                </div>
+                {order.status === 'pending_verification' ? (
+                  <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '0.5rem 0' }}>
+                    Tu comprobante de transferencia está siendo verificado. <br/>
+                    <strong style={{ color: 'var(--primary)' }}>Tus credenciales aparecerán aquí pronto.</strong>
+                  </div>
+                ) : (
+                  <>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', flexShrink: 0 }}>Usuario:</span>
+                      <strong style={{ color: 'var(--text-main)', wordBreak: 'break-all', textAlign: 'right' }}>{order.accountUsername}</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', flexShrink: 0 }}>Contraseña:</span>
+                      <strong style={{ color: 'var(--text-main)', letterSpacing: '1px', wordBreak: 'break-all', textAlign: 'right' }}>{order.accountPassword}</strong>
+                    </div>
+                  </>
+                )}
               </div>
                 <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
@@ -170,6 +184,17 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
               >
                 Chats
               </button>
+              <button 
+                onClick={() => setActiveAdminTab('orders')}
+                style={{ 
+                  background: activeAdminTab === 'orders' ? '#dc2626' : 'transparent',
+                  color: activeAdminTab === 'orders' ? 'white' : 'var(--text-muted)',
+                  border: activeAdminTab === 'orders' ? 'none' : '1px solid var(--border)',
+                  padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 600, cursor: 'pointer'
+                }}
+              >
+                Transferencias
+              </button>
             </div>
           </div>
 
@@ -184,6 +209,9 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
           )}
           {activeAdminTab === 'chats' && (
             <AdminChatList />
+          )}
+          {activeAdminTab === 'orders' && (
+            <AdminOrderList />
           )}
         </>
       )}

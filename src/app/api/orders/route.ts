@@ -39,14 +39,15 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { items, paymentId, paymentGateway } = body; // items = [{ id, quantity }] from cart
+    const { items, paymentId, paymentGateway, receiptBase64 } = body; // items = [{ id, quantity }] from cart
 
-    if (!items || items.length === 0 || !paymentId || !paymentGateway) {
+    if (!items || items.length === 0 || !paymentGateway) {
       return NextResponse.json({ success: false, error: "Faltan datos de la orden o pago" }, { status: 400 });
     }
 
     // Verify payment based on gateway
     if (paymentGateway === 'stripe') {
+      if (!paymentId) return NextResponse.json({ success: false, error: "Falta paymentId" }, { status: 400 });
       const Stripe = require('stripe');
       const stripe = new Stripe((process.env.STRIPE_SECRET_KEY || '').trim());
       const paymentIntent = await stripe.paymentIntents.retrieve(paymentId);
@@ -54,6 +55,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: false, error: "El pago en Stripe no fue exitoso." }, { status: 400 });
       }
     } else if (paymentGateway === 'paypal') {
+      if (!paymentId) return NextResponse.json({ success: false, error: "Falta paymentId" }, { status: 400 });
       const paypalUrl = process.env.NODE_ENV === 'production' 
         ? 'https://api-m.paypal.com' 
         : 'https://api-m.sandbox.paypal.com';
@@ -86,6 +88,10 @@ export async function POST(request: Request) {
       const captureData = await captureRes.json();
       if (captureData.status !== 'COMPLETED') {
         return NextResponse.json({ success: false, error: "El pago en PayPal no pudo ser capturado." }, { status: 400 });
+      }
+    } else if (paymentGateway === 'transfer') {
+      if (!receiptBase64) {
+        return NextResponse.json({ success: false, error: "Debes subir un comprobante de transferencia" }, { status: 400 });
       }
     } else {
       return NextResponse.json({ success: false, error: "Gateway de pago no soportado" }, { status: 400 });
@@ -132,7 +138,10 @@ export async function POST(request: Request) {
           accountUsername: username || "N/A",
           accountPassword: password || "N/A",
           price: product.price,
-          paymentId: paymentId
+          paymentId: paymentId || 'manual_transfer',
+          paymentMethod: paymentGateway,
+          status: paymentGateway === 'transfer' ? 'pending_verification' : 'completed',
+          receiptBase64: paymentGateway === 'transfer' ? receiptBase64 : undefined
         });
 
         createdOrders.push(newOrder);
