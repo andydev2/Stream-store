@@ -66,7 +66,7 @@ function StripeForm({ cartTotal, onSuccess, onError }: { cartTotal: number, onSu
 }
 
 export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPayment }: CheckoutModalProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { cart } = useCart();
   const [step, setStep] = useState<'form' | 'processing' | 'success'>('form');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
@@ -117,7 +117,7 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
       display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
       padding: '1rem'
     }}>
-      <div style={{
+      <div className="hide-scrollbar" style={{
         background: 'var(--card-bg)',
         width: '100%', maxWidth: '450px',
         maxHeight: '90vh',
@@ -217,7 +217,7 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
 
               {paymentMethod === 'card' && clientSecret && email ? (
                 <div style={{ marginTop: '0.5rem' }}>
-                  <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'night', variables: { colorPrimary: '#3ED5CC' } } }}>
+                  <Elements stripe={stripePromise} options={{ locale: language.toLowerCase() as any, clientSecret, appearance: { theme: 'night', variables: { colorPrimary: '#3ED5CC' } } }}>
                     <StripeForm 
                       cartTotal={cartTotal} 
                       onSuccess={(id) => handlePaymentSuccess(id, 'stripe')} 

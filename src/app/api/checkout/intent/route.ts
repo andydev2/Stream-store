@@ -25,9 +25,7 @@ export async function POST(request: Request) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountInCents,
       currency: 'usd',
-      automatic_payment_methods: {
-        enabled: true,
-      },
+      payment_method_types: ['card'],
       metadata: {
         cartItems: JSON.stringify(items.map((i: any) => ({ id: i.id, q: i.quantity }))),
       }
