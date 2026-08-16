@@ -93,8 +93,8 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
             }
             return data.messages;
           });
-        } else if (messages.length === 0) {
-          // If no chat exists yet, auto-send first message
+        } else if (messages.length === 0 && product.id !== 'soporte') {
+          // If no chat exists yet and it's not support, auto-send first message
           await startChat(sid);
         }
       }
@@ -219,7 +219,28 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
         {loading ? (
           <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>Cargando...</div>
         ) : (
-          messages.map((msg, idx) => (
+          <>
+            {messages.length === 0 && product.id === 'soporte' && (
+              <div style={{
+                alignSelf: 'flex-start',
+                backgroundColor: 'var(--card-bg)',
+                color: 'var(--text-main)',
+                padding: '0.8rem 1rem',
+                borderRadius: '16px',
+                borderBottomLeftRadius: '4px',
+                maxWidth: '85%',
+                border: '1px solid rgba(255,255,255,0.1)',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
+              }}>
+                <div style={{ fontSize: '0.95rem', lineHeight: 1.4 }}>
+                  👋 ¡Hola! Soy el asistente de soporte. ¿En qué te puedo ayudar hoy?
+                </div>
+                <div style={{ fontSize: '0.7rem', opacity: 0.7, marginTop: '4px', textAlign: 'right' }}>
+                  {t('chat.admin_title')}
+                </div>
+              </div>
+            )}
+            {messages.map((msg, idx) => (
             <div key={idx} style={{
               alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
               backgroundColor: msg.sender === 'user' ? 'var(--primary)' : (msg.text === '$$PAYMENT_BUTTON$$' ? 'transparent' : 'var(--card-bg)'),
@@ -307,8 +328,9 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
                 </div>
               )}
             </div>
-          ))
-        )}
+          ))}
+        </>
+      )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -317,10 +339,46 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
         padding: '1rem',
         borderTop: '1px solid rgba(255,255,255,0.05)',
         display: 'flex',
+        flexDirection: 'column',
         gap: '0.5rem',
         backgroundColor: 'var(--card-bg)'
       }}>
-        <input 
+        {product.id === 'soporte' && messages.length === 0 && (
+          <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.2rem' }} className="hide-scrollbar">
+            <button 
+              onClick={() => {
+                 const text = 'Tengo un problema con un pago';
+                 setMessages(prev => [...prev, { sender: 'user', text }]);
+                 sendMessage(text, sessionId);
+              }}
+              style={{ whiteSpace: 'nowrap', padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '20px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
+            >
+              Problema de pago
+            </button>
+            <button 
+              onClick={() => {
+                 const text = 'Necesito ayuda con mi cuenta';
+                 setMessages(prev => [...prev, { sender: 'user', text }]);
+                 sendMessage(text, sessionId);
+              }}
+              style={{ whiteSpace: 'nowrap', padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '20px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
+            >
+              Ayuda con cuenta
+            </button>
+            <button 
+              onClick={() => {
+                 const text = 'Tengo otra consulta';
+                 setMessages(prev => [...prev, { sender: 'user', text }]);
+                 sendMessage(text, sessionId);
+              }}
+              style={{ whiteSpace: 'nowrap', padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '20px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
+            >
+              Otra consulta
+            </button>
+          </div>
+        )}
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <input 
           type="text" 
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
@@ -355,6 +413,7 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
         >
           ➤
         </button>
+        </div>
       </div>
       
       <style>{`
