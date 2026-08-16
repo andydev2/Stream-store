@@ -1,36 +1,111 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { useCart } from '../context/CartContext';
 import { X, CreditCard, Mail, Lock, ShieldCheck, CheckCircle } from 'lucide-react';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
 type CheckoutModalProps = {
   isOpen: boolean;
   onClose: () => void;
   cartTotal: number;
-  onConfirmPayment: () => Promise<void>;
+  onConfirmPayment: (paymentId: string, gateway: 'stripe' | 'paypal') => Promise<void>;
 };
 
-export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPayment }: CheckoutModalProps) {
+function StripeForm({ cartTotal, onSuccess, onError }: { cartTotal: number, onSuccess: (id: string) => void, onError: (err: any) => void }) {
+  const stripe = useStripe();
+  const elements = useElements();
   const { t } = useLanguage();
-  const [step, setStep] = useState<'form' | 'processing' | 'success'>('form');
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
-  const [email, setEmail] = useState('');
-
-  if (!isOpen) return null;
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!stripe || !elements) return;
+
+    setIsProcessing(true);
+
+    const { error, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      redirect: 'if_required',
+    });
+
+    if (error) {
+      onError(error.message);
+      setIsProcessing(false);
+    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+      onSuccess(paymentIntent.id);
+    } else {
+      onError('Payment failed');
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', animation: 'fadeIn 0.3s ease' }}>
+      <PaymentElement />
+      <button 
+        type="submit"
+        disabled={!stripe || isProcessing}
+        style={{ 
+          marginTop: '1rem', width: '100%', padding: '1.2rem', 
+          background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)', 
+          color: '#1C5F5C', border: 'none', borderRadius: '16px', 
+          fontWeight: 800, fontSize: '1.1rem', cursor: isProcessing ? 'not-allowed' : 'pointer',
+          boxShadow: '0 10px 20px rgba(62, 213, 204, 0.2)',
+          display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem',
+          opacity: isProcessing ? 0.7 : 1
+        }}
+      >
+        {isProcessing ? 'Procesando...' : `${t('checkout.pay_btn')} $${cartTotal.toFixed(2)}`}
+      </button>
+    </form>
+  );
+}
+
+export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPayment }: CheckoutModalProps) {
+  const { t } = useLanguage();
+  const { cart } = useCart();
+  const [step, setStep] = useState<'form' | 'processing' | 'success'>('form');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
+  const [email, setEmail] = useState('');
+  const [clientSecret, setClientSecret] = useState('');
+
+  // Fetch client secret for Stripe when modal opens
+  useEffect(() => {
+    if (isOpen && cart.length > 0 && paymentMethod === 'card') {
+      fetch('/api/checkout/intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: cart }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.clientSecret) {
+            setClientSecret(data.clientSecret);
+          }
+        })
+        .catch(console.error);
+    }
+  }, [isOpen, cart, paymentMethod]);
+
+  if (!isOpen) return null;
+
+  const handlePaymentSuccess = async (paymentId: string, gateway: 'stripe' | 'paypal') => {
     setStep('processing');
-    
-    // Simulate payment processing delay
-    setTimeout(async () => {
-      try {
-        await onConfirmPayment();
-        setStep('success');
-      } catch (err) {
-        setStep('form');
-        alert(t('checkout.error'));
-      }
-    }, 2000);
+    try {
+      await onConfirmPayment(paymentId, gateway);
+      setStep('success');
+    } catch (err: any) {
+      setStep('form');
+      alert(err.message || t('checkout.error'));
+    }
+  };
+
+  const handlePaymentError = (errMessage: string) => {
+    alert(errMessage);
   };
 
   return (
@@ -43,8 +118,9 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
       <div style={{
         background: 'var(--card-bg)',
         width: '100%', maxWidth: '450px',
+        maxHeight: '90vh',
+        overflowY: 'auto',
         borderRadius: '24px',
-        overflow: 'hidden',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
         animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
       }}>
@@ -64,7 +140,7 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
         {/* Content */}
         <div style={{ padding: '1.5rem' }}>
           {step === 'form' && (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ textAlign: 'center', margin: '0.5rem 0 1rem 0' }}>
                 <p style={{ color: 'var(--text-muted)', margin: '0 0 0.5rem 0' }}>{t('checkout.total')}</p>
                 <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary)' }}>${cartTotal.toFixed(2)}</div>
@@ -116,43 +192,63 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
                 </div>
               </div>
 
-              {paymentMethod === 'card' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', animation: 'fadeIn 0.3s ease' }}>
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>{t('checkout.card.number')}</label>
-                    <input type="text" placeholder="0000 0000 0000 0000" maxLength={19} required style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)', fontSize: '1rem', letterSpacing: '1px' }} />
-                  </div>
-                  <div style={{ display: 'flex', gap: '1rem' }}>
-                    <div style={{ flex: 1 }}>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>{t('checkout.card.expiry')}</label>
-                      <input type="text" placeholder="MM/AA" maxLength={5} required style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)', fontSize: '1rem' }} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>{t('checkout.card.cvv')}</label>
-                      <input type="text" placeholder="123" maxLength={4} required style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)', fontSize: '1rem' }} />
-                    </div>
-                  </div>
+              {paymentMethod === 'card' && clientSecret && email ? (
+                <div style={{ marginTop: '0.5rem' }}>
+                  <Elements stripe={stripePromise} options={{ clientSecret, appearance: { theme: 'night', variables: { colorPrimary: '#3ED5CC' } } }}>
+                    <StripeForm 
+                      cartTotal={cartTotal} 
+                      onSuccess={(id) => handlePaymentSuccess(id, 'stripe')} 
+                      onError={handlePaymentError} 
+                    />
+                  </Elements>
+                </div>
+              ) : paymentMethod === 'card' && !email ? (
+                <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
+                  Por favor ingresa tu correo primero.
+                </div>
+              ) : paymentMethod === 'card' ? (
+                <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
+                  Cargando método de pago...
+                </div>
+              ) : null}
+
+              {paymentMethod === 'paypal' && email && (
+                <div style={{ marginTop: '1rem' }}>
+                  <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'test', currency: 'USD' }}>
+                    <PayPalButtons 
+                      createOrder={(data, actions) => {
+                        return actions.order.create({
+                          intent: 'CAPTURE',
+                          purchase_units: [
+                            {
+                              amount: {
+                                currency_code: 'USD',
+                                value: cartTotal.toFixed(2),
+                              },
+                            },
+                          ],
+                        });
+                      }}
+                      onApprove={(data, actions) => {
+                        return handlePaymentSuccess(data.orderID, 'paypal');
+                      }}
+                      onError={(err) => {
+                        handlePaymentError('Hubo un error con PayPal.');
+                      }}
+                    />
+                  </PayPalScriptProvider>
                 </div>
               )}
+              {paymentMethod === 'paypal' && !email && (
+                 <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
+                 Por favor ingresa tu correo primero.
+               </div>
+              )}
 
-              <button 
-                type="submit"
-                style={{ 
-                  marginTop: '1rem', width: '100%', padding: '1.2rem', 
-                  background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)', 
-                  color: '#1C5F5C', border: 'none', borderRadius: '16px', 
-                  fontWeight: 800, fontSize: '1.1rem', cursor: 'pointer',
-                  boxShadow: '0 10px 20px rgba(62, 213, 204, 0.2)',
-                  display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem'
-                }}
-              >
-                {t('checkout.pay_btn')} ${cartTotal.toFixed(2)}
-              </button>
-              
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>
                 <ShieldCheck size={16} /> {t('checkout.secure')}
               </div>
-            </form>
+            </div>
           )}
 
           {step === 'processing' && (

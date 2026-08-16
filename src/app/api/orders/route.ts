@@ -39,10 +39,56 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { items, paymentId } = body; // items = [{ id, quantity }] from cart
+    const { items, paymentId, paymentGateway } = body; // items = [{ id, quantity }] from cart
 
-    if (!items || items.length === 0 || !paymentId) {
+    if (!items || items.length === 0 || !paymentId || !paymentGateway) {
       return NextResponse.json({ success: false, error: "Faltan datos de la orden o pago" }, { status: 400 });
+    }
+
+    // Verify payment based on gateway
+    if (paymentGateway === 'stripe') {
+      const Stripe = require('stripe');
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentId);
+      if (paymentIntent.status !== 'succeeded') {
+        return NextResponse.json({ success: false, error: "El pago en Stripe no fue exitoso." }, { status: 400 });
+      }
+    } else if (paymentGateway === 'paypal') {
+      const paypalUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://api-m.paypal.com' 
+        : 'https://api-m.sandbox.paypal.com';
+        
+      const tokenRes = await fetch(`${paypalUrl}/v1/oauth2/token`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Accept-Language': 'en_US',
+          'Authorization': `Basic ${Buffer.from(process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID + ':' + process.env.PAYPAL_SECRET).toString('base64')}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'grant_type=client_credentials'
+      });
+      
+      const tokenData = await tokenRes.json();
+      if (!tokenData.access_token) {
+        throw new Error("No se pudo obtener el token de PayPal");
+      }
+
+      // Capture the order
+      const captureRes = await fetch(`${paypalUrl}/v2/checkout/orders/${paymentId}/capture`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${tokenData.access_token}`
+        }
+      });
+      
+      const captureData = await captureRes.json();
+      if (captureData.status !== 'COMPLETED') {
+        return NextResponse.json({ success: false, error: "El pago en PayPal no pudo ser capturado." }, { status: 400 });
+      }
+    } else {
+      return NextResponse.json({ success: false, error: "Gateway de pago no soportado" }, { status: 400 });
     }
 
     await connectToDatabase();

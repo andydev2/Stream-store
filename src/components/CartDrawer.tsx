@@ -37,13 +37,11 @@ export default function CartDrawer() {
     setIsCheckoutOpen(true);
   };
 
-  const processPayment = async () => {
-    const mockPaymentId = `PAY-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
-
+  const processPayment = async (paymentId: string, paymentGateway: 'stripe' | 'paypal') => {
     const response = await fetch('/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: cart, paymentId: mockPaymentId }),
+      body: JSON.stringify({ items: cart, paymentId, paymentGateway }),
     });
     
     const data = await response.json();
