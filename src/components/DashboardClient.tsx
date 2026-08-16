@@ -131,11 +131,11 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
 
       {isAdmin && (
         <>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
             <h2 style={{ fontSize: '1.8rem', color: '#dc2626', margin: 0 }}>
               {t('dashboard.admin')}
             </h2>
-            <div style={{ display: 'flex', gap: '1rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
               <button 
                 onClick={() => setActiveAdminTab('products')}
                 style={{ 
