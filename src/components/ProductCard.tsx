@@ -13,6 +13,7 @@ type Product = {
   icon: string;
   color: string;
   stock?: number;
+  details?: string[];
   images?: string[];
   requiresIdVerification?: boolean;
   category?: string;
