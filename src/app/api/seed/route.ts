@@ -7,14 +7,10 @@ export async function GET() {
   try {
     await dbConnect();
     
-    // Check if products already exist
-    const count = await Product.countDocuments();
-    if (count > 0) {
-      return NextResponse.json({ message: 'Base de datos ya está poblada.', count });
+    // Sync all products
+    for (const product of allProducts) {
+      await Product.findOneAndUpdate({ id: product.id }, product, { upsert: true, new: true });
     }
-
-    // Insert initial products
-    await Product.insertMany(allProducts);
 
     return NextResponse.json({ success: true, message: 'Productos iniciales insertados con éxito.' });
   } catch (error: any) {
