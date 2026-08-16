@@ -78,6 +78,7 @@ export async function POST(request: Request) {
           userEmail: session.user.email,
           productId: product.id,
           productName: product.name,
+          productCategory: product.category,
           accountId: accountToSell._id ? accountToSell._id.toString() : Date.now().toString(),
           accountUsername: username || "N/A",
           accountPassword: password || "N/A",

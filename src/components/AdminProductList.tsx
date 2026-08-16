@@ -66,12 +66,22 @@ export default function AdminProductList() {
     if (!selectedProduct) return;
     
     // Separar por líneas y quitar vacías
-    const accounts = accountsText.split('\n').map(a => a.trim()).filter(a => a !== '');
+    const rawAccounts = accountsText.split('\n').map(a => a.trim()).filter(a => a !== '');
     
-    if (accounts.length === 0) {
+    if (rawAccounts.length === 0) {
       alert('Por favor, ingresa al menos una cuenta.');
       return;
     }
+
+    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}:.+$/;
+    for (const line of rawAccounts) {
+      if (!emailRegex.test(line)) {
+        alert(`Error: La cuenta "${line}" no tiene el formato correcto (correo@valido.com:contraseña)`);
+        return;
+      }
+    }
+
+    const accounts = rawAccounts;
 
     try {
       setSavingInventory(true);
@@ -176,15 +186,18 @@ export default function AdminProductList() {
             <h3 style={{ fontSize: '1.4rem', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Añadir Stock</h3>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Agregando cuentas a: <strong>{selectedProduct.name}</strong></p>
             
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, color: '#333' }}>
-              Pega los datos de las cuentas (Una cuenta por línea)
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, color: 'var(--text-main)' }}>
+              Pega los datos de las cuentas (Formato estricto)
             </label>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.5rem', marginTop: '-0.3rem' }}>
+              Debe ser: <code>correo@valido.com:contraseña</code> (Una por línea)
+            </p>
             <textarea 
               rows={8}
               value={accountsText}
               onChange={(e) => setAccountsText(e.target.value)}
-              placeholder="correo1@gmail.com:contraseña1&#10;correo2@gmail.com:contraseña2"
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', marginBottom: '1.5rem', fontFamily: 'monospace' }}
+              placeholder="cliente1@gmail.com:pass123&#10;cliente2@gmail.com:pass456"
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)', marginBottom: '1.5rem', fontFamily: 'monospace' }}
             ></textarea>
             
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>

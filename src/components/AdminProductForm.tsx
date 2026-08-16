@@ -7,6 +7,7 @@ export default function AdminProductForm() {
   const [message, setMessage] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('streaming');
   const [imageBase64, setImageBase64] = useState<string | null>(null);
+  const [accountsText, setAccountsText] = useState('');
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -33,9 +34,23 @@ export default function AdminProductForm() {
     setLoading(true);
     setMessage('');
 
+    // Validación estricta de cuentas
+    let validAccounts: string[] = [];
+    if (accountsText.trim()) {
+      const lines = accountsText.split('\n').map(l => l.trim()).filter(l => l !== '');
+      const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}:.+$/;
+      
+      for (const line of lines) {
+        if (!emailRegex.test(line)) {
+          setMessage(`Error: La cuenta "${line}" no tiene el formato correcto (correo@valido.com:contraseña)`);
+          setLoading(false);
+          return;
+        }
+        validAccounts.push(line);
+      }
+    }
+
     const formData = new FormData(e.currentTarget);
-    
-    // Si seleccionó subir desde el dispositivo, usamos el base64. Si pegó una URL, usamos la URL.
     const fileInputUsed = !!imageBase64;
     const finalImageUrl = fileInputUsed ? imageBase64 : formData.get('imageUrl');
 
@@ -46,6 +61,7 @@ export default function AdminProductForm() {
       color: formData.get('color'),
       category: formData.get('category'),
       imageUrl: finalImageUrl,
+      accounts: validAccounts, // Enviar al backend
     };
 
     try {
@@ -59,8 +75,9 @@ export default function AdminProductForm() {
       if (res.ok) {
         setMessage('¡Producto agregado con éxito!');
         (e.target as HTMLFormElement).reset();
-        setSelectedCategory('streaming'); // reset category state
+        setSelectedCategory('streaming'); 
         setImageBase64(null);
+        setAccountsText('');
       } else {
         setMessage('Error: ' + result.error);
       }
@@ -70,6 +87,9 @@ export default function AdminProductForm() {
       setLoading(false);
     }
   };
+
+  const inputStyle = { width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' };
+  const labelStyle = { display: 'block', marginBottom: '0.5rem', fontWeight: 500, color: 'var(--text-main)' };
 
   return (
     <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
@@ -83,29 +103,29 @@ export default function AdminProductForm() {
 
       <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Nombre del Producto</label>
-          <input required name="name" type="text" placeholder="Ej: Cuenta de Free Fire" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)' }} />
+          <label style={labelStyle}>Nombre del Producto</label>
+          <input required name="name" type="text" placeholder="Ej: Cuenta de Free Fire" style={inputStyle} />
         </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Descripción</label>
-          <textarea required name="description" rows={3} placeholder="Detalles de la cuenta o producto..." style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)' }}></textarea>
+          <label style={labelStyle}>Descripción</label>
+          <textarea required name="description" rows={3} placeholder="Detalles de la cuenta o producto..." style={inputStyle}></textarea>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Precio (USD)</label>
-            <input required name="price" type="number" step="0.01" placeholder="Ej: 9.99" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)' }} />
+            <label style={labelStyle}>Precio (USD)</label>
+            <input required name="price" type="number" step="0.01" placeholder="Ej: 9.99" style={inputStyle} />
           </div>
           
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Categoría</label>
+            <label style={labelStyle}>Categoría</label>
             <select 
               required 
               name="category" 
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', backgroundColor: 'var(--card-bg)' }}
+              style={inputStyle}
             >
               <option value="streaming">Streaming</option>
               <option value="ai">Inteligencia Artificial</option>
@@ -116,25 +136,40 @@ export default function AdminProductForm() {
           </div>
         </div>
 
+        <div>
+          <label style={labelStyle}>Stock Inicial / Cuentas (Opcional)</label>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.5rem', marginTop: '-0.3rem' }}>
+            Formato estricto requerido: <code>correo@valido.com:contraseña</code> (Una cuenta por línea)
+          </p>
+          <textarea 
+            name="accounts" 
+            rows={4} 
+            value={accountsText}
+            onChange={(e) => setAccountsText(e.target.value)}
+            placeholder="cliente1@gmail.com:pass123&#10;cliente2@gmail.com:pass456" 
+            style={{...inputStyle, fontFamily: 'monospace'}}
+          ></textarea>
+        </div>
+
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Color de Fondo</label>
+            <label style={labelStyle}>Color de Fondo</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <input required name="color" type="color" defaultValue="#E50914" style={{ width: '50px', height: '45px', padding: '0', border: 'none', borderRadius: '8px', cursor: 'pointer' }} title="Elige un color" />
-              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>El icono se generará automáticamente con la primera letra.</span>
+              <input required name="color" type="color" defaultValue="#E50914" style={{ width: '50px', height: '45px', padding: '0', border: 'none', borderRadius: '8px', cursor: 'pointer', background: 'transparent' }} title="Elige un color" />
+              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>El icono se generará automáticamente.</span>
             </div>
           </div>
           
           {(selectedCategory === 'games' || selectedCategory === 'free_fire') && (
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Imagen (Opcional)</label>
+              <label style={labelStyle}>Imagen (Opcional)</label>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <input 
                   type="file" 
                   accept="image/*"
                   onChange={handleImageChange}
-                  style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px dashed var(--border)', background: 'var(--search-bg)' }} 
+                  style={{ width: '100%', padding: '0.5rem', borderRadius: '8px', border: '1px dashed var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} 
                 />
                 
                 <span style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-muted)' }}>O</span>
@@ -144,7 +179,7 @@ export default function AdminProductForm() {
                   type="url" 
                   disabled={!!imageBase64}
                   placeholder={imageBase64 ? "Archivo seleccionado (Ignorando URL)" : "Pegar URL externa..."} 
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border)', opacity: imageBase64 ? 0.5 : 1 }} 
+                  style={{ ...inputStyle, opacity: imageBase64 ? 0.5 : 1 }} 
                 />
               </div>
             </div>

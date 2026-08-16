@@ -51,6 +51,14 @@ export async function POST(request: Request) {
       body.images = [body.imageUrl];
     }
 
+    // Procesar cuentas iniciales si existen
+    if (body.accounts && Array.isArray(body.accounts)) {
+      body.accounts = body.accounts.map((accStr: string) => ({
+        credentials: accStr,
+        isSold: false
+      }));
+    }
+
     const product = await Product.create(body);
     return NextResponse.json({ success: true, data: product }, { status: 201 });
   } catch (error: any) {

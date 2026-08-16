@@ -13,6 +13,10 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  productCategory: {
+    type: String,
+    default: 'streaming',
+  },
   accountId: {
     type: String, // ID of the specific account assigned to this user
     required: true,

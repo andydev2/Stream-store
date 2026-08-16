@@ -86,11 +86,35 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
                   <strong style={{ color: 'var(--text-main)', letterSpacing: '1px' }}>{order.accountPassword}</strong>
                 </div>
               </div>
-              <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                  Comprado el {new Date(order.createdAt).toLocaleDateString()}
-                </span>
-              </div>
+                <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                    Comprado el {new Date(order.createdAt).toLocaleDateString()}
+                  </span>
+                  
+                  {/* Logic for Renovar */}
+                  {order.productCategory === 'streaming' && (
+                    (() => {
+                      const orderDate = new Date(order.createdAt);
+                      const currentDate = new Date();
+                      const diffTime = Math.abs(currentDate.getTime() - orderDate.getTime());
+                      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                      
+                      if (diffDays >= 27) {
+                        return (
+                          <button style={{ 
+                            background: 'var(--primary)', color: '#1C5F5C', 
+                            border: 'none', padding: '0.4rem 1rem', borderRadius: '8px', 
+                            fontWeight: 'bold', fontSize: '0.85rem', cursor: 'pointer',
+                            boxShadow: '0 4px 10px rgba(62, 213, 204, 0.2)'
+                          }}>
+                            Renovar
+                          </button>
+                        );
+                      }
+                      return null;
+                    })()
+                  )}
+                </div>
             </div>
           ))}
         </div>
