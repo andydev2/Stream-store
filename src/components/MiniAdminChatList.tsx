@@ -30,12 +30,8 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
     fetchChats();
     const interval = setInterval(fetchChats, 5000);
     
-    // Lock body scroll to prevent scrolling main page
-    document.body.style.overflow = 'hidden';
-    
     return () => {
       clearInterval(interval);
-      document.body.style.overflow = 'unset';
     };
   }, []);
 
@@ -56,6 +52,22 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
       console.error('Error deleting chat:', error);
     } finally {
       setChatToDelete(null);
+    }
+  };
+
+  const handleCloseChat = async (id: string) => {
+    try {
+      const res = await fetch(`/api/admin/chats/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'close' })
+      });
+      if (res.ok) {
+        fetchChats();
+        if (selectedChatId === id) setSelectedChatId(null);
+      }
+    } catch (error) {
+      console.error('Error closing chat:', error);
     }
   };
 
@@ -126,11 +138,21 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                 {selectedChat?.productName || 'Chat'}
               </span>
             </div>
-            <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              {selectedChat?.status === 'open' && (
+                <button 
+                  onClick={() => handleCloseChat(selectedChat._id)}
+                  style={{ background: '#ef4444', border: 'none', color: 'white', fontSize: '0.75rem', fontWeight: 'bold', padding: '0.2rem 0.5rem', borderRadius: '8px', cursor: 'pointer' }}
+                >
+                  Cerrar Chat
+                </button>
+              )}
+              <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+            </div>
           </div>
           
           {/* Messages */}
-          <div className="hide-scrollbar" style={{ flex: 1, padding: '1rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.8rem', backgroundColor: 'var(--bg-main)' }}>
+          <div className="hide-scrollbar" style={{ flex: 1, padding: '1rem', overflowY: 'auto', overscrollBehavior: 'contain', display: 'flex', flexDirection: 'column', gap: '0.8rem', backgroundColor: 'var(--bg-main)' }}>
             {selectedChat?.messages?.map((msg: any, idx: number) => (
               <div key={idx} style={{
                 alignSelf: msg.sender === 'admin' ? 'flex-end' : 'flex-start',
@@ -230,7 +252,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
             <span>Chats Activos</span>
             <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
           </div>
-          <div className="hide-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '0.5rem', backgroundColor: 'var(--background)' }}>
+          <div className="hide-scrollbar" style={{ flex: 1, overflowY: 'auto', overscrollBehavior: 'contain', padding: '0.5rem', backgroundColor: 'var(--background)' }}>
             {loading ? (
               <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>Cargando chats...</div>
             ) : chats.length === 0 ? (

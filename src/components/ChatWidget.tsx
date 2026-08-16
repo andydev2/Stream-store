@@ -66,17 +66,6 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
 
 
 
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
   const fetchChat = async (sid: string) => {
     try {
       const res = await fetch(`/api/chat?sessionId=${sid}&productId=${product.id}&_t=${Date.now()}`);
@@ -206,11 +195,11 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
         </button>
       </div>
 
-      {/* Messages */}
       <div className="hide-scrollbar" style={{
         flex: 1,
         padding: '1rem',
         overflowY: 'auto',
+        overscrollBehavior: 'contain',
         display: 'flex',
         flexDirection: 'column',
         gap: '0.8rem',
