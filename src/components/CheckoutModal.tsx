@@ -69,33 +69,14 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
   const { t, language } = useLanguage();
   const { cart } = useCart();
   const [step, setStep] = useState<'form' | 'processing' | 'success'>('form');
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'transfer'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'transfer'>('transfer');
   const [email, setEmail] = useState('');
-  const [clientSecret, setClientSecret] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   
   // Transfer state
   const [transferCountry, setTransferCountry] = useState('España');
   const [receiptBase64, setReceiptBase64] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Fetch client secret for Stripe when modal opens
-  useEffect(() => {
-    if (isOpen && cart.length > 0 && paymentMethod === 'card') {
-      fetch('/api/checkout/intent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: cart }),
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.clientSecret) {
-            setClientSecret(data.clientSecret);
-          }
-        })
-        .catch(console.error);
-    }
-  }, [isOpen, cart, paymentMethod]);
 
   const bankDetails: Record<string, any> = {
     'España': { bank: 'BBVA', owner: 'Stream Store SL', iban: 'ES91 0182 0000 0000 0000 0000' },
@@ -238,41 +219,15 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
                 <div style={{ display: 'flex', gap: '1rem' }}>
                   <button 
                     type="button"
-                    onClick={() => setPaymentMethod('card')}
                     style={{ 
-                      flex: 1, padding: '1rem', borderRadius: '12px', border: `2px solid ${paymentMethod === 'card' ? 'var(--primary)' : 'var(--border)'}`, 
-                      background: paymentMethod === 'card' ? 'rgba(62, 213, 204, 0.05)' : 'transparent',
-                      color: paymentMethod === 'card' ? 'var(--primary)' : 'var(--text-muted)',
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 600
-                    }}
-                  >
-                    <CreditCard size={24} /> {t('checkout.card')}
-                  </button>
-                  <button 
-                    type="button"
-                    onClick={() => setPaymentMethod('paypal')}
-                    style={{ 
-                      flex: 1, padding: '1rem', borderRadius: '12px', border: `2px solid ${paymentMethod === 'paypal' ? '#0070ba' : 'var(--border)'}`, 
-                      background: paymentMethod === 'paypal' ? 'rgba(0, 112, 186, 0.05)' : 'transparent',
-                      color: paymentMethod === 'paypal' ? '#0070ba' : 'var(--text-muted)',
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 600
-                    }}
-                  >
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z"/></svg>
-                    PayPal
-                  </button>
-                  <button 
-                    type="button"
-                    onClick={() => setPaymentMethod('transfer')}
-                    style={{ 
-                      flex: 1, padding: '1rem', borderRadius: '12px', border: `2px solid ${paymentMethod === 'transfer' ? '#10b981' : 'var(--border)'}`, 
-                      background: paymentMethod === 'transfer' ? 'rgba(16, 185, 129, 0.05)' : 'transparent',
-                      color: paymentMethod === 'transfer' ? '#10b981' : 'var(--text-muted)',
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 600
+                      flex: 1, padding: '1rem', borderRadius: '12px', border: `2px solid #10b981`, 
+                      background: 'rgba(16, 185, 129, 0.05)',
+                      color: '#10b981',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'default', fontWeight: 600
                     }}
                   >
                     <Landmark size={24} />
-                    Transfer
+                    Transferencia Bancaria
                   </button>
                 </div>
               </div>
@@ -346,59 +301,6 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
                     Enviar Comprobante
                   </button>
                 </div>
-              )}
-
-              {paymentMethod === 'card' && clientSecret && email ? (
-                <div style={{ marginTop: '0.5rem' }}>
-                  <Elements stripe={stripePromise} options={{ locale: language.toLowerCase() as any, clientSecret, appearance: { theme: 'night', variables: { colorPrimary: '#3ED5CC' } } }}>
-                    <StripeForm 
-                      cartTotal={cartTotal} 
-                      onSuccess={(id) => handlePaymentSuccess(id, 'stripe')} 
-                      onError={handlePaymentError} 
-                    />
-                  </Elements>
-                </div>
-              ) : paymentMethod === 'card' && !email ? (
-                <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
-                  Por favor ingresa tu correo primero.
-                </div>
-              ) : paymentMethod === 'card' ? (
-                <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
-                  Cargando método de pago...
-                </div>
-              ) : null}
-
-              {paymentMethod === 'paypal' && email && (
-                <div style={{ marginTop: '1rem' }}>
-                  <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'test', currency: 'USD' }}>
-                    <PayPalButtons 
-                      createOrder={(data, actions) => {
-                        return actions.order.create({
-                          intent: 'CAPTURE',
-                          purchase_units: [
-                            {
-                              amount: {
-                                currency_code: 'USD',
-                                value: cartTotal.toFixed(2),
-                              },
-                            },
-                          ],
-                        });
-                      }}
-                      onApprove={(data, actions) => {
-                        return handlePaymentSuccess(data.orderID, 'paypal');
-                      }}
-                      onError={(err) => {
-                        handlePaymentError('Hubo un error con PayPal.');
-                      }}
-                    />
-                  </PayPalScriptProvider>
-                </div>
-              )}
-              {paymentMethod === 'paypal' && !email && (
-                 <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
-                 Por favor ingresa tu correo primero.
-               </div>
               )}
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>
