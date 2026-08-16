@@ -39,6 +39,16 @@ export default function AdminProductList() {
     fetchProducts();
   }, []);
 
+  const fetchProductsSilently = async () => {
+    try {
+      const res = await fetch('/api/products');
+      const result = await res.json();
+      if (result.success) {
+        setProducts(result.data);
+      }
+    } catch (err) {}
+  };
+
   const confirmDeleteProduct = (id: string, name: string) => {
     setProductToDelete({ id, name });
   };
@@ -118,13 +128,22 @@ export default function AdminProductList() {
 
   const handleAddRechargeStock = async (id: string) => {
     try {
+      // Optimistic UI update
+      setProducts(prev => prev.map(p => {
+        const pId = p.id || p._id;
+        if (pId === id && p.stock !== undefined) {
+          return { ...p, stock: p.stock + 1 };
+        }
+        return p;
+      }));
+
       const dummyAccount = `recarga_${Math.random().toString(36).substring(2,8).toUpperCase()}:diamantes`;
       const res = await fetch(`/api/products/${id}/inventory`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ accounts: [dummyAccount] }),
       });
-      if (res.ok) fetchProducts();
+      if (res.ok) fetchProductsSilently();
     } catch (err) {
       alert('Error de red al agregar stock');
     }

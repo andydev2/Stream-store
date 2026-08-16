@@ -55,6 +55,7 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   const hasStock = product.stock !== undefined ? product.stock > 0 : true;
+  const isRecharge = product.category === 'recharges';
 
   return (
     <>
@@ -118,7 +119,11 @@ export default function ProductCard({ product }: { product: Product }) {
 
         {/* Stock Indicator */}
         <div style={{ zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 600, color: hasStock ? '#16a34a' : '#dc2626', background: hasStock ? '#dcfce7' : '#fee2e2', padding: '0.3rem 0.6rem', borderRadius: '20px', width: 'fit-content' }}>
-          {hasStock ? `🟢 ${product.stock} ${t('product.stock.available')}` : `🔴 ${t('product.stock.out')}`}
+          {isRecharge ? (
+            hasStock ? `🟢 Disponible para Recarga` : `🔴 Sin Stock`
+          ) : (
+            hasStock ? `🟢 ${product.stock} ${t('product.stock.available')}` : `🔴 ${t('product.stock.out')}`
+          )}
         </div>
 
         <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.6, zIndex: 1, flex: 1 }}>
@@ -150,21 +155,21 @@ export default function ProductCard({ product }: { product: Product }) {
           </button>
           
           <button 
-            disabled={!hasStock && !product.requiresIdVerification}
+            disabled={!hasStock && !isRecharge}
             style={{ 
-              background: (hasStock || product.requiresIdVerification) ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : '#cbd5e1', 
+              background: (hasStock || isRecharge) ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : '#cbd5e1', 
               color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '16px', 
               fontWeight: 700, 
-              cursor: (hasStock || product.requiresIdVerification) ? 'pointer' : 'not-allowed',
+              cursor: (hasStock || isRecharge) ? 'pointer' : 'not-allowed',
               fontSize: '1.1rem',
-              boxShadow: (hasStock || product.requiresIdVerification) ? '0 4px 15px rgba(62, 213, 204, 0.3)' : 'none',
+              boxShadow: (hasStock || isRecharge) ? '0 4px 15px rgba(62, 213, 204, 0.3)' : 'none',
               transition: 'transform 0.2s'
             }}
-            onClick={product.requiresIdVerification ? handleVerifyId : handleAddToCart}
-            onMouseDown={(e) => { if (hasStock || product.requiresIdVerification) e.currentTarget.style.transform = 'scale(0.98)' }}
-            onMouseUp={(e) => { if (hasStock || product.requiresIdVerification) e.currentTarget.style.transform = 'scale(1)' }}
+            onClick={isRecharge ? handleVerifyId : handleAddToCart}
+            onMouseDown={(e) => { if (hasStock || isRecharge) e.currentTarget.style.transform = 'scale(0.98)' }}
+            onMouseUp={(e) => { if (hasStock || isRecharge) e.currentTarget.style.transform = 'scale(1)' }}
           >
-            {product.requiresIdVerification ? t('product.verify_id') : (hasStock ? t('cart.add') : t('product.stock.none'))}
+            {isRecharge ? (hasStock ? 'Solicitar Recarga' : t('product.stock.none')) : (hasStock ? t('cart.add') : t('product.stock.none'))}
           </button>
         </div>
       </div>
@@ -271,15 +276,15 @@ export default function ProductCard({ product }: { product: Product }) {
               )}
 
               <button 
-                disabled={!hasStock && !product.requiresIdVerification}
+                disabled={!hasStock && !isRecharge}
                 style={{ 
-                  background: (hasStock || product.requiresIdVerification) ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : '#cbd5e1', 
+                  background: (hasStock || isRecharge) ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : '#cbd5e1', 
                   color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '16px', 
-                  fontWeight: 700, cursor: (hasStock || product.requiresIdVerification) ? 'pointer' : 'not-allowed', fontSize: '1.2rem', width: '100%',
-                  boxShadow: (hasStock || product.requiresIdVerification) ? '0 4px 15px rgba(62, 213, 204, 0.3)' : 'none'
+                  fontWeight: 700, cursor: (hasStock || isRecharge) ? 'pointer' : 'not-allowed', fontSize: '1.2rem', width: '100%',
+                  boxShadow: (hasStock || isRecharge) ? '0 4px 15px rgba(62, 213, 204, 0.3)' : 'none'
                 }}
                 onClick={(e) => { 
-                  if (product.requiresIdVerification) {
+                  if (isRecharge) {
                     handleVerifyId(e);
                   } else if (hasStock) {
                     handleAddToCart(e); 
@@ -288,7 +293,7 @@ export default function ProductCard({ product }: { product: Product }) {
                   }
                 }}
               >
-                {product.requiresIdVerification ? t('product.verify_id') : (hasStock ? t('cart.add') : t('product.stock.none'))}
+                {isRecharge ? (hasStock ? 'Solicitar Recarga' : t('product.stock.none')) : (hasStock ? t('cart.add') : t('product.stock.none'))}
               </button>
             </div>
           </div>
