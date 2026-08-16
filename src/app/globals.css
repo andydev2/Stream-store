@@ -127,7 +127,7 @@ a:hover {
   padding: 0 5%;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .desktop-search { display: flex !important; }
   .desktop-links { display: flex !important; }
   .mobile-toggle { display: none !important; }

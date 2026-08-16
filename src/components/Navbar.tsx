@@ -282,9 +282,11 @@ export default function Navbar() {
         }
         @media (max-width: 768px) {
           .desktop-only-text { display: none !important; }
+        }
+        @media (max-width: 1023px) {
           .mobile-theme-toggle { display: flex !important; }
         }
-        @media (min-width: 769px) {
+        @media (min-width: 1024px) {
           .mobile-theme-toggle { display: none !important; }
         }
       `}</style>
