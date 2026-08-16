@@ -138,17 +138,107 @@ export default function AdminProductForm() {
 
         <div>
           <label style={labelStyle}>Stock Inicial / Cuentas (Opcional)</label>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.5rem', marginTop: '-0.3rem' }}>
-            Formato estricto requerido: <code>correo@valido.com:contraseña</code> (Una cuenta por línea)
-          </p>
-          <textarea 
-            name="accounts" 
-            rows={4} 
-            value={accountsText}
-            onChange={(e) => setAccountsText(e.target.value)}
-            placeholder="cliente1@gmail.com:pass123&#10;cliente2@gmail.com:pass456" 
-            style={{...inputStyle, fontFamily: 'monospace'}}
-          ></textarea>
+          <div style={{ background: 'rgba(0,0,0,0.02)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
+            
+            {/* Input manual */}
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+              <input 
+                id="manual-email"
+                type="email" 
+                placeholder="Correo de la cuenta..." 
+                style={{ ...inputStyle, flex: '1 1 200px', marginBottom: 0 }} 
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('manual-password')?.focus();
+                  }
+                }}
+              />
+              <input 
+                id="manual-password"
+                type="text" 
+                placeholder="Contraseña..." 
+                style={{ ...inputStyle, flex: '1 1 150px', marginBottom: 0 }} 
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('btn-add-account')?.click();
+                  }
+                }}
+              />
+              <button 
+                id="btn-add-account"
+                type="button"
+                onClick={() => {
+                  const emailInput = document.getElementById('manual-email') as HTMLInputElement;
+                  const passInput = document.getElementById('manual-password') as HTMLInputElement;
+                  if (emailInput.value && passInput.value) {
+                    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+                    if (!emailRegex.test(emailInput.value)) {
+                      setMessage(`Error: El correo "${emailInput.value}" no es válido.`);
+                      return;
+                    }
+                    const newLine = `${emailInput.value}:${passInput.value}`;
+                    const currentAccounts = accountsText ? accountsText.split('\n') : [];
+                    if (!currentAccounts.includes(newLine)) {
+                      setAccountsText(accountsText ? accountsText + '\n' + newLine : newLine);
+                      emailInput.value = '';
+                      passInput.value = '';
+                      setMessage('');
+                      emailInput.focus();
+                    }
+                  }
+                }}
+                style={{ background: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '0 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}
+              >
+                + Añadir
+              </button>
+            </div>
+
+            {/* Visualización de cuentas añadidas */}
+            {accountsText && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '150px', overflowY: 'auto', marginBottom: '1rem' }}>
+                {accountsText.split('\n').filter(l => l.trim() !== '').map((line, idx) => {
+                  const [email, pass] = line.split(':');
+                  return (
+                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--card-bg)', padding: '0.5rem 1rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                      <div>
+                        <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>{email}</span>
+                        <span style={{ color: 'var(--text-muted)', marginLeft: '0.5rem' }}>({pass})</span>
+                      </div>
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          const lines = accountsText.split('\n').filter(l => l.trim() !== '');
+                          lines.splice(idx, 1);
+                          setAccountsText(lines.join('\n'));
+                        }}
+                        style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '1.2rem' }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Opcional para pegar múltiples */}
+            <details style={{ marginTop: '0.5rem' }}>
+              <summary style={{ fontSize: '0.85rem', color: 'var(--text-muted)', cursor: 'pointer', userSelect: 'none' }}>
+                O pegar lista masiva (correo:contraseña)
+              </summary>
+              <textarea 
+                name="accounts" 
+                rows={4} 
+                value={accountsText}
+                onChange={(e) => setAccountsText(e.target.value)}
+                placeholder="cliente1@gmail.com:pass123&#10;cliente2@gmail.com:pass456" 
+                style={{...inputStyle, fontFamily: 'monospace', marginTop: '0.5rem'}}
+              ></textarea>
+            </details>
+
+          </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
