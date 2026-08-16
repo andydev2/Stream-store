@@ -37,12 +37,17 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
 
   useEffect(() => {
     // Generate or retrieve session ID
-    let sid = localStorage.getItem('chat_session_id');
+    let sid = session?.user?.email;
+    
     if (!sid) {
-      sid = 'session_' + Math.random().toString(36).substr(2, 9);
-      localStorage.setItem('chat_session_id', sid);
+      sid = localStorage.getItem('chat_session_id');
+      if (!sid) {
+        sid = 'session_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('chat_session_id', sid);
+      }
     }
-    setSessionId(sid);
+    
+    setSessionId(sid as string);
     
     // Initial fetch
     fetchChat(sid);
@@ -53,7 +58,7 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [product.id]);
+  }, [product.id, session?.user?.email]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

@@ -41,8 +41,8 @@ export async function POST(request: Request) {
 
     await connectMongo();
 
-    // Find if there's an open chat for this session (and product if specified)
-    const query: any = { sessionId, status: 'open' };
+    // Find if there's any existing chat for this session (and product if specified)
+    const query: any = { sessionId };
     if (productId) {
       query.productId = productId;
     }
@@ -66,6 +66,7 @@ export async function POST(request: Request) {
     } else {
       // Add message to existing chat
       chat.messages.push({ sender: 'user', text });
+      chat.status = 'open'; // Reopen the chat if it was closed
       chat.updatedAt = new Date();
     }
 

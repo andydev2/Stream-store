@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import ChatWidget from './ChatWidget';
 import { useTheme } from 'next-themes';
-import { MessageCircle, Sun, Moon, Plus, X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { MessageCircle, Sun, Moon, Plus, ShieldAlert } from 'lucide-react';
+import MiniAdminChatList from './MiniAdminChatList';
 
 export default function GlobalChatWidget() {
   const [product, setProduct] = useState<{ id: string; name: string } | null>(null);
@@ -13,11 +15,16 @@ export default function GlobalChatWidget() {
   
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  
+  const { data: session } = useSession();
+  const isAdmin = (session?.user as any)?.role === 'admin';
 
   useEffect(() => {
     setMounted(true);
     const handleOpenChat = (e: CustomEvent<{ id: string; name: string }>) => {
-      setProduct(e.detail);
+      if (!isAdmin) {
+        setProduct(e.detail);
+      }
       setIsOpen(true);
       setMenuOpen(false);
     };
@@ -30,7 +37,7 @@ export default function GlobalChatWidget() {
   }, []);
 
   const handleToggleChat = () => {
-    if (!isOpen && !product) {
+    if (!isAdmin && !isOpen && !product) {
       setProduct({ id: 'soporte', name: 'Atención al Cliente' });
     }
     setIsOpen(!isOpen);
@@ -67,7 +74,7 @@ export default function GlobalChatWidget() {
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
 
-          {/* Chat Button */}
+          {/* Chat / Admin Button */}
           <button
             onClick={handleToggleChat}
             style={{ 
@@ -76,10 +83,10 @@ export default function GlobalChatWidget() {
               display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
               boxShadow: '0 4px 10px rgba(0,0,0,0.1)', position: 'relative'
             }}
-            title="Soporte"
+            title={isAdmin ? "Panel Admin" : "Soporte"}
           >
-            <MessageCircle size={20} />
-            {unreadAdminMessages && !isOpen && (
+            {isAdmin ? <ShieldAlert size={20} /> : <MessageCircle size={20} />}
+            {!isAdmin && unreadAdminMessages && !isOpen && (
               <span style={{
                 position: 'absolute', top: '-4px', right: '-4px',
                 width: '12px', height: '12px', borderRadius: '50%',
@@ -100,9 +107,10 @@ export default function GlobalChatWidget() {
             transition: 'transform 0.3s ease',
             transform: menuOpen ? 'rotate(45deg)' : 'rotate(0deg)'
           }}
+          className={!isAdmin && unreadAdminMessages && !isOpen && !menuOpen ? 'fab-unread' : ''}
         >
           <Plus size={32} />
-          {unreadAdminMessages && !isOpen && !menuOpen && (
+          {!isAdmin && unreadAdminMessages && !isOpen && !menuOpen && (
             <span style={{
               position: 'absolute', top: '0', right: '0',
               width: '16px', height: '16px', borderRadius: '50%',
@@ -112,15 +120,34 @@ export default function GlobalChatWidget() {
         </button>
       </div>
 
-      {/* Chat Window */}
-      {product && (
-        <ChatWidget 
-          product={product} 
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)} 
-          forceOpen={Date.now()}
-          onUnreadChange={setUnreadAdminMessages}
-        />
+      <style>{`
+        @keyframes ring-bounce {
+          0% { transform: rotate(0deg) scale(1); }
+          15% { transform: rotate(-15deg) scale(1.1); }
+          30% { transform: rotate(15deg) scale(1.1); }
+          45% { transform: rotate(-15deg) scale(1.1); }
+          60% { transform: rotate(15deg) scale(1.1); }
+          75% { transform: rotate(-15deg) scale(1.1); }
+          100% { transform: rotate(0deg) scale(1); }
+        }
+        .fab-unread {
+          animation: ring-bounce 1.5s infinite;
+        }
+      `}</style>
+
+      {/* Chat Window / Mini Admin Dashboard */}
+      {isAdmin ? (
+        isOpen && <MiniAdminChatList onClose={() => setIsOpen(false)} />
+      ) : (
+        product && (
+          <ChatWidget 
+            product={product} 
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)} 
+            forceOpen={Date.now()}
+            onUnreadChange={setUnreadAdminMessages}
+          />
+        )
       )}
     </>
   );
