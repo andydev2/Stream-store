@@ -56,7 +56,7 @@ export default function ProductCard({ product }: { product: Product }) {
     window.dispatchEvent(new CustomEvent('open-chat', { detail: { id: product.id, name: product.name } }));
   };
 
-  const isOnDemand = product.category === 'streaming';
+  const isOnDemand = product.category === 'streaming' || product.category === 'music';
   const hasStock = isOnDemand ? true : (product.stock !== undefined ? product.stock > 0 : true);
   const isRecharge = product.category === 'recharges' || product.category === 'free_fire';
 

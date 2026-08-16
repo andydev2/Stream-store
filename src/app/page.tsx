@@ -67,11 +67,14 @@ export default function Home() {
     });
 
     return filtered.sort((a, b) => {
-      const aStock = a.stock || 0;
-      const bStock = b.stock || 0;
+      const isOnDemandA = ['streaming', 'music', 'recharges', 'free_fire'].includes(a.category);
+      const isOnDemandB = ['streaming', 'music', 'recharges', 'free_fire'].includes(b.category);
       
-      if (aStock > 0 && bStock === 0) return -1;
-      if (aStock === 0 && bStock > 0) return 1;
+      const hasStockA = isOnDemandA ? true : (a.stock || 0) > 0;
+      const hasStockB = isOnDemandB ? true : (b.stock || 0) > 0;
+      
+      if (hasStockA && !hasStockB) return -1;
+      if (!hasStockA && hasStockB) return 1;
       return 0; // Keep relative order otherwise
     });
   }, [searchQuery, activeCategory, allProducts]);

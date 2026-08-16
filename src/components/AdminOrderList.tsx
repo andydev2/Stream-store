@@ -47,7 +47,7 @@ export default function AdminOrderList() {
     
     const payload: any = { action };
     
-    if (action === 'approve' && category === 'streaming') {
+    if (action === 'approve' && (category === 'streaming' || category === 'music')) {
       if (!manualCreds.email || !manualCreds.password) {
         setAlertModal({ isOpen: true, title: 'Datos Incompletos', message: 'Debes rellenar el correo y la contraseña de la cuenta.', type: 'error' });
         return;
@@ -169,7 +169,7 @@ export default function AdminOrderList() {
                 : 'Si rechazas, esta orden será eliminada permanentemente del sistema.'}
             </p>
             
-            {confirmModal.action === 'approve' && confirmModal.category === 'streaming' && (
+            {confirmModal.action === 'approve' && (confirmModal.category === 'streaming' || confirmModal.category === 'music') && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', marginBottom: '1.5rem', textAlign: 'left' }}>
                 <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Correo de la cuenta</label>
                 <input type="email" value={manualCreds.email} onChange={(e) => setManualCreds({...manualCreds, email: e.target.value})} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} placeholder="ejemplo@gmail.com" />

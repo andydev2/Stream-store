@@ -139,7 +139,7 @@ export default function AdminProductForm() {
           </div>
         </div>
 
-        {(selectedCategory !== 'recharges' && selectedCategory !== 'free_fire' && selectedCategory !== 'streaming') && (
+        {(selectedCategory !== 'recharges' && selectedCategory !== 'free_fire' && selectedCategory !== 'streaming' && selectedCategory !== 'music') && (
           <div>
             <label style={labelStyle}>{t('admin.prod.stock')}</label>
           <div style={{ background: 'rgba(0,0,0,0.02)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
