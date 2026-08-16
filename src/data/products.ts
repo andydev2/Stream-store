@@ -8,6 +8,7 @@ export type Product = {
   category: 'streaming' | 'ai' | 'music' | 'games';
   details?: string[];
   images?: string[];
+  stock?: number;
 };
 
 export const allProducts: Product[] = [
