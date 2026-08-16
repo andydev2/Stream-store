@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { useSession } from 'next-auth/react';
 
 interface ChatWidgetProps {
   product: { id: string; name: string };
   onClose: () => void;
+  forceOpen?: number;
 }
 
 interface Message {
@@ -15,13 +17,20 @@ interface Message {
   createdAt?: string;
 }
 
-export default function ChatWidget({ product, onClose }: ChatWidgetProps) {
+export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetProps) {
   const { t } = useLanguage();
+  const { data: session } = useSession();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [sessionId, setSessionId] = useState<string>('');
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [unreadAdminMessages, setUnreadAdminMessages] = useState(false);
+
+  useEffect(() => {
+    setIsMinimized(false);
+  }, [forceOpen]);
 
   useEffect(() => {
     // Generate or retrieve session ID
@@ -53,7 +62,16 @@ export default function ChatWidget({ product, onClose }: ChatWidgetProps) {
       if (res.ok) {
         const data = await res.json();
         if (data && data.messages) {
-          setMessages(data.messages);
+          setMessages(prev => {
+            // Check for new admin messages when minimized
+            if (isMinimized && data.messages.length > prev.length) {
+              const lastMessage = data.messages[data.messages.length - 1];
+              if (lastMessage.sender === 'admin') {
+                setUnreadAdminMessages(true);
+              }
+            }
+            return data.messages;
+          });
         } else if (messages.length === 0) {
           // If no chat exists yet, auto-send first message
           await startChat(sid);
@@ -91,6 +109,7 @@ export default function ChatWidget({ product, onClose }: ChatWidgetProps) {
           sessionId: sid,
           productId: product.id,
           productName: product.name,
+          userEmail: session?.user?.email || undefined,
           text
         })
       });
@@ -102,6 +121,54 @@ export default function ChatWidget({ product, onClose }: ChatWidgetProps) {
       console.error('Error sending message', error);
     }
   };
+
+  if (isMinimized) {
+    return (
+      <div 
+        onClick={() => {
+          setIsMinimized(false);
+          setUnreadAdminMessages(false);
+        }}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          width: '60px',
+          height: '60px',
+          backgroundColor: 'var(--primary)',
+          borderRadius: '50%',
+          boxShadow: '0 10px 25px rgba(62, 213, 204, 0.4)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          zIndex: 1000,
+          animation: 'bounceIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+        }}
+        title="Abrir chat"
+      >
+        <span style={{ fontSize: '24px' }}>💬</span>
+        {unreadAdminMessages && (
+          <div style={{
+            position: 'absolute',
+            top: '0px',
+            right: '0px',
+            width: '16px',
+            height: '16px',
+            backgroundColor: '#ef4444',
+            borderRadius: '50%',
+            border: '2px solid var(--card-bg)'
+          }} />
+        )}
+        <style>{`
+          @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -132,7 +199,22 @@ export default function ChatWidget({ product, onClose }: ChatWidgetProps) {
       }}>
         <span>{t('chat.title')} - {product.name}</span>
         <button 
-          onClick={onClose}
+          onClick={() => setIsMinimized(true)}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: '#1C5F5C',
+            cursor: 'pointer',
+            fontSize: '1.2rem',
+            padding: '0.2rem 0.5rem',
+            marginRight: '0.5rem'
+          }}
+          title="Minimizar"
+        >
+          _
+        </button>
+        <button 
+          onClick={() => setIsMinimized(true)}
           style={{
             background: 'transparent',
             border: 'none',
@@ -141,6 +223,7 @@ export default function ChatWidget({ product, onClose }: ChatWidgetProps) {
             fontSize: '1.2rem',
             padding: '0.2rem 0.5rem'
           }}
+          title="Minimizar chat"
         >
           ✕
         </button>

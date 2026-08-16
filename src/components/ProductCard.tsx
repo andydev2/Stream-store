@@ -25,6 +25,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatOpenCount, setChatOpenCount] = useState(0);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -52,6 +53,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const handleVerifyId = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsChatOpen(true);
+    setChatOpenCount(c => c + 1);
   };
 
   const hasStock = product.stock !== undefined ? product.stock > 0 : true;
@@ -309,7 +311,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
       {/* Render Chat Widget if open */}
       {isChatOpen && (
-        <ChatWidget product={product} onClose={() => setIsChatOpen(false)} />
+        <ChatWidget product={product} onClose={() => setIsChatOpen(false)} forceOpen={chatOpenCount} />
       )}
     </>
   );

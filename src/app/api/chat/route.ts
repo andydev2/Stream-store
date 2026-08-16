@@ -33,11 +33,10 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { sessionId, productId, productName, text } = body;
+    const { sessionId, productId, productName, text, userEmail } = await request.json();
 
-    if (!sessionId || !text) {
-      return NextResponse.json({ error: 'Session ID and text are required' }, { status: 400 });
+    if (!sessionId || !productId || !text) {
+      return NextResponse.json({ success: false, error: 'Faltan datos' }, { status: 400 });
     }
 
     await connectMongo();
@@ -56,11 +55,11 @@ export async function POST(request: Request) {
       }
       
       // Create new chat
-      chat = new Chat({
+      chat = await Chat.create({
         sessionId,
         productId,
         productName,
-        status: 'open',
+        userEmail,
         messages: [{ sender: 'user', text }]
       });
     } else {
