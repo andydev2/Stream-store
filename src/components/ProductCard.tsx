@@ -3,7 +3,6 @@
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useState, useEffect } from 'react';
-import ChatWidget from './ChatWidget';
 
 type Product = {
   id: string;
@@ -24,8 +23,6 @@ export default function ProductCard({ product }: { product: Product }) {
   const { t } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [chatOpenCount, setChatOpenCount] = useState(0);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -50,10 +47,10 @@ export default function ProductCard({ product }: { product: Product }) {
     addToCart(product);
   };
 
-  const handleVerifyId = (e: React.MouseEvent) => {
+  const handleSupportClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
-    setIsChatOpen(true);
-    setChatOpenCount(c => c + 1);
+    window.dispatchEvent(new CustomEvent('open-chat', { detail: { id: product.id, name: product.name } }));
   };
 
   const hasStock = product.stock !== undefined ? product.stock > 0 : true;
@@ -167,7 +164,7 @@ export default function ProductCard({ product }: { product: Product }) {
               boxShadow: (hasStock || isRecharge) ? '0 4px 15px rgba(62, 213, 204, 0.3)' : 'none',
               transition: 'transform 0.2s'
             }}
-            onClick={isRecharge ? handleVerifyId : handleAddToCart}
+            onClick={isRecharge ? handleSupportClick : handleAddToCart}
             onMouseDown={(e) => { if (hasStock || isRecharge) e.currentTarget.style.transform = 'scale(0.98)' }}
             onMouseUp={(e) => { if (hasStock || isRecharge) e.currentTarget.style.transform = 'scale(1)' }}
           >
@@ -287,7 +284,8 @@ export default function ProductCard({ product }: { product: Product }) {
                 }}
                 onClick={(e) => { 
                   if (isRecharge) {
-                    handleVerifyId(e);
+                    handleSupportClick(e);
+                    setIsModalOpen(false);
                   } else if (hasStock) {
                     handleAddToCart(e); 
                     setIsModalOpen(false); 
@@ -308,11 +306,6 @@ export default function ProductCard({ product }: { product: Product }) {
           to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
-
-      {/* Render Chat Widget if open */}
-      {isChatOpen && (
-        <ChatWidget product={product} onClose={() => setIsChatOpen(false)} forceOpen={chatOpenCount} />
-      )}
     </>
   );
 }

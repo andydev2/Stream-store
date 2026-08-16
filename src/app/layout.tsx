@@ -6,6 +6,7 @@ import ThemeProviderWrapper from "../components/ThemeProviderWrapper";
 import { CartProvider } from "../context/CartContext";
 import { LanguageProvider } from "../context/LanguageContext";
 import CartDrawer from "../components/CartDrawer";
+import GlobalChatWidget from "../components/GlobalChatWidget";
 import { Outfit } from 'next/font/google';
 import "./globals.css";
 
@@ -25,16 +26,19 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <body suppressHydrationWarning className={outfit.className} style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <SessionProviderWrapper>
-          <LanguageProvider>
-            <ThemeProviderWrapper>
+          <ThemeProviderWrapper>
+            <LanguageProvider>
               <CartProvider>
-                <Navbar />
-                <CartDrawer />
-                {children}
-                <Footer />
+                <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: 'var(--bg-main)' }}>
+                  <Navbar />
+                  <CartDrawer />
+                  <main style={{ flex: 1 }}>{children}</main>
+                  <Footer />
+                </div>
+                <GlobalChatWidget />
               </CartProvider>
-            </ThemeProviderWrapper>
-          </LanguageProvider>
+            </LanguageProvider>
+          </ThemeProviderWrapper>
         </SessionProviderWrapper>
       </body>
     </html>

@@ -158,7 +158,7 @@ a:hover {
   flex-direction: column;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .admin-chat-container {
     height: auto;
     min-height: calc(100vh - 100px);
@@ -170,10 +170,10 @@ a:hover {
     flex: 1;
   }
   .admin-sidebar.hidden-on-mobile {
-    display: none;
+    display: none !important;
   }
   .admin-main.hidden-on-mobile {
-    display: none;
+    display: none !important;
   }
   .admin-main {
     height: calc(100vh - 100px);
