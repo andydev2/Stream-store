@@ -56,7 +56,8 @@ export default function ProductCard({ product }: { product: Product }) {
     window.dispatchEvent(new CustomEvent('open-chat', { detail: { id: product.id, name: product.name } }));
   };
 
-  const hasStock = product.stock !== undefined ? product.stock > 0 : true;
+  const isOnDemand = product.category === 'streaming';
+  const hasStock = isOnDemand ? true : (product.stock !== undefined ? product.stock > 0 : true);
   const isRecharge = product.category === 'recharges' || product.category === 'free_fire';
 
   return (
@@ -125,6 +126,8 @@ export default function ProductCard({ product }: { product: Product }) {
         <div style={{ zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 600, color: hasStock ? '#16a34a' : '#dc2626', background: hasStock ? '#dcfce7' : '#fee2e2', padding: '0.3rem 0.6rem', borderRadius: '20px', width: 'fit-content' }}>
           {isRecharge ? (
             hasStock ? `🟢 ${t('product.recharge.available')}` : `🔴 ${t('product.stock.none')}`
+          ) : isOnDemand ? (
+            `🟢 ${t('product.stock.ondemand')}`
           ) : (
             hasStock ? `🟢 ${product.stock} ${t('product.stock.available')}` : `🔴 ${t('product.stock.out')}`
           )}
