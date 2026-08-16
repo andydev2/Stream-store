@@ -305,24 +305,6 @@ export default function Navbar() {
         }
       `}</style>
 
-      {/* Floating Theme Toggle (Mobile Only) */}
-      {mounted && (
-        <button
-          className="mobile-theme-toggle"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          style={{ 
-            position: 'fixed', bottom: '2rem', left: '2rem', zIndex: 100,
-            background: 'var(--primary)', color: '#1C5F5C', border: 'none',
-            width: '56px', height: '56px', borderRadius: '50%',
-            alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-            boxShadow: '0 4px 15px rgba(62, 213, 204, 0.4)'
-          }}
-          aria-label="Cambiar Tema"
-        >
-          {theme === 'dark' ? <Sun size={26} /> : <Moon size={26} />}
-        </button>
-      )}
-
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div style={{

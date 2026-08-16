@@ -8,6 +8,8 @@ interface ChatWidgetProps {
   product: { id: string; name: string };
   onClose: () => void;
   forceOpen?: number;
+  isOpen?: boolean;
+  onUnreadChange?: (hasUnread: boolean) => void;
 }
 
 interface Message {
@@ -17,7 +19,7 @@ interface Message {
   createdAt?: string;
 }
 
-export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetProps) {
+export default function ChatWidget({ product, onClose, forceOpen, isOpen = true, onUnreadChange }: ChatWidgetProps) {
   const { t } = useLanguage();
   const { data: session } = useSession();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -25,12 +27,13 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [sessionId, setSessionId] = useState<string>('');
-  const [isMinimized, setIsMinimized] = useState(false);
   const [unreadAdminMessages, setUnreadAdminMessages] = useState(false);
 
   useEffect(() => {
-    setIsMinimized(false);
-  }, [forceOpen]);
+    if (onUnreadChange) {
+      onUnreadChange(unreadAdminMessages);
+    }
+  }, [unreadAdminMessages, onUnreadChange]);
 
   useEffect(() => {
     // Generate or retrieve session ID
@@ -56,17 +59,7 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  useEffect(() => {
-    // Lock body scroll when chat is open on mobile
-    if (!isMinimized && window.innerWidth <= 768) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isMinimized]);
+
 
   const fetchChat = async (sid: string) => {
     try {
@@ -75,8 +68,8 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
         const data = await res.json();
         if (data && data.messages) {
           setMessages(prev => {
-            // Check for new admin messages when minimized
-            if (isMinimized && data.messages.length > prev.length) {
+            // Check for new admin messages when closed
+            if (!isOpen && data.messages.length > prev.length) {
               const lastMessage = data.messages[data.messages.length - 1];
               if (lastMessage.sender === 'admin') {
                 setUnreadAdminMessages(true);
@@ -135,68 +128,23 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
     }
   };
 
-  if (isMinimized) {
-    return (
-      <div 
-        onClick={() => {
-          setIsMinimized(false);
-          setUnreadAdminMessages(false);
-        }}
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          width: '60px',
-          height: '60px',
-          backgroundColor: 'var(--primary)',
-          borderRadius: '50%',
-          boxShadow: '0 10px 25px rgba(62, 213, 204, 0.4)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          zIndex: 1000,
-          animation: 'bounceIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-        }}
-        title="Abrir chat"
-      >
-        <span style={{ fontSize: '24px' }}>💬</span>
-        {unreadAdminMessages && (
-          <div style={{
-            position: 'absolute',
-            top: '0px',
-            right: '0px',
-            width: '16px',
-            height: '16px',
-            backgroundColor: '#ef4444',
-            borderRadius: '50%',
-            border: '2px solid var(--card-bg)'
-          }} />
-        )}
-        <style>{`
-          @keyframes bounceIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-          }
-        `}</style>
-      </div>
-    );
-  }
-
+  // Eliminar el render del minimized widget, eso lo maneja GlobalChatWidget ahora
   return (
-    <div className="chat-widget-mobile" style={{
+    <div style={{
       position: 'fixed',
-      bottom: '20px',
+      bottom: '100px', // por encima del FAB
       right: '20px',
       width: '350px',
+      maxWidth: 'calc(100vw - 40px)', // Para celulares
       height: '500px',
-      backgroundColor: 'var(--card-bg)',
+      maxHeight: 'calc(100vh - 120px)', // Para no tapar la pantalla
+      backgroundColor: 'var(--background)', // Fondo súper sólido
       borderRadius: '20px',
-      boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
-      display: 'flex',
+      boxShadow: '0 10px 40px rgba(0,0,0,0.3)',
+      display: isOpen ? 'flex' : 'none',
       flexDirection: 'column',
       zIndex: 10000,
-      border: '1px solid rgba(255,255,255,0.1)',
+      border: '1px solid var(--border)',
       overflow: 'hidden',
       animation: 'slideUp 0.3s ease-out'
     }}>
@@ -212,7 +160,7 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
       }}>
         <span>{t('chat.title')} - {product.name}</span>
         <button 
-          onClick={() => setIsMinimized(true)}
+          onClick={onClose}
           style={{
             background: 'transparent',
             border: 'none',
@@ -227,7 +175,7 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
           _
         </button>
         <button 
-          onClick={() => setIsMinimized(true)}
+          onClick={onClose}
           style={{
             background: 'transparent',
             border: 'none',
@@ -250,7 +198,7 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
         display: 'flex',
         flexDirection: 'column',
         gap: '0.8rem',
-        backgroundColor: 'var(--bg-main)' // Usar fondo sólido en lugar de rgba transparente
+        backgroundColor: 'var(--background)' // Usar fondo sólido real de la paleta
       }}>
         {loading ? (
           <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>Cargando...</div>
