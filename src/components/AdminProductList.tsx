@@ -116,6 +116,20 @@ export default function AdminProductList() {
     }
   };
 
+  const handleAddRechargeStock = async (id: string) => {
+    try {
+      const dummyAccount = `recarga_${Math.random().toString(36).substring(2,8).toUpperCase()}:diamantes`;
+      const res = await fetch(`/api/products/${id}/inventory`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accounts: [dummyAccount] }),
+      });
+      if (res.ok) fetchProducts();
+    } catch (err) {
+      alert('Error de red al agregar stock');
+    }
+  };
+
   if (loading) return <div style={{ marginTop: '2rem', textAlign: 'center' }}>Cargando catálogo...</div>;
   if (error) return <div style={{ marginTop: '2rem', color: 'red', textAlign: 'center' }}>{error}</div>;
 
@@ -167,12 +181,22 @@ export default function AdminProductList() {
 
                 {/* Acciones */}
                 <div style={{ display: 'flex', gap: '0.5rem', flex: '1 1 100%', justifyContent: 'flex-end' }}>
-                  <button 
-                    onClick={() => handleOpenInventoryModal(product.id || product._id, product.name)}
-                    style={{ background: '#dbeafe', color: '#2563eb', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', flex: 1, maxWidth: '150px' }}
-                  >
-                    Inventario
-                  </button>
+                  {product.category === 'recharges' ? (
+                    <button 
+                      onClick={() => handleAddRechargeStock(product.id || product._id)}
+                      style={{ background: '#dcfce7', color: '#166534', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '800', flex: 1, maxWidth: '150px', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      title="Agregar +1 al stock"
+                    >
+                      +
+                    </button>
+                  ) : (
+                    <button 
+                      onClick={() => handleOpenInventoryModal(product.id || product._id, product.name)}
+                      style={{ background: '#dbeafe', color: '#2563eb', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', flex: 1, maxWidth: '150px' }}
+                    >
+                      Inventario
+                    </button>
+                  )}
                   <button 
                     onClick={() => confirmDeleteProduct(product.id || product._id, product.name)}
                     style={{ background: '#fee2e2', color: '#ef4444', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', flex: 1, maxWidth: '150px' }}

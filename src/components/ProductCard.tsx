@@ -13,9 +13,9 @@ type Product = {
   icon: string;
   color: string;
   stock?: number;
-  details?: string[];
   images?: string[];
   requiresIdVerification?: boolean;
+  category?: string;
 };
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -109,7 +109,7 @@ export default function ProductCard({ product }: { product: Product }) {
             <div>
               <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>{product.name}</h3>
               <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem' }}>
-                ${product.price.toFixed(2)} {!product.requiresIdVerification && <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>{t('product.month')}</span>}
+                ${product.price.toFixed(2)} {product.category !== 'recharges' && <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>{t('product.month')}</span>}
               </div>
             </div>
           </div>

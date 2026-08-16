@@ -137,8 +137,9 @@ export default function AdminProductForm() {
           </div>
         </div>
 
-        <div>
-          <label style={labelStyle}>Stock Inicial / Cuentas (Opcional)</label>
+        {selectedCategory !== 'recharges' && (
+          <div>
+            <label style={labelStyle}>Stock Inicial / Cuentas (Opcional)</label>
           <div style={{ background: 'rgba(0,0,0,0.02)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
             
             {/* Input manual */}
@@ -239,8 +240,9 @@ export default function AdminProductForm() {
               ></textarea>
             </details>
 
+            </div>
           </div>
-        </div>
+        )}
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
           <div>
