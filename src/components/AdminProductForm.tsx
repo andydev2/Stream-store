@@ -109,7 +109,7 @@ export default function AdminProductForm() {
         
         <div>
           <label style={labelStyle}>Descripción</label>
-          <textarea required name="description" rows={3} placeholder="Detalles de la cuenta o producto..." style={inputStyle}></textarea>
+          <textarea required name="description" rows={3} maxLength={400} placeholder="Detalles de la cuenta o producto... (Máx 400 caracteres)" style={{ ...inputStyle, resize: 'none' }}></textarea>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
@@ -137,7 +137,7 @@ export default function AdminProductForm() {
           </div>
         </div>
 
-        {(selectedCategory !== 'recharges' && selectedCategory !== 'free_fire') && (
+        {(selectedCategory !== 'recharges' && selectedCategory !== 'free_fire' && selectedCategory !== 'streaming') && (
           <div>
             <label style={labelStyle}>Stock Inicial / Cuentas (Opcional)</label>
           <div style={{ background: 'rgba(0,0,0,0.02)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
