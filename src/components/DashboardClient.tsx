@@ -78,13 +78,13 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
                 <span style={{ background: 'var(--primary)', color: '#1C5F5C', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>Activa</span>
               </div>
               <div style={{ background: 'var(--search-bg)', padding: '1rem', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Usuario:</span>
-                  <strong style={{ color: 'var(--text-main)' }}>{order.accountUsername}</strong>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', flexShrink: 0 }}>Usuario:</span>
+                  <strong style={{ color: 'var(--text-main)', wordBreak: 'break-all', textAlign: 'right' }}>{order.accountUsername}</strong>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Contraseña:</span>
-                  <strong style={{ color: 'var(--text-main)', letterSpacing: '1px' }}>{order.accountPassword}</strong>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', flexShrink: 0 }}>Contraseña:</span>
+                  <strong style={{ color: 'var(--text-main)', letterSpacing: '1px', wordBreak: 'break-all', textAlign: 'right' }}>{order.accountPassword}</strong>
                 </div>
               </div>
                 <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

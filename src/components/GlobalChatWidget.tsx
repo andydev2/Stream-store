@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import { MessageCircle, Sun, Moon, Plus, ShieldAlert } from 'lucide-react';
 import MiniAdminChatList from './MiniAdminChatList';
 
-export default function GlobalChatWidget() {
+export default function GlobalChatWidget({ isAdmin = false }: { isAdmin?: boolean }) {
   const [product, setProduct] = useState<{ id: string; name: string } | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -17,7 +17,6 @@ export default function GlobalChatWidget() {
   const [mounted, setMounted] = useState(false);
   
   const { data: session } = useSession();
-  const isAdmin = (session?.user as any)?.role === 'admin';
 
   useEffect(() => {
     setMounted(true);
