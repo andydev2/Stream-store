@@ -259,34 +259,24 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
                     {t('chat.payment.approved')}
                   </div>
                   <button
-                    onClick={async () => {
+                    onClick={() => {
                       const btn = document.getElementById(`pay-btn-${idx}`);
-                      if (btn) btn.innerHTML = t('chat.payment.processing');
-                      try {
-                        // Fetch product details to get the exact price
-                        const prodRes = await fetch(`/api/products/${product.id}`);
-                        if (!prodRes.ok) throw new Error('Error fetching product');
-                        const prodData = await prodRes.json();
-                        
-                        const res = await fetch('/api/checkout', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({
-                            items: [{
-                              name: product.name,
-                              price: prodData.price || 0,
-                              quantity: 1
-                            }]
-                          })
+                      if (btn) btn.innerHTML = 'Procesando...';
+                      
+                      // Fetch product to get updated price
+                      fetch(`/api/products/${product.id}`)
+                        .then(res => res.json())
+                        .then(prodData => {
+                           // Emitir un evento para que el botón de pago sea "Comprar",
+                           // la lógica principal ahora es usar el carrito (ya que stripe se eliminó).
+                           // El usuario debe cerrar el chat y agregar al carrito.
+                           alert("Stripe se ha eliminado. Por favor, compra el producto agregándolo al carrito y pagando por transferencia bancaria.");
+                           if (btn) btn.innerHTML = 'Pagos por Carrito';
+                        })
+                        .catch(err => {
+                          console.error(err);
+                          if (btn) btn.innerHTML = 'Error';
                         });
-                        const data = await res.json();
-                        if (data.url) {
-                          window.location.href = data.url;
-                        }
-                      } catch (e) {
-                        console.error('Error during checkout', e);
-                        if (btn) btn.innerHTML = t('chat.payment.error');
-                      }
                     }}
                     id={`pay-btn-${idx}`}
                     style={{
