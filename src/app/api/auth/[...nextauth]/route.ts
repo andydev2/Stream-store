@@ -5,6 +5,12 @@ import bcrypt from "bcryptjs";
 import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 
+const ADMIN_EMAILS = [
+  'bonejohao60@gmail.com',
+  // Puedes agregar tu correo aquí abajo para que ambos tengan admin, por ejemplo:
+  // 'tu_correo_de_desarrollador@gmail.com'
+];
+
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -35,7 +41,7 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
             isVerified: true,
             provider: 'google',
-            role: user.email === (process.env.ADMIN_EMAIL || 'bonejohao60@gmail.com') ? 'admin' : 'user'
+            role: ADMIN_EMAILS.includes(user.email) ? 'admin' : 'user'
           });
         }
       }
@@ -43,7 +49,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user && token.email) {
-        (session.user as any).role = token.email === (process.env.ADMIN_EMAIL || 'bonejohao60@gmail.com') ? 'admin' : 'user';
+        (session.user as any).role = ADMIN_EMAILS.includes(token.email) ? 'admin' : 'user';
       }
       return session;
     },
