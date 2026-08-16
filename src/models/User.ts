@@ -8,6 +8,7 @@ export interface IUser extends Document {
   verificationCodeExpiresAt?: Date;
   provider: 'credentials' | 'google';
   role: 'user' | 'admin';
+  cart?: any[];
 }
 
 const CartItemSchema = new Schema({

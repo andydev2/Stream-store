@@ -76,15 +76,15 @@ export default function ProductCard({ product }: { product: Product }) {
     <>
       <div 
         style={{
-          background: 'var(--card-bg)',
-          borderRadius: 'var(--radius)',
+          background: `linear-gradient(135deg, #ffffff 0%, ${product.color}15 100%)`,
+          borderRadius: '32px',
           padding: '2rem',
-          boxShadow: '0 10px 40px rgba(0,0,0,0.06)',
+          boxShadow: '0 10px 40px rgba(0,0,0,0.03)',
           display: 'flex',
           flexDirection: 'column',
           gap: '1.5rem',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          border: '1px solid rgba(0,0,0,0.02)',
+          transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease',
+          border: '1px solid rgba(0,0,0,0.04)',
           position: 'relative',
           overflow: 'hidden',
           opacity: hasStock ? 1 : 0.6,
@@ -100,17 +100,7 @@ export default function ProductCard({ product }: { product: Product }) {
           e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.06)';
         }}
       >
-        {/* Decorative Gradient Blob */}
-        <div style={{
-          position: 'absolute',
-          top: '-50px',
-          right: '-50px',
-          width: '150px',
-          height: '150px',
-          background: `radial-gradient(circle, ${product.color}40 0%, transparent 70%)`,
-          borderRadius: '50%',
-          zIndex: 0
-        }} />
+
 
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

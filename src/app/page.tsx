@@ -1,18 +1,18 @@
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
-import styles from './page.module.css';
 import ProductCard from '../components/ProductCard';
 import ReviewSection from '../components/ReviewSection';
 import { useLanguage } from '../context/LanguageContext';
 import { Product as ProductType } from '../data/products';
+import { ArrowRight, ShieldCheck, Zap, HeadphonesIcon, Award, Play, Monitor, Bot, Gamepad2, ShoppingBag } from 'lucide-react';
 
 const categories = [
-  { id: 'all', labelKey: 'cat.all', icon: '⊞' },
-  { id: 'streaming', labelKey: 'cat.streaming', icon: '🎬' },
-  { id: 'ai', labelKey: 'cat.ai', icon: '🤖' },
-  { id: 'music', labelKey: 'cat.music', icon: '🎵' },
-  { id: 'games', labelKey: 'cat.games', icon: '🎮' },
+  { id: 'all', labelKey: 'cat.all', icon: <ShoppingBag size={20} /> },
+  { id: 'streaming', labelKey: 'cat.streaming', icon: <Monitor size={20} /> },
+  { id: 'ai', labelKey: 'cat.ai', icon: <Bot size={20} /> },
+  { id: 'music', labelKey: 'cat.music', icon: <Play size={20} /> },
+  { id: 'games', labelKey: 'cat.games', icon: <Gamepad2 size={20} /> },
 ];
 
 export default function Home() {
@@ -22,8 +22,8 @@ export default function Home() {
   const [allProducts, setAllProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(12);
+  const [scrollY, setScrollY] = useState(0);
 
-  // Reset pagination when search or category changes
   useEffect(() => {
     setVisibleCount(12);
   }, [searchQuery, activeCategory]);
@@ -54,7 +54,15 @@ export default function Home() {
     window.addEventListener('searchChanged', handleSearch);
     handleSearch();
 
-    return () => window.removeEventListener('searchChanged', handleSearch);
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('searchChanged', handleSearch);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const filteredProducts = useMemo(() => {
@@ -75,179 +83,361 @@ export default function Home() {
       
       if (hasStockA && !hasStockB) return -1;
       if (!hasStockA && hasStockB) return 1;
-      return 0; // Keep relative order otherwise
+      return 0;
     });
   }, [searchQuery, activeCategory, allProducts]);
 
   return (
-    <main className={styles.main}>
-      <div className={styles.hero}>
-        <h1 className={styles.title}>{t('hero.title')}</h1>
-        <p className={styles.description}>
-          {t('hero.desc')}
-        </p>
+    <main style={{ position: 'relative', overflowX: 'hidden' }}>
+      
+      {/* --- CLEAN STATIC BACKGROUND --- */}
+      <div style={{
+        position: 'fixed',
+        top: 0, left: 0, right: 0, bottom: 0,
+        zIndex: -1,
+        pointerEvents: 'none',
+        background: 'linear-gradient(180deg, var(--background) 0%, #ffffff 100%)',
+      }}>
+      </div>
 
-        {/* Categories Row */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '1rem',
-          marginTop: '3rem',
-          flexWrap: 'wrap',
-          position: 'relative',
-          zIndex: 10
-        }}>
-          {categories.map((cat, i) => {
-            const isActive = activeCategory === cat.id;
-            return (
-              <button 
-                key={cat.id} 
-                onClick={() => setActiveCategory(cat.id)}
-                style={{
-                  background: isActive ? 'var(--card-bg)' : 'transparent',
-                  color: isActive ? 'var(--primary)' : 'var(--text-muted)',
-                  border: '1px solid',
-                  borderColor: isActive ? 'var(--primary)' : 'var(--border)',
-                  padding: '0.75rem 1.5rem',
-                  borderRadius: '20px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  minWidth: '90px',
-                  backdropFilter: 'blur(10px)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: isActive ? '0 8px 25px rgba(62, 213, 204, 0.2)' : 'none',
-                  transform: isActive ? 'translateY(-5px)' : 'none'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.borderColor = 'var(--primary)';
-                    e.currentTarget.style.color = 'var(--text-main)';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.borderColor = 'var(--border)';
-                    e.currentTarget.style.color = 'var(--text-muted)';
-                    e.currentTarget.style.transform = 'none';
+      <div style={{ padding: '2rem 5%', maxWidth: '1400px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <style>{`
+          /* Asymmetric Premium Bento Grid */
+          .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 240px;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+          }
+          
+          .bento-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 32px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 1);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(28, 95, 92, 0.08), inset 0 0 0 1px rgba(255,255,255,0.5);
+            display: flex;
+            flex-direction: column;
+          }
+          
+          .bento-card:hover {
+            transform: scale(0.98) translateY(-5px);
+            box-shadow: 0 25px 50px rgba(28, 95, 92, 0.15);
+            border-color: var(--primary);
+          }
+
+          /* Grid cell placements */
+          .hero-cell { 
+            grid-column: span 2; 
+            grid-row: span 2; 
+            justify-content: flex-end; 
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(211, 242, 237, 0.6) 100%);
+          }
+          .f1-wide { 
+            grid-column: span 2; 
+            grid-row: span 1; 
+            flex-direction: row; 
+            align-items: center; 
+            gap: 2rem;
+          }
+          .f2-square { grid-column: span 1; grid-row: span 1; justify-content: space-between; }
+          .f3-square { grid-column: span 1; grid-row: span 1; justify-content: space-between; }
+          .about-wide { 
+            grid-column: span 3; 
+            grid-row: span 1; 
+            flex-direction: row; 
+            align-items: center; 
+            gap: 3rem;
+            background: var(--card-bg);
+          }
+          .f4-tall { 
+            grid-column: span 1; 
+            grid-row: span 2; 
+            background: var(--primary); 
+            color: #1C5F5C; 
+            justify-content: space-between;
+          }
+          .cta-wide { 
+            grid-column: span 3; 
+            grid-row: span 1; 
+            background: var(--text-main); 
+            color: var(--background); 
+            flex-direction: row; 
+            align-items: center; 
+            justify-content: space-between;
+            cursor: pointer;
+          }
+          .cta-wide:hover { background: #113f3d; }
+
+          /* Typography */
+          .hero-title {
+            font-size: clamp(2.5rem, 4vw, 4rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.05em;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+          }
+          .hero-desc {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-weight: 500;
+          }
+          
+          .icon-wrap {
+            width: 64px; height: 64px;
+            background: var(--primary);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            color: #1C5F5C; flex-shrink: 0;
+            box-shadow: 0 8px 20px rgba(62, 213, 204, 0.4);
+          }
+          
+          /* Layout Ordering */
+          .home-layout { display: flex; flex-direction: column; }
+          .bento-section { order: 1; }
+          .catalog-section { order: 2; }
+
+          /* Responsive */
+          @media (max-width: 1024px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(200px, auto); }
+            .hero-cell { grid-column: span 2; grid-row: span 1; justify-content: center; }
+            .f1-wide { grid-column: span 2; }
+            .about-wide { grid-column: span 2; flex-direction: column; text-align: center; gap: 1rem; }
+            .f4-tall { grid-column: span 2; grid-row: span 1; flex-direction: row; align-items: center; }
+            .cta-wide { grid-column: span 2; }
+          }
+          
+          @media (max-width: 600px) {
+            .bento-grid { grid-template-columns: 1fr; gap: 1rem; grid-auto-rows: auto; }
+            .bento-card { padding: 2rem; border-radius: 24px; }
+            .hero-cell, .f1-wide, .f2-square, .f3-square, .about-wide, .f4-tall, .cta-wide { 
+              grid-column: span 1; grid-row: auto; 
+            }
+            .f1-wide, .f4-tall { flex-direction: column; text-align: center; gap: 1.5rem; }
+            .icon-wrap { width: 56px; height: 56px; margin: 0 auto; }
+            .cta-wide { display: none !important; }
+            
+            .bento-section { order: 2; margin-top: 2rem; }
+            .catalog-section { order: 1; margin-bottom: 2rem; }
+          }
+          .no-scrollbar::-webkit-scrollbar { display: none; }
+          .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        `}</style>
+
+        <div className="home-layout">
+          {/* --- ASYMMETRIC BENTO GRID --- */}
+          <section className="bento-section">
+            <div className="bento-grid">
+              
+              {/* 1. Hero Cell (Huge Square) */}
+              <div className="bento-card hero-cell">
+                <div style={{ position: 'absolute', top: '-10%', right: '-10%', width: '300px', height: '300px', background: 'radial-gradient(circle, var(--primary) 0%, transparent 70%)', opacity: 0.2, filter: 'blur(40px)', zIndex: 0 }}></div>
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <h1 className="hero-title">{t('hero.title')}</h1>
+                  <p className="hero-desc">{t('hero.desc')}</p>
+                </div>
+              </div>
+
+              {/* 2. Feature 1 (Wide Top Right) */}
+              <div className="bento-card f1-wide">
+                <div className="icon-wrap">
+                  <Award size={32} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--text-main)', marginBottom: '0.5rem', letterSpacing: '-0.03em' }}>{t('why.exp.title')}</h3>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.5, fontWeight: 500 }}>{t('why.exp.desc')}</p>
+                </div>
+              </div>
+
+              {/* 3. Feature 2 (Small Square) */}
+              <div className="bento-card f2-square">
+                <div className="icon-wrap" style={{ background: 'var(--card-bg)', color: 'var(--primary)', boxShadow: 'none' }}>
+                  <Zap size={28} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.5rem' }}>{t('why.delivery.title')}</h3>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.4 }}>{t('why.delivery.desc')}</p>
+                </div>
+              </div>
+
+              {/* 4. Feature 3 (Small Square) */}
+              <div className="bento-card f3-square">
+                <div className="icon-wrap" style={{ background: 'var(--card-bg)', color: 'var(--primary)', boxShadow: 'none' }}>
+                  <ShieldCheck size={28} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.5rem' }}>{t('why.warranty.title')}</h3>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.4 }}>{t('why.warranty.desc')}</p>
+                </div>
+              </div>
+
+              {/* 5. About Me (Wide Middle) */}
+              <div className="bento-card about-wide" id="sobre-mi">
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'inline-block', padding: '0.4rem 1rem', background: 'var(--text-main)', color: 'var(--background)', borderRadius: '100px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.75rem', marginBottom: '1rem' }}>
+                    {t('about.subtitle')}
+                  </div>
+                  <h2 style={{ fontSize: 'clamp(2rem, 3vw, 2.5rem)', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-0.04em', lineHeight: 1.1 }}>{t('about.title')}</h2>
+                </div>
+                <div style={{ flex: 1.5 }}>
+                  <p style={{ color: 'var(--text-main)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '0.8rem', fontWeight: 500 }}>
+                    {t('about.desc1')}
+                  </p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.6 }}>
+                    {t('about.desc2')}
+                  </p>
+                </div>
+              </div>
+
+              {/* 6. Feature 4 (Tall Right) */}
+              <div className="bento-card f4-tall">
+                <div className="icon-wrap" style={{ background: 'rgba(255,255,255,0.3)', color: '#1C5F5C', boxShadow: 'none', width: '80px', height: '80px' }}>
+                  <HeadphonesIcon size={40} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#1C5F5C', marginBottom: '0.8rem', letterSpacing: '-0.03em', lineHeight: 1.1 }}>{t('why.support.title')}</h3>
+                  <p style={{ color: 'rgba(28, 95, 92, 0.8)', fontSize: '1.05rem', lineHeight: 1.5, fontWeight: 600 }}>{t('why.support.desc')}</p>
+                </div>
+              </div>
+
+              {/* 7. CTA (Wide Bottom) */}
+              <div 
+                className="bento-card cta-wide" 
+                onClick={() => {
+                  const el = document.getElementById('catalog');
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
                 }}
               >
-                <div style={{ fontSize: '1.8rem', filter: isActive ? 'drop-shadow(0 2px 8px rgba(62, 213, 204, 0.4))' : 'none', transition: 'all 0.3s' }}>
-                  {cat.icon}
+                <div>
+                  <h2 style={{ margin: '0 0 0.5rem 0', fontSize: 'clamp(2rem, 3vw, 2.5rem)', fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1.1 }}>
+                    {t('nav.catalog')}
+                  </h2>
+                  <p style={{ fontSize: '1.1rem', fontWeight: 500, opacity: 0.8, margin: 0 }}>
+                    Explora nuestros productos y ahorra hoy mismo.
+                  </p>
                 </div>
-                <span style={{ fontSize: '0.85rem', letterSpacing: '0.5px' }}>{t(cat.labelKey)}</span>
-              </button>
-            );
-          })}
+                <div style={{ width: '64px', height: '64px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <ArrowRight size={32} color="var(--background)" />
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          {/* --- CATALOG SECTION --- */}
+          <section id="catalog" className="catalog-section" style={{ paddingTop: '2rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '3rem', gap: '2rem' }}>
+              <h2 style={{ fontSize: 'clamp(3rem, 6vw, 4.5rem)', fontWeight: 900, letterSpacing: '-0.05em', color: 'var(--text-main)', margin: 0, lineHeight: 1 }}>
+                {t('nav.catalog')}
+              </h2>
+              
+              {/* Category Pills */}
+              <div className="no-scrollbar" style={{ display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem', maxWidth: '100%' }}>
+                {categories.map((cat) => {
+                  const isActive = activeCategory === cat.id;
+                  return (
+                    <button 
+                      key={cat.id} 
+                      onClick={() => setActiveCategory(cat.id)}
+                      style={{
+                        background: isActive ? 'var(--text-main)' : 'rgba(255,255,255,0.7)',
+                        backdropFilter: 'blur(10px)',
+                        color: isActive ? 'var(--background)' : 'var(--text-main)',
+                        border: '1px solid',
+                        borderColor: isActive ? 'var(--text-main)' : 'rgba(255,255,255,0.8)',
+                        padding: '0.75rem 1.5rem',
+                        borderRadius: '100px',
+                        fontWeight: 800,
+                        fontSize: '0.95rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        transition: 'all 0.2s',
+                        whiteSpace: 'nowrap',
+                        flexShrink: 0,
+                        boxShadow: isActive ? '0 8px 20px rgba(0,0,0,0.1)' : '0 4px 10px rgba(0,0,0,0.05)'
+                      }}
+                    >
+                      {cat.icon}
+                      <span>{t(cat.labelKey)}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Product Grid */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+              gap: '2.5rem'
+            }}>
+              {loading ? (
+                <div style={{ gridColumn: '1 / -1', padding: '5rem', display: 'flex', justifyContent: 'center' }}>
+                  <div style={{ width: '50px', height: '50px', border: '5px solid rgba(255,255,255,0.5)', borderTop: '5px solid var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+                </div>
+              ) : filteredProducts.length > 0 ? (
+                filteredProducts.slice(0, visibleCount).map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))
+              ) : (
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '5rem', color: 'var(--text-main)', fontSize: '1.2rem', background: 'rgba(255,255,255,0.8)', borderRadius: '32px', fontWeight: 600 }}>
+                  {t('empty.search')}
+                </div>
+              )}
+            </div>
+
+            {filteredProducts.length > visibleCount && (
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '4rem' }}>
+                <button 
+                  onClick={() => setVisibleCount(filteredProducts.length)}
+                  style={{ 
+                    padding: '1.2rem 3.5rem', 
+                    borderRadius: '100px', 
+                    fontSize: '1.1rem',
+                    fontWeight: 800,
+                    background: 'rgba(255,255,255,0.8)',
+                    backdropFilter: 'blur(10px)',
+                    color: 'var(--text-main)',
+                    border: '2px solid rgba(255,255,255,1)',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'var(--text-main)';
+                    e.currentTarget.style.color = 'var(--background)';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.8)';
+                    e.currentTarget.style.color = 'var(--text-main)';
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  {t('catalog.load_more')}
+                </button>
+              </div>
+            )}
+          </section>
         </div>
 
-        {/* Elegant Wave Divider */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', overflow: 'hidden', lineHeight: 0, transform: 'translateY(1px)' }}>
-          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" style={{ position: 'relative', display: 'block', width: 'calc(100% + 1.3px)', height: 'clamp(30px, 6vw, 70px)' }}>
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.08,130.83,123.63,196.36,108.92c57.5-13.06,108.68-35.32,166.42-45.74z" fill="var(--background)"></path>
-          </svg>
-        </div>
-      </div>
-
-      <div className={styles.grid} style={{ marginTop: '2rem' }}>
-        {loading ? (
-          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-            {t('catalog.loading')}
-          </div>
-        ) : filteredProducts.length > 0 ? (
-          filteredProducts.slice(0, visibleCount).map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))
-        ) : (
-          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-            {t('empty.search')}
-          </div>
-        )}
-      </div>
-
-      {filteredProducts.length > visibleCount && (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '3rem', width: '100%', zIndex: 10, position: 'relative' }}>
-          <button 
-            className="btn btn-primary"
-            onClick={() => setVisibleCount(filteredProducts.length)}
-            style={{ 
-              padding: '1rem 3rem', 
-              borderRadius: '30px', 
-              fontSize: '1.2rem',
-              boxShadow: '0 8px 25px rgba(62, 213, 204, 0.4)',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
-            onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
-          >
-            {t('catalog.load_more')}
-          </button>
-        </div>
-      )}
-
-      {/* Why Choose Us Section */}
-      <section style={{ width: '100%', maxWidth: '1200px', padding: '0 1rem', marginTop: '6rem' }}>
-        <h2 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '3rem', color: 'var(--text-main)', fontWeight: 900, letterSpacing: '-1px' }}>
-          {t('why.title')}
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
-          {/* Card 1 */}
-          <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏆</div>
-            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', marginBottom: '1rem', fontWeight: 800 }}>{t('why.exp.title')}</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('why.exp.desc')}</p>
-          </div>
-          {/* Card 2 */}
-          <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚡</div>
-            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', marginBottom: '1rem', fontWeight: 800 }}>{t('why.delivery.title')}</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('why.delivery.desc')}</p>
-          </div>
-          {/* Card 3 */}
-          <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🛡️</div>
-            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', marginBottom: '1rem', fontWeight: 800 }}>{t('why.warranty.title')}</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('why.warranty.desc')}</p>
-          </div>
-          {/* Card 4 */}
-          <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: 'var(--radius)', border: '1px solid var(--border)', textAlign: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎧</div>
-            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', marginBottom: '1rem', fontWeight: 800 }}>{t('why.support.title')}</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('why.support.desc')}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* About Me Section */}
-      <section id="sobre-mi" style={{ width: '100%', maxWidth: '1000px', padding: '0 1rem', marginTop: '6rem' }}>
-        <div style={{ background: 'var(--card-bg)', borderRadius: 'var(--radius)', border: '1px solid var(--border)', overflow: 'hidden', display: 'flex', flexWrap: 'wrap', boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
-          <div style={{ flex: '1 1 400px', padding: 'clamp(2rem, 5vw, 4rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <h4 style={{ color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-              {t('about.subtitle')}
-            </h4>
-            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 2.5rem)', color: 'var(--text-main)', marginBottom: '1.5rem', fontWeight: 900, lineHeight: 1.1, letterSpacing: '-1px' }}>
-              {t('about.title')}
-            </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '1.5rem', lineHeight: 1.7 }}>
-              {t('about.desc1')}
-            </p>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: 1.7 }}>
-              {t('about.desc2')}
-            </p>
-          </div>
-          <div style={{ flex: '1 1 300px', minHeight: '350px', background: 'url(https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80) center/cover' }}>
-            {/* Image Placeholder */}
-          </div>
-        </div>
-      </section>
-
-      <div style={{ width: '100%', marginTop: '8rem', marginBottom: '4rem' }}>
-        <ReviewSection />
+        {/* --- REVIEWS SECTION --- */}
+        <section style={{ marginBottom: '4rem' }}>
+          <ReviewSection />
+        </section>
+        
       </div>
     </main>
   );

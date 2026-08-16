@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { MessageCircle } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 
 export default function Footer() {
@@ -51,14 +52,14 @@ export default function Footer() {
 
         {/* Payment Methods */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <h4 style={{ color: 'var(--text-main)', fontWeight: 700, fontSize: '1.1rem', marginBottom: '0.5rem' }}>Métodos de Pago</h4>
+          <h4 style={{ color: 'var(--text-main)', fontWeight: 700, fontSize: '1.1rem', marginBottom: '0.5rem' }}>{t('footer.payment_methods')}</h4>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <div style={{ background: 'var(--background)', padding: '0.5rem', borderRadius: '8px' }}>
               <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" style={{ height: '20px' }} />
             </div>
-            <div style={{ background: 'var(--background)', padding: '0.5rem', borderRadius: '8px', display: 'flex', gap: '0.5rem' }}>
-              <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" style={{ height: '20px' }} />
-              <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" style={{ height: '14px', marginTop: '3px' }} />
+            <div style={{ background: 'var(--background)', padding: '0.5rem 0.8rem', borderRadius: '8px', display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#fbc02d' }}>Pichincha</span>
+              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: '#e91e63' }}>Guayaquil</span>
             </div>
           </div>
         </div>
@@ -76,11 +77,17 @@ export default function Footer() {
             {t('footer.developed')} <a href="https://akira-itzt.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 700, transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'} onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}>AKIRA</a>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          {/* Social Icons (Placholders) */}
-          <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-main)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>Instagram</span>
-          <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-main)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>Twitter</span>
-          <span style={{ cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-main)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>Facebook</span>
+        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          {/* Social Icons */}
+          <a href="https://wa.me/593990730162" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', transition: 'color 0.2s', display: 'flex' }} onMouseEnter={(e) => e.currentTarget.style.color = '#25D366'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>
+            <MessageCircle size={24} />
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', transition: 'color 0.2s', display: 'flex' }} onMouseEnter={(e) => e.currentTarget.style.color = '#E1306C'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', transition: 'color 0.2s', display: 'flex' }} onMouseEnter={(e) => e.currentTarget.style.color = '#1877F2'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+          </a>
         </div>
       </div>
     </footer>

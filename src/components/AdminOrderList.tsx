@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function AdminOrderList() {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -37,7 +39,7 @@ export default function AdminOrderList() {
   }, []);
 
   const handleActionClick = (id: string, action: 'approve' | 'reject', category?: string) => {
-    setManualCreds({ email: '', password: '', profile: '' });
+    setManualCreds({ email: '', password: '', profile: '', pin: '' });
     setConfirmModal({ isOpen: true, id, action, category });
   };
 

@@ -74,17 +74,13 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   
   // Transfer state
-  const [transferCountry, setTransferCountry] = useState('España');
+  const [transferCountry, setTransferCountry] = useState('Ecuador - Pichincha');
   const [receiptBase64, setReceiptBase64] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const bankDetails: Record<string, any> = {
-    'España': { Banco: 'BBVA', Titular: 'Stream Store SL', IBAN: 'ES91 0182 0000 0000 0000 0000' },
     'Ecuador - Pichincha': { Banco: 'Banco Pichincha', Titular: 'Johao Loor', Cédula: '1251051197', 'Tipo de Cuenta': 'Ahorro transaccional', Número: '2211758587' },
     'Ecuador - Guayaquil': { Banco: 'Banco Guayaquil', Titular: 'Loor Bone Diego Johao', CI: '1251051197', Correo: 'bonejohao60@gmail.com', Ahorro: '0057353958' },
-    'USA': { Banco: 'Bank of America', Titular: 'Stream Store', Routing: '026009593', Cuenta: '000000000000' },
-    'Colombia': { Banco: 'Bancolombia', Titular: 'Stream Store', Cuenta: '000-000000-00', Tipo: 'Ahorros' },
-    'Otros Países': { Banco: 'Binance Pay / USDT', ID: '123456789', Red: 'TRC20', Dirección: 'TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' },
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -349,7 +345,7 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
                       onApprove={async (data, actions) => {
                         if (actions.order) {
                           const details = await actions.order.capture();
-                          await handlePaymentSuccess(details.id, 'paypal');
+                          await handlePaymentSuccess(details.id as string, 'paypal');
                         }
                       }}
                       onError={(err) => {
