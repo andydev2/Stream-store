@@ -1,11 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function MiniAdminChatList({ onClose }: { onClose: () => void }) {
   const [chats, setChats] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+  const [replyText, setReplyText] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const fetchChats = async () => {
     try {
@@ -27,6 +30,44 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
     return () => clearInterval(interval);
   }, []);
 
+  const selectedChat = chats.find(c => c._id === selectedChatId);
+
+  useEffect(() => {
+    if (selectedChat) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedChat?.messages?.length]);
+
+  const handleSendReply = async () => {
+    if (!replyText.trim() || !selectedChatId) return;
+    const text = replyText;
+    setReplyText('');
+
+    // Optimistic update
+    setChats(prev => prev.map(c => {
+      if (c._id === selectedChatId) {
+        return {
+          ...c,
+          messages: [...(c.messages || []), { sender: 'admin', text, createdAt: new Date().toISOString() }]
+        };
+      }
+      return c;
+    }));
+
+    try {
+      const res = await fetch(`/api/admin/chats/${selectedChatId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      if (res.ok) {
+        fetchChats();
+      }
+    } catch (error) {
+      console.error('Error sending reply', error);
+    }
+  };
+
   return (
     <div style={{
       position: 'fixed', bottom: '100px', right: '20px',
@@ -38,42 +79,140 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
       zIndex: 10000, border: '1px solid var(--border)',
       overflow: 'hidden', animation: 'slideUp 0.3s ease-out'
     }}>
-      <div style={{
-        padding: '1rem', background: 'var(--primary)', color: '#1C5F5C',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        fontWeight: 'bold', borderBottom: '1px solid var(--border)'
-      }}>
-        <span>Chats Activos</span>
-        <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
-      </div>
-      <div className="hide-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '0.5rem', backgroundColor: 'var(--background)' }}>
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>Cargando chats...</div>
-        ) : chats.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>No hay chats activos.</div>
-        ) : (
-          chats.map(chat => (
-            <div key={chat._id} style={{
-              padding: '1rem', borderBottom: '1px solid var(--border)',
-              cursor: 'pointer', transition: 'background 0.2s',
-              backgroundColor: 'var(--card-bg)', borderRadius: '12px', marginBottom: '0.5rem'
-            }} onClick={() => window.location.href = '/dashboard'}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <strong style={{ color: 'var(--foreground)' }}>{chat.productName || 'Soporte'}</strong>
-                <span style={{ fontSize: '0.8rem', color: chat.status === 'open' ? '#10b981' : 'var(--text-muted)' }}>
-                  {chat.status === 'open' ? 'Abierto' : 'Cerrado'}
-                </span>
+      {selectedChatId ? (
+        <>
+          <div style={{
+            padding: '1rem', background: 'var(--primary)', color: '#1C5F5C',
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            fontWeight: 'bold', borderBottom: '1px solid var(--border)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <button 
+                onClick={() => setSelectedChatId(null)}
+                style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer', padding: '0 0.5rem 0 0' }}
+              >
+                ←
+              </button>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>
+                {selectedChat?.productName || 'Chat'}
+              </span>
+            </div>
+            <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+          </div>
+          
+          {/* Messages */}
+          <div className="hide-scrollbar" style={{ flex: 1, padding: '1rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.8rem', backgroundColor: 'var(--bg-main)' }}>
+            {selectedChat?.messages?.map((msg: any, idx: number) => (
+              <div key={idx} style={{
+                alignSelf: msg.sender === 'admin' ? 'flex-end' : 'flex-start',
+                backgroundColor: msg.sender === 'admin' ? 'var(--primary)' : 'var(--card-bg)',
+                color: msg.sender === 'admin' ? '#1C5F5C' : 'var(--text-main)',
+                padding: '0.8rem 1rem',
+                borderRadius: '16px',
+                borderBottomRightRadius: msg.sender === 'admin' ? '4px' : '16px',
+                borderBottomLeftRadius: msg.sender === 'user' ? '4px' : '16px',
+                maxWidth: '85%',
+                border: msg.sender === 'user' ? '1px solid rgba(0,0,0,0.05)' : 'none',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.02)'
+              }}>
+                {msg.text === '$$PAYMENT_BUTTON$$' ? (
+                  <div style={{ fontStyle: 'italic', opacity: 0.8, fontSize: '0.85rem' }}>
+                    [Botón de Pago enviado]
+                  </div>
+                ) : (
+                  <div style={{ fontSize: '0.95rem', lineHeight: 1.4 }}>{msg.text}</div>
+                )}
               </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {chat.userEmail || chat.userName || 'Usuario anónimo'}
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Reply Input */}
+          {selectedChat?.status === 'open' ? (
+            <div style={{ padding: '0.8rem', borderTop: '1px solid var(--border)', backgroundColor: 'var(--card-bg)' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', overflowX: 'auto', paddingBottom: '0.3rem' }} className="hide-scrollbar">
+                <button 
+                  onClick={() => setReplyText('$$PAYMENT_BUTTON$$')}
+                  style={{ whiteSpace: 'nowrap', padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: '15px', border: 'none', backgroundColor: '#eab308', color: '#fff', cursor: 'pointer' }}
+                >
+                  💰 Botón Pago
+                </button>
+                <button 
+                  onClick={() => setReplyText('👋 Hola, claro que sí. Envíeme su ID del juego para verificar si aplica.')}
+                  style={{ whiteSpace: 'nowrap', padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: '15px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
+                >
+                  Pedir ID
+                </button>
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem', opacity: 0.7 }}>
-                Clic para ir al dashboard completo
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <input 
+                  type="text" 
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSendReply()}
+                  placeholder="Responder..."
+                  style={{
+                    flex: 1, padding: '0.6rem 0.8rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg-main)', color: 'var(--text-main)', outline: 'none'
+                  }}
+                />
+                <button 
+                  onClick={handleSendReply}
+                  disabled={!replyText.trim()}
+                  style={{
+                    background: 'var(--primary)', color: '#1C5F5C', border: 'none', borderRadius: '50%', width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: replyText.trim() ? 'pointer' : 'not-allowed', opacity: replyText.trim() ? 1 : 0.5
+                  }}
+                >
+                  ➤
+                </button>
               </div>
             </div>
-          ))
-        )}
-      </div>
+          ) : (
+            <div style={{ padding: '0.8rem', textAlign: 'center', color: 'var(--text-muted)', backgroundColor: 'var(--card-bg)', fontSize: '0.9rem', borderTop: '1px solid var(--border)' }}>
+              Chat cerrado.
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          <div style={{
+            padding: '1rem', background: 'var(--primary)', color: '#1C5F5C',
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            fontWeight: 'bold', borderBottom: '1px solid var(--border)'
+          }}>
+            <span>Chats Activos</span>
+            <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+          </div>
+          <div className="hide-scrollbar" style={{ flex: 1, overflowY: 'auto', padding: '0.5rem', backgroundColor: 'var(--background)' }}>
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>Cargando chats...</div>
+            ) : chats.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>No hay chats activos.</div>
+            ) : (
+              chats.map(chat => (
+                <div key={chat._id} style={{
+                  padding: '1rem', borderBottom: '1px solid var(--border)',
+                  cursor: 'pointer', transition: 'background 0.2s',
+                  backgroundColor: 'var(--card-bg)', borderRadius: '12px', marginBottom: '0.5rem'
+                }} onClick={() => setSelectedChatId(chat._id)}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                    <strong style={{ color: 'var(--foreground)' }}>{chat.productName || 'Soporte'}</strong>
+                    <span style={{ fontSize: '0.8rem', color: chat.status === 'open' ? '#10b981' : 'var(--text-muted)' }}>
+                      {chat.status === 'open' ? 'Abierto' : 'Cerrado'}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {chat.userEmail || chat.userName || 'Usuario anónimo'}
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem', opacity: 0.7 }}>
+                    Clic para ver chat
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
