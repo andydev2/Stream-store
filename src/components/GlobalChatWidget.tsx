@@ -6,8 +6,10 @@ import { useTheme } from 'next-themes';
 import { useSession } from 'next-auth/react';
 import { MessageCircle, Sun, Moon, Plus, ShieldAlert } from 'lucide-react';
 import MiniAdminChatList from './MiniAdminChatList';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function GlobalChatWidget({ isAdmin = false }: { isAdmin?: boolean }) {
+  const { t } = useLanguage();
   const [product, setProduct] = useState<{ id: string; name: string } | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -37,7 +39,7 @@ export default function GlobalChatWidget({ isAdmin = false }: { isAdmin?: boolea
 
   const handleToggleChat = () => {
     if (!isAdmin && !isOpen && !product) {
-      setProduct({ id: 'soporte', name: 'Atención al Cliente' });
+      setProduct({ id: 'soporte', name: t('chat.support.name') });
     }
     setIsOpen(!isOpen);
     setMenuOpen(false);
@@ -68,7 +70,7 @@ export default function GlobalChatWidget({ isAdmin = false }: { isAdmin?: boolea
               display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
               boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
             }}
-            title="Cambiar Tema"
+            title={t('widget.theme')}
           >
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
@@ -82,7 +84,7 @@ export default function GlobalChatWidget({ isAdmin = false }: { isAdmin?: boolea
               display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
               boxShadow: '0 4px 10px rgba(0,0,0,0.1)', position: 'relative'
             }}
-            title={isAdmin ? "Panel Admin" : "Soporte"}
+            title={isAdmin ? t('widget.admin') : t('widget.support')}
           >
             {isAdmin ? <ShieldAlert size={20} /> : <MessageCircle size={20} />}
             {!isAdmin && unreadAdminMessages && !isOpen && (

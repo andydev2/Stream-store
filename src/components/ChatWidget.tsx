@@ -206,7 +206,7 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
         backgroundColor: 'var(--background)' // Usar fondo sólido real de la paleta
       }}>
         {loading ? (
-          <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>Cargando...</div>
+          <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{t('chat.loading')}</div>
         ) : (
           <>
             {messages.length === 0 && product.id === 'soporte' && (
@@ -222,7 +222,7 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
                 boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
               }}>
                 <div style={{ fontSize: '0.95rem', lineHeight: 1.4 }}>
-                  👋 ¡Hola! Soy el asistente de soporte. ¿En qué te puedo ayudar hoy?
+                  {t('chat.welcome')}
                 </div>
                 <div style={{ fontSize: '0.7rem', opacity: 0.7, marginTop: '4px', textAlign: 'right' }}>
                   {t('chat.admin_title')}
@@ -256,12 +256,12 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
                   width: '100%'
                 }}>
                   <div style={{ color: 'white', fontWeight: 'bold', textAlign: 'center', fontSize: '0.9rem' }}>
-                    Recarga Aprobada
+                    {t('chat.payment.approved')}
                   </div>
                   <button
                     onClick={async () => {
                       const btn = document.getElementById(`pay-btn-${idx}`);
-                      if (btn) btn.innerHTML = 'Procesando...';
+                      if (btn) btn.innerHTML = t('chat.payment.processing');
                       try {
                         // Fetch product details to get the exact price
                         const prodRes = await fetch(`/api/products/${product.id}`);
@@ -285,7 +285,7 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
                         }
                       } catch (e) {
                         console.error('Error during checkout', e);
-                        if (btn) btn.innerHTML = 'Error. Intentar de nuevo';
+                        if (btn) btn.innerHTML = t('chat.payment.error');
                       }
                     }}
                     id={`pay-btn-${idx}`}
@@ -305,7 +305,7 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
                     onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
                     onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
                   >
-                    💳 Pagar con Tarjeta
+                    {t('chat.payment.pay_card')}
                   </button>
                 </div>
               ) : (
@@ -336,33 +336,33 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
           <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.2rem' }} className="hide-scrollbar">
             <button 
               onClick={() => {
-                 const text = 'Tengo un problema con un pago';
+                 const text = t('chat.quick.payment');
                  setMessages(prev => [...prev, { sender: 'user', text }]);
                  sendMessage(text, sessionId);
               }}
               style={{ whiteSpace: 'nowrap', padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '20px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
             >
-              Problema de pago
+              {t('chat.quick.payment')}
             </button>
             <button 
               onClick={() => {
-                 const text = 'Necesito ayuda con mi cuenta';
+                 const text = t('chat.quick.account');
                  setMessages(prev => [...prev, { sender: 'user', text }]);
                  sendMessage(text, sessionId);
               }}
               style={{ whiteSpace: 'nowrap', padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '20px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
             >
-              Ayuda con cuenta
+              {t('chat.quick.account')}
             </button>
             <button 
               onClick={() => {
-                 const text = 'Tengo otra consulta';
+                 const text = t('chat.quick.other');
                  setMessages(prev => [...prev, { sender: 'user', text }]);
                  sendMessage(text, sessionId);
               }}
               style={{ whiteSpace: 'nowrap', padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '20px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
             >
-              Otra consulta
+              {t('chat.quick.other')}
             </button>
           </div>
         )}

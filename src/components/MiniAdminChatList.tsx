@@ -11,6 +11,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
   const [chatToDelete, setChatToDelete] = useState<string | null>(null);
   const [replyText, setReplyText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
 
   const fetchChats = async () => {
     try {
@@ -144,7 +145,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                   onClick={() => handleCloseChat(selectedChat._id)}
                   style={{ background: '#ef4444', border: 'none', color: 'white', fontSize: '0.75rem', fontWeight: 'bold', padding: '0.2rem 0.5rem', borderRadius: '8px', cursor: 'pointer' }}
                 >
-                  Cerrar Chat
+                  {t('admin.chats.close_chat')}
                 </button>
               )}
               <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
@@ -168,7 +169,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
               }}>
                 {msg.text === '$$PAYMENT_BUTTON$$' ? (
                   <div style={{ fontStyle: 'italic', opacity: 0.8, fontSize: '0.85rem' }}>
-                    [Botón de Pago enviado]
+                    [{t('admin.chats.payment_button_label')}]
                   </div>
                 ) : (
                   <div style={{ fontSize: '0.95rem', lineHeight: 1.4 }}>{msg.text}</div>
@@ -186,31 +187,31 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                   onClick={() => setReplyText('$$PAYMENT_BUTTON$$')}
                   style={{ whiteSpace: 'nowrap', padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: '15px', border: 'none', backgroundColor: '#eab308', color: '#fff', cursor: 'pointer' }}
                 >
-                  💰 Botón Pago
+                  💰 {t('admin.chats.btn_payment')}
                 </button>
                 <button 
-                  onClick={() => setReplyText('👋 Hola, claro que sí. Envíeme su ID del juego para verificar si aplica.')}
+                  onClick={() => setReplyText(t('admin.chats.reply_ask_id'))}
                   style={{ whiteSpace: 'nowrap', padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: '15px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
                 >
-                  Pedir ID
+                  {t('admin.chats.btn_ask_id')}
                 </button>
                 <button 
-                  onClick={() => setReplyText('✅ Su ID ha sido verificado con éxito. Puede proceder con el pago.')}
+                  onClick={() => setReplyText(t('admin.chats.reply_id_verified'))}
                   style={{ whiteSpace: 'nowrap', padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: '15px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
                 >
-                  ID Verificado
+                  {t('admin.chats.btn_id_verified')}
                 </button>
                 <button 
-                  onClick={() => setReplyText('⏳ Estamos procesando su recarga, por favor espere un momento.')}
+                  onClick={() => setReplyText(t('admin.chats.reply_processing'))}
                   style={{ whiteSpace: 'nowrap', padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: '15px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
                 >
-                  Procesando
+                  {t('admin.chats.btn_processing')}
                 </button>
                 <button 
-                  onClick={() => setReplyText('🎉 ¡Su recarga ha sido completada con éxito! Disfrute su compra.')}
+                  onClick={() => setReplyText(t('admin.chats.reply_completed'))}
                   style={{ whiteSpace: 'nowrap', padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: '15px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
                 >
-                  Completada
+                  {t('admin.chats.btn_completed')}
                 </button>
               </div>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -219,7 +220,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSendReply()}
-                  placeholder="Responder..."
+                  placeholder={t('admin.chats.reply_placeholder')}
                   style={{
                     flex: 1, padding: '0.6rem 0.8rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg-main)', color: 'var(--text-main)', outline: 'none'
                   }}
@@ -238,7 +239,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
             </div>
           ) : (
             <div style={{ padding: '0.8rem', textAlign: 'center', color: 'var(--text-muted)', backgroundColor: 'var(--card-bg)', fontSize: '0.9rem', borderTop: '1px solid var(--border)' }}>
-              Chat cerrado.
+              {t('admin.chats.closed_status')}
             </div>
           )}
         </>
@@ -249,14 +250,14 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             fontWeight: 'bold', borderBottom: '1px solid var(--border)'
           }}>
-            <span>Chats Activos</span>
+            <span>{t('admin.chats.active')}</span>
             <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
           </div>
           <div className="hide-scrollbar" style={{ flex: 1, overflowY: 'auto', overscrollBehavior: 'contain', padding: '0.5rem', backgroundColor: 'var(--background)' }}>
             {loading ? (
-              <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>Cargando chats...</div>
+              <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>{t('admin.chats.loading')}</div>
             ) : chats.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>No hay chats activos.</div>
+              <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>{t('admin.chats.empty')}</div>
             ) : (
               chats.map(chat => (
                 <div key={chat._id} style={{
@@ -268,7 +269,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                     <strong style={{ color: 'var(--foreground)' }}>{chat.productName || 'Soporte'}</strong>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <span style={{ fontSize: '0.8rem', color: chat.status === 'open' ? '#10b981' : 'var(--text-muted)' }}>
-                        {chat.status === 'open' ? 'Abierto' : 'Cerrado'}
+                        {chat.status === 'open' ? t('admin.chats.status_open') : t('admin.chats.status_closed')}
                       </span>
                       {chat.status === 'closed' && (
                         <button 
@@ -285,7 +286,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                     {chat.userEmail || chat.userName || 'Usuario anónimo'}
                   </div>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.25rem', opacity: 0.7 }}>
-                    Clic para ver chat
+                    {t('admin.chats.click_to_view')}
                   </div>
                 </div>
               ))
@@ -312,23 +313,23 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
               <Trash2 size={24} />
             </div>
             <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-main)', fontSize: '1.1rem' }}>
-              ¿Eliminar chat?
+              {t('admin.chats.delete_title')}
             </h4>
             <p style={{ margin: '0 0 1.5rem 0', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-              Esta acción es permanente y no se puede deshacer.
+              {t('admin.chats.delete_desc')}
             </p>
             <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
               <button 
                 onClick={(e) => { e.stopPropagation(); setChatToDelete(null); }}
                 style={{ flex: 1, padding: '0.6rem', background: 'transparent', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text-main)', cursor: 'pointer', fontWeight: 'bold' }}
               >
-                Cancelar
+                {t('admin.chats.delete_cancel')}
               </button>
               <button 
                 onClick={(e) => { e.stopPropagation(); confirmDeleteChat(); }}
                 style={{ flex: 1, padding: '0.6rem', background: '#ef4444', border: 'none', borderRadius: '10px', color: 'white', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 4px 10px rgba(239, 68, 68, 0.3)' }}
               >
-                Eliminar
+                {t('admin.chats.delete_confirm')}
               </button>
             </div>
           </div>
