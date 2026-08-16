@@ -5,7 +5,7 @@ export type Product = {
   price: number;
   icon: string;
   color: string;
-  category: 'streaming' | 'ai' | 'music' | 'games';
+  category: 'streaming' | 'ai' | 'music' | 'games' | 'recharges';
   details?: string[];
   images?: string[];
   stock?: number;
@@ -130,25 +130,36 @@ export const allProducts: Product[] = [
     details: ['Audio Lossless', 'Audio Espacial con Dolby Atmos', 'Sin anuncios', 'Suscripción privada']
   },
   { 
-    id: 'freefire-recharge', 
-    name: 'Free Fire - Recarga 1060 Diamantes', 
-    description: 'Recarga de 1060 diamantes directamente a tu cuenta mediante ID.', 
-    price: 9.99, 
+    id: 'ff-1188', 
+    name: 'Free Fire - 1188 Diamantes', 
+    description: 'Recarga de 1188 diamantes directamente a tu cuenta mediante ID.', 
+    price: 8.50, 
     icon: '💎', 
     color: '#FFB800',
-    category: 'games',
+    category: 'recharges',
     requiresIdVerification: true,
     details: ['Recarga mediante Player ID', 'Requiere verificación del Admin', 'Proceso 100% legal y seguro']
   },
   { 
-    id: 'fortnite-recharge', 
-    name: 'Fortnite - Recarga 1000 Pavos', 
-    description: 'Recarga de 1000 Pavos (V-Bucks) directamente a tu cuenta de Epic Games.', 
-    price: 8.99, 
-    icon: '⛏️', 
-    color: '#0078F2',
-    category: 'games',
+    id: 'ff-2398', 
+    name: 'Free Fire - 2398 Diamantes', 
+    description: 'Recarga de 2398 diamantes directamente a tu cuenta mediante ID.', 
+    price: 16.50, 
+    icon: '💎', 
+    color: '#FF9500',
+    category: 'recharges',
     requiresIdVerification: true,
-    details: ['Recarga mediante ID/Tag', 'Requiere verificación del Admin', 'Proceso 100% legal y seguro']
+    details: ['Recarga mediante Player ID', 'Requiere verificación del Admin', 'Proceso 100% legal y seguro']
+  },
+  { 
+    id: 'ff-6160', 
+    name: 'Free Fire - 6160 Diamantes', 
+    description: 'Recarga de 6160 diamantes directamente a tu cuenta mediante ID.', 
+    price: 38.50, 
+    icon: '💎', 
+    color: '#FF6F00',
+    category: 'recharges',
+    requiresIdVerification: true,
+    details: ['Recarga mediante Player ID', 'Requiere verificación del Admin', 'Proceso 100% legal y seguro']
   }
 ];

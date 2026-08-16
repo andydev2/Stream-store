@@ -3,6 +3,7 @@
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useState, useEffect } from 'react';
+import ChatWidget from './ChatWidget';
 
 type Product = {
   id: string;
@@ -22,6 +23,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const { t } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -48,8 +50,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   const handleVerifyId = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const text = encodeURIComponent(`Hola, necesito verificar mi ID para una recarga de ${product.name}`);
-    window.open(`https://wa.me/1234567890?text=${text}`, '_blank');
+    setIsChatOpen(true);
   };
 
   const hasStock = product.stock !== undefined ? product.stock > 0 : true;
@@ -299,6 +300,11 @@ export default function ProductCard({ product }: { product: Product }) {
           to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
+
+      {/* Render Chat Widget if open */}
+      {isChatOpen && (
+        <ChatWidget product={product} onClose={() => setIsChatOpen(false)} />
+      )}
     </>
   );
 }

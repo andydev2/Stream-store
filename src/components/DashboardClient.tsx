@@ -4,6 +4,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import AdminProductForm from "@/components/AdminProductForm";
 import AdminProductList from "@/components/AdminProductList";
 import AdminReviewList from "@/components/AdminReviewList";
+import AdminChatList from "@/components/AdminChatList";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Key } from "lucide-react";
@@ -21,7 +22,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
   const { t } = useLanguage();
   const [orders, setOrders] = useState<any[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
-  const [activeAdminTab, setActiveAdminTab] = useState<'products' | 'reviews'>('products');
+  const [activeAdminTab, setActiveAdminTab] = useState<'products' | 'reviews' | 'chats'>('products');
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -158,16 +159,31 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
               >
                 Opiniones
               </button>
+              <button 
+                onClick={() => setActiveAdminTab('chats')}
+                style={{ 
+                  background: activeAdminTab === 'chats' ? '#dc2626' : 'transparent',
+                  color: activeAdminTab === 'chats' ? 'white' : 'var(--text-muted)',
+                  border: activeAdminTab === 'chats' ? 'none' : '1px solid var(--border)',
+                  padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 600, cursor: 'pointer'
+                }}
+              >
+                Chats
+              </button>
             </div>
           </div>
 
-          {activeAdminTab === 'products' ? (
+          {activeAdminTab === 'products' && (
             <>
               <AdminProductForm />
               <AdminProductList />
             </>
-          ) : (
+          )}
+          {activeAdminTab === 'reviews' && (
             <AdminReviewList />
+          )}
+          {activeAdminTab === 'chats' && (
+            <AdminChatList />
           )}
         </>
       )}

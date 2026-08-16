@@ -25,6 +25,7 @@ const translations = {
     'cat.ai': 'IA',
     'cat.music': 'Música',
     'cat.games': 'Juegos',
+    'cat.recharges': 'Recargas',
     'empty.search': 'No se encontraron productos para tu búsqueda.',
     'why.title': '¿Por qué elegirnos?',
     'why.exp.title': '5 Años de Experiencia',
@@ -69,7 +70,12 @@ const translations = {
     'review.comment': 'Cuéntanos tu experiencia...',
     'review.submit': 'Publicar Opinión',
     'review.empty': 'Aún no hay opiniones. ¡Sé el primero en comentar!',
-    'product.verify_id': 'Verificar ID con Admin',
+    'product.verify_id': 'Chat para recargar',
+    'chat.title': 'Chat de Soporte',
+    'chat.placeholder': 'Escribe tu mensaje...',
+    'chat.send': 'Enviar',
+    'chat.admin_title': 'Admin',
+    'chat.user_title': 'Tú',
   },
   EN: {
     'nav.search': 'Discover your next subscription...',
@@ -85,6 +91,7 @@ const translations = {
     'cat.ai': 'AI',
     'cat.music': 'Music',
     'cat.games': 'Games',
+    'cat.recharges': 'Recharges',
     'empty.search': 'No products found for your search.',
     'why.title': 'Why Choose Us?',
     'why.exp.title': '5 Years of Experience',
@@ -129,7 +136,12 @@ const translations = {
     'review.comment': 'Tell us about your experience...',
     'review.submit': 'Post Review',
     'review.empty': 'No reviews yet. Be the first to comment!',
-    'product.verify_id': 'Verify ID with Admin',
+    'product.verify_id': 'Chat to Recharge',
+    'chat.title': 'Support Chat',
+    'chat.placeholder': 'Type your message...',
+    'chat.send': 'Send',
+    'chat.admin_title': 'Admin',
+    'chat.user_title': 'You',
   }
 };
 

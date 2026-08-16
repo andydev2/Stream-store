@@ -12,7 +12,7 @@ export interface IProduct extends Document {
   price: number;
   icon: string;
   color: string;
-  category: 'streaming' | 'ai' | 'music' | 'games' | 'free_fire';
+  category: 'streaming' | 'ai' | 'music' | 'games' | 'free_fire' | 'recharges';
   details?: string[];
   images?: string[];
   accounts?: IAccount[];
@@ -33,7 +33,7 @@ const ProductSchema: Schema = new Schema({
   category: { 
     type: String, 
     required: true, 
-    enum: ['streaming', 'ai', 'music', 'games', 'free_fire'] 
+    enum: ['streaming', 'ai', 'music', 'games', 'free_fire', 'recharges'] 
   },
   details: { type: [String] },
   images: { type: [String] },
