@@ -84,3 +84,26 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
+  try {
+    const params = await context.params;
+    const chatId = params.id;
+
+    if (!chatId) {
+      return NextResponse.json({ error: 'Chat ID is required' }, { status: 400 });
+    }
+
+    await connectMongo();
+    
+    const chat = await Chat.findByIdAndDelete(chatId);
+    if (!chat) {
+      return NextResponse.json({ error: 'Chat not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting chat:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}

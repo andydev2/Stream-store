@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { Trash2 } from 'lucide-react';
 
 export default function MiniAdminChatList({ onClose }: { onClose: () => void }) {
   const [chats, setChats] = useState<any[]>([]);
@@ -27,8 +28,30 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
   useEffect(() => {
     fetchChats();
     const interval = setInterval(fetchChats, 5000);
-    return () => clearInterval(interval);
+    
+    // Lock body scroll to prevent scrolling main page
+    document.body.style.overflow = 'hidden';
+    
+    return () => {
+      clearInterval(interval);
+      document.body.style.overflow = 'unset';
+    };
   }, []);
+
+  const handleDeleteChat = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm('¿Seguro que deseas eliminar este chat?')) return;
+    
+    try {
+      const res = await fetch(`/api/admin/chats/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setChats(prev => prev.filter(c => c._id !== id));
+        if (selectedChatId === id) setSelectedChatId(null);
+      }
+    } catch (error) {
+      console.error('Error deleting chat:', error);
+    }
+  };
 
   const selectedChat = chats.find(c => c._id === selectedChatId);
 
@@ -197,9 +220,20 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                 }} onClick={() => setSelectedChatId(chat._id)}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                     <strong style={{ color: 'var(--foreground)' }}>{chat.productName || 'Soporte'}</strong>
-                    <span style={{ fontSize: '0.8rem', color: chat.status === 'open' ? '#10b981' : 'var(--text-muted)' }}>
-                      {chat.status === 'open' ? 'Abierto' : 'Cerrado'}
-                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontSize: '0.8rem', color: chat.status === 'open' ? '#10b981' : 'var(--text-muted)' }}>
+                        {chat.status === 'open' ? 'Abierto' : 'Cerrado'}
+                      </span>
+                      {chat.status === 'closed' && (
+                        <button 
+                          onClick={(e) => handleDeleteChat(chat._id, e)}
+                          style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0.2rem' }}
+                          title="Eliminar chat"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {chat.userEmail || chat.userName || 'Usuario anónimo'}
