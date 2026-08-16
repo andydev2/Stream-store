@@ -96,7 +96,7 @@ export default function Home() {
         top: 0, left: 0, right: 0, bottom: 0,
         zIndex: -1,
         pointerEvents: 'none',
-        background: 'linear-gradient(180deg, var(--background) 0%, #ffffff 100%)',
+        background: 'linear-gradient(180deg, var(--background) 0%, var(--bg-bottom) 100%)',
       }}>
       </div>
 
@@ -112,12 +112,12 @@ export default function Home() {
           }
           
           .bento-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: var(--card-glass);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border-radius: 32px;
             padding: 2.5rem;
-            border: 1px solid rgba(255, 255, 255, 1);
+            border: 1px solid var(--border-glass);
             transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             overflow: hidden;
             position: relative;
@@ -137,7 +137,7 @@ export default function Home() {
             grid-column: span 2; 
             grid-row: span 2; 
             justify-content: flex-end; 
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(211, 242, 237, 0.6) 100%);
+            background: var(--card-gradient);
           }
           .f1-wide { 
             grid-column: span 2; 
@@ -299,7 +299,7 @@ export default function Home() {
 
               {/* 6. Feature 4 (Tall Right) */}
               <div className="bento-card f4-tall">
-                <div className="icon-wrap" style={{ background: 'rgba(255,255,255,0.3)', color: '#1C5F5C', boxShadow: 'none', width: '80px', height: '80px' }}>
+                <div className="icon-wrap" style={{ background: 'var(--border-glass)', color: '#1C5F5C', boxShadow: 'none', width: '80px', height: '80px' }}>
                   <HeadphonesIcon size={40} />
                 </div>
                 <div>
@@ -350,11 +350,11 @@ export default function Home() {
                       key={cat.id} 
                       onClick={() => setActiveCategory(cat.id)}
                       style={{
-                        background: isActive ? 'var(--text-main)' : 'rgba(255,255,255,0.7)',
+                        background: isActive ? 'var(--text-main)' : 'var(--card-glass)',
                         backdropFilter: 'blur(10px)',
                         color: isActive ? 'var(--background)' : 'var(--text-main)',
                         border: '1px solid',
-                        borderColor: isActive ? 'var(--text-main)' : 'rgba(255,255,255,0.8)',
+                        borderColor: isActive ? 'var(--text-main)' : 'var(--border-glass)',
                         padding: '0.75rem 1.5rem',
                         borderRadius: '100px',
                         fontWeight: 800,
@@ -392,7 +392,7 @@ export default function Home() {
                   <ProductCard key={product.id} product={product} />
                 ))
               ) : (
-                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '5rem', color: 'var(--text-main)', fontSize: '1.2rem', background: 'rgba(255,255,255,0.8)', borderRadius: '32px', fontWeight: 600 }}>
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '5rem', color: 'var(--text-main)', fontSize: '1.2rem', background: 'var(--card-glass)', borderRadius: '32px', fontWeight: 600 }}>
                   {t('empty.search')}
                 </div>
               )}
@@ -407,10 +407,10 @@ export default function Home() {
                     borderRadius: '100px', 
                     fontSize: '1.1rem',
                     fontWeight: 800,
-                    background: 'rgba(255,255,255,0.8)',
+                    background: 'var(--card-glass)',
                     backdropFilter: 'blur(10px)',
                     color: 'var(--text-main)',
-                    border: '2px solid rgba(255,255,255,1)',
+                    border: '2px solid var(--border-glass)',
                     cursor: 'pointer',
                     transition: 'all 0.3s ease',
                     boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
@@ -421,7 +421,7 @@ export default function Home() {
                     e.currentTarget.style.transform = 'scale(1.05)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.8)';
+                    e.currentTarget.style.background = 'var(--card-glass)';
                     e.currentTarget.style.color = 'var(--text-main)';
                     e.currentTarget.style.transform = 'scale(1)';
                   }}

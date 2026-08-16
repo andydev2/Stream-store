@@ -1,5 +1,6 @@
 :root {
   --background: #f0fbfa; /* Soft mint off-white instead of pure white */
+  --bg-bottom: #ffffff;
   --foreground: #1C5F5C; 
   
   /* New Palette */
@@ -9,19 +10,24 @@
   --accent: #D3F2ED;
   --dark-teal: #1C5F5C;
   
-  --card-bg: #D3F2ED; /* No more pure white cards */
-  --card-border: #8AE3CD;
-  --navbar-bg: rgba(211, 242, 237, 0.85); /* Tinted transparent mint */
+  --card-bg: #ffffff; 
+  --card-border: #D3F2ED;
+  --navbar-bg: rgba(211, 242, 237, 0.85); 
   --search-bg: #f8fafc;
-  --text-main: #1C5F5C; /* Using dark teal for main text instead of black for harmony */
+  --text-main: #1C5F5C; 
   --text-muted: #5e8b89;
   --border: #D3F2ED;
   
-  --radius: 24px; /* Very rounded, modern feel */
+  --card-glass: rgba(255, 255, 255, 0.85);
+  --border-glass: rgba(255, 255, 255, 1);
+  --card-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(211, 242, 237, 0.6) 100%);
+  
+  --radius: 24px; 
 }
 
 .dark {
   --background: #091615; /* Super dark teal */
+  --bg-bottom: #040a09;
   --foreground: #f8fafc; 
   
   --primary: #3ED5CC; 
@@ -30,13 +36,17 @@
   --accent: #1C5F5C; 
   --dark-teal: #D3F2ED;
   
-  --card-bg: rgba(28, 95, 92, 0.15); /* Tinted dark teal cards */
+  --card-bg: rgba(28, 95, 92, 0.15); 
   --card-border: rgba(62, 213, 204, 0.15);
   --navbar-bg: rgba(9, 22, 21, 0.85);
   --search-bg: rgba(255, 255, 255, 0.03);
   --text-main: #f8fafc;
   --text-muted: #8AE3CD;
   --border: rgba(62, 213, 204, 0.15);
+  
+  --card-glass: rgba(18, 50, 48, 0.6);
+  --border-glass: rgba(62, 213, 204, 0.2);
+  --card-gradient: linear-gradient(135deg, rgba(18, 50, 48, 0.8) 0%, rgba(9, 22, 21, 0.6) 100%);
 }
 
 * {
