@@ -187,7 +187,13 @@ export default function AdminChatList() {
                 border: msg.sender === 'user' ? '1px solid rgba(0,0,0,0.05)' : 'none',
                 boxShadow: '0 2px 10px rgba(0,0,0,0.02)'
               }}>
-                <div style={{ lineHeight: 1.5 }}>{msg.text}</div>
+                {msg.text === '$$PAYMENT_BUTTON$$' ? (
+                  <div style={{ fontStyle: 'italic', opacity: 0.8, fontSize: '0.9rem' }}>
+                    [Botón de Pago enviado al cliente]
+                  </div>
+                ) : (
+                  <div style={{ lineHeight: 1.5 }}>{msg.text}</div>
+                )}
                 <div style={{ fontSize: '0.7rem', opacity: 0.7, marginTop: '5px', textAlign: 'right' }}>
                   {msg.sender === 'admin' ? 'Tú' : (selectedChat.userName || 'Usuario')} - {new Date(msg.createdAt).toLocaleTimeString()}
                 </div>
@@ -198,18 +204,59 @@ export default function AdminChatList() {
 
           {/* Reply Input */}
           {selectedChat.status === 'open' ? (
-            <div style={{ padding: '1rem', borderTop: '1px solid rgba(0,0,0,0.05)', display: 'flex', gap: '0.5rem', backgroundColor: 'var(--card-bg)' }}>
-              <input 
-                type="text" 
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSendReply()}
-                placeholder="Escribe una respuesta al usuario..."
-                style={{
-                  flex: 1, padding: '1rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.1)', background: 'var(--bg-main)', outline: 'none'
-                }}
-              />
+            <div style={{ padding: '1rem', borderTop: '1px solid rgba(0,0,0,0.05)', backgroundColor: 'var(--card-bg)' }}>
+              {/* Quick Replies */}
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.8rem', overflowX: 'auto', paddingBottom: '0.5rem' }} className="hide-scrollbar">
+                <button 
+                  onClick={() => setReplyText('👋 Hola, claro que sí. Envíeme su ID del juego para verificar si aplica.')}
+                  style={{ whiteSpace: 'nowrap', padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '20px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
+                >
+                  Pedir ID
+                </button>
+                <button 
+                  onClick={() => setReplyText('✅ Su ID ha sido verificado con éxito. Puede proceder con el pago.')}
+                  style={{ whiteSpace: 'nowrap', padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '20px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
+                >
+                  ID Verificado
+                </button>
+                <button 
+                  onClick={() => setReplyText('⏳ Estamos procesando su recarga, por favor espere un momento.')}
+                  style={{ whiteSpace: 'nowrap', padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '20px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
+                >
+                  Procesando
+                </button>
+                <button 
+                  onClick={() => setReplyText('🎉 ¡Su recarga ha sido completada con éxito! Disfrute su compra.')}
+                  style={{ whiteSpace: 'nowrap', padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '20px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
+                >
+                  Completada
+                </button>
+                <button 
+                  onClick={() => {
+                    setReplyText('$$PAYMENT_BUTTON$$');
+                    // Automatically send it when clicking this specific button to avoid manual send
+                    setTimeout(() => document.getElementById('btn-send-reply')?.click(), 50);
+                  }}
+                  style={{ whiteSpace: 'nowrap', padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderRadius: '20px', border: 'none', backgroundColor: '#eab308', color: '#fff', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 2px 5px rgba(234, 179, 8, 0.3)' }}
+                  title="Generar botón de pago en el chat del cliente"
+                >
+                  💰 Generar Botón de Pago
+                </button>
+              </div>
+              
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <input 
+                  type="text" 
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSendReply()}
+                  placeholder="Escribe una respuesta al usuario..."
+                  style={{
+                    flex: 1, padding: '1rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.1)', background: 'var(--bg-main)', outline: 'none'
+                  }}
+                />
               <button 
+                id="btn-send-reply"
                 onClick={handleSendReply}
                 disabled={!replyText.trim()}
                 style={{

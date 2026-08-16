@@ -246,20 +246,90 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
           messages.map((msg, idx) => (
             <div key={idx} style={{
               alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-              backgroundColor: msg.sender === 'user' ? 'var(--primary)' : 'var(--card-bg)',
+              backgroundColor: msg.sender === 'user' ? 'var(--primary)' : (msg.text === '$$PAYMENT_BUTTON$$' ? 'transparent' : 'var(--card-bg)'),
               color: msg.sender === 'user' ? '#1C5F5C' : 'var(--text-main)',
-              padding: '0.8rem 1rem',
+              padding: msg.text === '$$PAYMENT_BUTTON$$' ? '0' : '0.8rem 1rem',
               borderRadius: '16px',
               borderBottomRightRadius: msg.sender === 'user' ? '4px' : '16px',
               borderBottomLeftRadius: msg.sender === 'admin' ? '4px' : '16px',
-              maxWidth: '85%',
-              border: msg.sender === 'admin' ? '1px solid rgba(255,255,255,0.1)' : 'none',
-              boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
+              maxWidth: msg.text === '$$PAYMENT_BUTTON$$' ? '100%' : '85%',
+              border: (msg.sender === 'admin' && msg.text !== '$$PAYMENT_BUTTON$$') ? '1px solid rgba(255,255,255,0.1)' : 'none',
+              boxShadow: msg.text === '$$PAYMENT_BUTTON$$' ? 'none' : '0 2px 5px rgba(0,0,0,0.05)'
             }}>
-              <div style={{ fontSize: '0.95rem', lineHeight: 1.4 }}>{msg.text}</div>
-              <div style={{ fontSize: '0.7rem', opacity: 0.7, marginTop: '4px', textAlign: 'right' }}>
-                {msg.sender === 'user' ? t('chat.user_title') : t('chat.admin_title')}
-              </div>
+              {msg.text === '$$PAYMENT_BUTTON$$' ? (
+                <div style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  padding: '1.2rem',
+                  borderRadius: '16px',
+                  boxShadow: '0 4px 15px rgba(16, 185, 129, 0.3)',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.8rem',
+                  alignItems: 'center',
+                  width: '100%'
+                }}>
+                  <div style={{ color: 'white', fontWeight: 'bold', textAlign: 'center', fontSize: '0.9rem' }}>
+                    Recarga Aprobada
+                  </div>
+                  <button
+                    onClick={async () => {
+                      const btn = document.getElementById(`pay-btn-${idx}`);
+                      if (btn) btn.innerHTML = 'Procesando...';
+                      try {
+                        // Fetch product details to get the exact price
+                        const prodRes = await fetch(`/api/products/${product.id}`);
+                        if (!prodRes.ok) throw new Error('Error fetching product');
+                        const prodData = await prodRes.json();
+                        
+                        const res = await fetch('/api/checkout', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            items: [{
+                              name: product.name,
+                              price: prodData.price || 0,
+                              quantity: 1
+                            }]
+                          })
+                        });
+                        const data = await res.json();
+                        if (data.url) {
+                          window.location.href = data.url;
+                        }
+                      } catch (e) {
+                        console.error('Error during checkout', e);
+                        if (btn) btn.innerHTML = 'Error. Intentar de nuevo';
+                      }
+                    }}
+                    id={`pay-btn-${idx}`}
+                    style={{
+                      background: 'white',
+                      color: '#059669',
+                      border: 'none',
+                      padding: '0.8rem 1.5rem',
+                      borderRadius: '25px',
+                      fontWeight: 'bold',
+                      fontSize: '0.95rem',
+                      cursor: 'pointer',
+                      width: '100%',
+                      boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                      transition: 'transform 0.1s'
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  >
+                    💳 Pagar con Tarjeta
+                  </button>
+                </div>
+              ) : (
+                <div style={{ fontSize: '0.95rem', lineHeight: 1.4 }}>{msg.text}</div>
+              )}
+              {msg.text !== '$$PAYMENT_BUTTON$$' && (
+                <div style={{ fontSize: '0.7rem', opacity: 0.7, marginTop: '4px', textAlign: 'right' }}>
+                  {msg.sender === 'user' ? t('chat.user_title') : t('chat.admin_title')}
+                </div>
+              )}
             </div>
           ))
         )}
