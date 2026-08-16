@@ -76,7 +76,7 @@ export default function ProductCard({ product }: { product: Product }) {
     <>
       <div 
         style={{
-          background: `linear-gradient(135deg, #ffffff 0%, ${product.color}15 100%)`,
+          background: `linear-gradient(135deg, var(--card-bg) 0%, ${product.color}20 100%)`,
           borderRadius: '32px',
           padding: '2rem',
           boxShadow: '0 10px 40px rgba(0,0,0,0.03)',
@@ -84,7 +84,7 @@ export default function ProductCard({ product }: { product: Product }) {
           flexDirection: 'column',
           gap: '1.5rem',
           transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease',
-          border: '1px solid rgba(0,0,0,0.04)',
+          border: '1px solid var(--border)',
           position: 'relative',
           overflow: 'hidden',
           opacity: hasStock ? 1 : 0.6,
@@ -144,8 +144,8 @@ export default function ProductCard({ product }: { product: Product }) {
             disabled={!hasStock}
             style={{ 
               background: 'transparent', 
-              color: hasStock ? 'var(--text-muted)' : '#cbd5e1', 
-              border: `2px solid ${hasStock ? '#e2e8f0' : '#f1f5f9'}`, 
+              color: hasStock ? 'var(--text-muted)' : 'var(--border)', 
+              border: `2px solid ${hasStock ? 'var(--border)' : 'var(--border)'}`, 
               padding: '0.75rem', 
               borderRadius: '16px', 
               fontWeight: 700, 
@@ -158,7 +158,7 @@ export default function ProductCard({ product }: { product: Product }) {
               if (hasStock) setIsModalOpen(true); 
             }}
             onMouseEnter={(e) => { if (hasStock) { e.currentTarget.style.borderColor = 'var(--primary)'; e.currentTarget.style.color = 'var(--primary)'; } }}
-            onMouseLeave={(e) => { if (hasStock) { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.color = '#475569'; } }}
+            onMouseLeave={(e) => { if (hasStock) { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-muted)'; } }}
           >
             {t('product.details')}
           </button>
@@ -166,8 +166,8 @@ export default function ProductCard({ product }: { product: Product }) {
           <button 
             disabled={!hasStock && !isRecharge}
             style={{ 
-              background: (hasStock || isRecharge) ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : '#cbd5e1', 
-              color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '16px', 
+              background: (hasStock || isRecharge) ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : 'var(--border)', 
+              color: (hasStock || isRecharge) ? '#1C5F5C' : 'var(--text-muted)', border: 'none', padding: '1rem', borderRadius: '16px', 
               fontWeight: 700, 
               cursor: (hasStock || isRecharge) ? 'pointer' : 'not-allowed',
               fontSize: '1.1rem',
@@ -291,8 +291,8 @@ export default function ProductCard({ product }: { product: Product }) {
               <button 
                 disabled={!hasStock && !isRecharge}
                 style={{ 
-                  background: (hasStock || isRecharge) ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : '#cbd5e1', 
-                  color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '16px', 
+                  background: (hasStock || isRecharge) ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : 'var(--border)', 
+                  color: (hasStock || isRecharge) ? '#1C5F5C' : 'var(--text-muted)', border: 'none', padding: '1rem', borderRadius: '16px', 
                   fontWeight: 700, cursor: (hasStock || isRecharge) ? 'pointer' : 'not-allowed', fontSize: '1.2rem', width: '100%',
                   boxShadow: (hasStock || isRecharge) ? '0 4px 15px rgba(62, 213, 204, 0.3)' : 'none'
                 }}

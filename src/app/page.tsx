@@ -166,14 +166,14 @@ export default function Home() {
           .cta-wide { 
             grid-column: span 3; 
             grid-row: span 1; 
-            background: var(--text-main); 
-            color: var(--background); 
+            background: var(--primary); 
+            color: #1C5F5C; 
             flex-direction: row; 
             align-items: center; 
             justify-content: space-between;
             cursor: pointer;
           }
-          .cta-wide:hover { background: #113f3d; }
+          .cta-wide:hover { background: var(--primary-hover); }
 
           /* Typography */
           .hero-title {
