@@ -13,7 +13,7 @@ export default function AdminOrderList() {
   const [alertModal, setAlertModal] = useState<{ isOpen: boolean; title: string; message: string; type: 'success' | 'error' }>({ isOpen: false, title: '', message: '', type: 'success' });
   
   // Streaming credentials state
-  const [manualCreds, setManualCreds] = useState({ email: '', password: '', profile: '' });
+  const [manualCreds, setManualCreds] = useState({ email: '', password: '', profile: '', pin: '' });
 
   const fetchOrders = async () => {
     try {
@@ -55,6 +55,7 @@ export default function AdminOrderList() {
       payload.email = manualCreds.email;
       payload.password = manualCreds.password;
       payload.profile = manualCreds.profile;
+      payload.pin = manualCreds.pin;
     }
     
     setConfirmModal({ isOpen: false, id: '', action: null });
@@ -176,8 +177,11 @@ export default function AdminOrderList() {
                 <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Contraseña</label>
                 <input type="text" value={manualCreds.password} onChange={(e) => setManualCreds({...manualCreds, password: e.target.value})} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} placeholder="contraseña123" />
                 
-                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Nombre del Perfil o PIN</label>
-                <input type="text" value={manualCreds.profile} onChange={(e) => setManualCreds({...manualCreds, profile: e.target.value})} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} placeholder="Ej: Perfil 1 / PIN: 1234" />
+                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Perfil</label>
+                <input type="text" value={manualCreds.profile} onChange={(e) => setManualCreds({...manualCreds, profile: e.target.value})} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} placeholder="Ej: 2" />
+                
+                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>PIN</label>
+                <input type="text" value={manualCreds.pin} onChange={(e) => setManualCreds({...manualCreds, pin: e.target.value})} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} placeholder="Ej: 4567" />
               </div>
             )}
 

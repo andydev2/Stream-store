@@ -11,7 +11,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ success: false, error: "No autorizado" }, { status: 401 });
     }
 
-    const { action, email, password, profile } = await request.json();
+    const { action, email, password, profile, pin } = await request.json();
     
     if (action !== 'approve' && action !== 'reject') {
       return NextResponse.json({ success: false, error: "Acción inválida" }, { status: 400 });
@@ -35,6 +35,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         order.accountUsername = email;
         order.accountPassword = password;
         if (profile) order.accountProfile = profile;
+        if (pin) order.accountPin = pin;
       }
       
       await order.save();
