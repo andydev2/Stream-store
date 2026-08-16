@@ -44,8 +44,8 @@ function StripeForm({ cartTotal, onSuccess, onError }: { cartTotal: number, onSu
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', animation: 'fadeIn 0.3s ease' }}>
-      <PaymentElement />
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', animation: 'fadeIn 0.3s ease', paddingBottom: '1rem' }}>
+      <PaymentElement options={{ terms: { card: 'never' }, wallets: { applePay: 'never', googlePay: 'never' } }} />
       <button 
         type="submit"
         disabled={!stripe || isProcessing}
