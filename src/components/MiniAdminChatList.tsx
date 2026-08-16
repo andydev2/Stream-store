@@ -172,6 +172,24 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                 >
                   Pedir ID
                 </button>
+                <button 
+                  onClick={() => setReplyText('✅ Su ID ha sido verificado con éxito. Puede proceder con el pago.')}
+                  style={{ whiteSpace: 'nowrap', padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: '15px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
+                >
+                  ID Verificado
+                </button>
+                <button 
+                  onClick={() => setReplyText('⏳ Estamos procesando su recarga, por favor espere un momento.')}
+                  style={{ whiteSpace: 'nowrap', padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: '15px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
+                >
+                  Procesando
+                </button>
+                <button 
+                  onClick={() => setReplyText('🎉 ¡Su recarga ha sido completada con éxito! Disfrute su compra.')}
+                  style={{ whiteSpace: 'nowrap', padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: '15px', border: '1px solid var(--primary)', backgroundColor: 'transparent', color: 'var(--text-main)', cursor: 'pointer' }}
+                >
+                  Completada
+                </button>
               </div>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <input 
