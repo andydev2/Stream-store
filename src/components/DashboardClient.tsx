@@ -77,30 +77,30 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                 <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', margin: 0 }}>{order.productName}</h3>
                 {order.status === 'pending_verification' ? (
-                  <span style={{ background: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>Verificando Pago</span>
+                  <span style={{ background: 'rgba(245, 158, 11, 0.2)', color: '#f59e0b', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>{t('dashboard.order.verifying')}</span>
                 ) : (
-                  <span style={{ background: 'var(--primary)', color: '#1C5F5C', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>Activa</span>
+                  <span style={{ background: 'var(--primary)', color: '#1C5F5C', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>{t('dashboard.order.active')}</span>
                 )}
               </div>
               <div style={{ background: 'var(--search-bg)', padding: '1rem', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {order.status === 'pending_verification' ? (
                   <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '0.5rem 0' }}>
-                    Tu comprobante de transferencia está siendo verificado. <br/>
-                    <strong style={{ color: 'var(--primary)' }}>Tus credenciales aparecerán aquí pronto.</strong>
+                    {t('dashboard.order.verifying_desc1')} <br/>
+                    <strong style={{ color: 'var(--primary)' }}>{t('dashboard.order.verifying_desc2')}</strong>
                   </div>
                 ) : (
                   <>
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
-                      <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', flexShrink: 0 }}>Usuario:</span>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', flexShrink: 0 }}>{t('dashboard.order.user')}</span>
                       <strong style={{ color: 'var(--text-main)', wordBreak: 'break-all', textAlign: 'right' }}>{order.accountUsername}</strong>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
-                      <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', flexShrink: 0 }}>Contraseña:</span>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', flexShrink: 0 }}>{t('dashboard.order.password')}</span>
                       <strong style={{ color: 'var(--text-main)', letterSpacing: '1px', wordBreak: 'break-all', textAlign: 'right' }}>{order.accountPassword}</strong>
                     </div>
                     {order.accountProfile && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', background: 'rgba(62, 213, 204, 0.1)', padding: '0.5rem', borderRadius: '8px', border: '1px solid rgba(62, 213, 204, 0.3)' }}>
-                        <span style={{ color: 'var(--primary)', fontSize: '0.9rem', flexShrink: 0, fontWeight: 'bold' }}>Perfil/PIN:</span>
+                        <span style={{ color: 'var(--primary)', fontSize: '0.9rem', flexShrink: 0, fontWeight: 'bold' }}>{t('dashboard.order.profile')}</span>
                         <strong style={{ color: 'var(--text-main)', letterSpacing: '1px', wordBreak: 'break-all', textAlign: 'right' }}>{order.accountProfile}</strong>
                       </div>
                     )}
@@ -109,7 +109,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
               </div>
                 <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                    Comprado el {new Date(order.createdAt).toLocaleDateString()}
+                    {t('dashboard.order.bought_on')} {new Date(order.createdAt).toLocaleDateString()}
                   </span>
                   
                   {/* Logic for Renovar */}
@@ -128,7 +128,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
                             fontWeight: 'bold', fontSize: '0.85rem', cursor: 'pointer',
                             boxShadow: '0 4px 10px rgba(62, 213, 204, 0.2)'
                           }}>
-                            Renovar
+                            {t('dashboard.order.renew')}
                           </button>
                         );
                       }
@@ -166,7 +166,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
                   padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 600, cursor: 'pointer'
                 }}
               >
-                Productos
+                {t('admin.tab.products')}
               </button>
               <button 
                 onClick={() => setActiveAdminTab('reviews')}
@@ -177,7 +177,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
                   padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 600, cursor: 'pointer'
                 }}
               >
-                Opiniones
+                {t('admin.tab.reviews')}
               </button>
               <button 
                 onClick={() => setActiveAdminTab('chats')}
@@ -188,7 +188,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
                   padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 600, cursor: 'pointer'
                 }}
               >
-                Chats
+                {t('admin.tab.chats')}
               </button>
               <button 
                 onClick={() => setActiveAdminTab('orders')}
@@ -199,7 +199,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
                   padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 600, cursor: 'pointer'
                 }}
               >
-                Transferencias
+                {t('admin.tab.orders')}
               </button>
             </div>
           </div>

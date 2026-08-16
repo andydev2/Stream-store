@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function AdminProductForm() {
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('streaming');
@@ -93,7 +95,7 @@ export default function AdminProductForm() {
 
   return (
     <div style={{ background: 'var(--card-bg)', padding: '2rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
-      <h3 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--text-main)' }}>Añadir Nuevo Producto</h3>
+      <h3 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'var(--text-main)' }}>{t('admin.prod.add_title')}</h3>
       
       {message && (
         <div style={{ padding: '1rem', marginBottom: '1.5rem', borderRadius: '8px', background: message.includes('Error') ? '#fee2e2' : '#dcfce7', color: message.includes('Error') ? '#991b1b' : '#166534' }}>
@@ -103,23 +105,23 @@ export default function AdminProductForm() {
 
       <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
         <div>
-          <label style={labelStyle}>Nombre del Producto</label>
-          <input required name="name" type="text" placeholder="Ej: Cuenta de Free Fire" style={inputStyle} />
+          <label style={labelStyle}>{t('admin.prod.name')}</label>
+          <input required name="name" type="text" placeholder={t('admin.prod.name_placeholder')} style={inputStyle} />
         </div>
         
         <div>
-          <label style={labelStyle}>Descripción</label>
-          <textarea required name="description" rows={3} maxLength={400} placeholder="Detalles de la cuenta o producto... (Máx 400 caracteres)" style={{ ...inputStyle, resize: 'none' }}></textarea>
+          <label style={labelStyle}>{t('admin.prod.desc')}</label>
+          <textarea required name="description" rows={3} maxLength={400} placeholder={t('admin.prod.desc_placeholder')} style={{ ...inputStyle, resize: 'none' }}></textarea>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
           <div>
-            <label style={labelStyle}>Precio (USD)</label>
+            <label style={labelStyle}>{t('admin.prod.price')}</label>
             <input required name="price" type="number" step="0.01" placeholder="Ej: 9.99" style={inputStyle} />
           </div>
           
           <div>
-            <label style={labelStyle}>Categoría</label>
+            <label style={labelStyle}>{t('admin.prod.category')}</label>
             <select 
               required 
               name="category" 
@@ -127,19 +129,19 @@ export default function AdminProductForm() {
               onChange={(e) => setSelectedCategory(e.target.value)}
               style={inputStyle}
             >
-              <option value="streaming">Streaming</option>
-              <option value="ai">Inteligencia Artificial</option>
-              <option value="music">Música</option>
-              <option value="games">Juegos (Gral)</option>
-              <option value="free_fire">Juegos / Free Fire</option>
-              <option value="recharges">Diamantes de Free Fire</option>
+              <option value="streaming">{t('cat.streaming')}</option>
+              <option value="ai">{t('cat.ai_full')}</option>
+              <option value="music">{t('cat.music')}</option>
+              <option value="games">{t('cat.games_full')}</option>
+              <option value="free_fire">{t('cat.free_fire')}</option>
+              <option value="recharges">{t('cat.recharges')}</option>
             </select>
           </div>
         </div>
 
         {(selectedCategory !== 'recharges' && selectedCategory !== 'free_fire' && selectedCategory !== 'streaming') && (
           <div>
-            <label style={labelStyle}>Stock Inicial / Cuentas (Opcional)</label>
+            <label style={labelStyle}>{t('admin.prod.stock')}</label>
           <div style={{ background: 'rgba(0,0,0,0.02)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
             
             {/* Input manual */}
@@ -147,7 +149,7 @@ export default function AdminProductForm() {
               <input 
                 id="manual-email"
                 type="email" 
-                placeholder="Correo de la cuenta..." 
+                placeholder={t('admin.prod.email_ph')} 
                 style={{ ...inputStyle, flex: '1 1 200px', marginBottom: 0 }} 
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
@@ -159,7 +161,7 @@ export default function AdminProductForm() {
               <input 
                 id="manual-password"
                 type="text" 
-                placeholder="Contraseña..." 
+                placeholder={t('admin.prod.pass_ph')}
                 style={{ ...inputStyle, flex: '1 1 150px', marginBottom: 0 }} 
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
@@ -193,7 +195,7 @@ export default function AdminProductForm() {
                 }}
                 style={{ background: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '0 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}
               >
-                + Añadir
+                {t('admin.prod.add_btn')}
               </button>
             </div>
 
@@ -228,7 +230,7 @@ export default function AdminProductForm() {
             {/* Opcional para pegar múltiples */}
             <details style={{ marginTop: '0.5rem' }}>
               <summary style={{ fontSize: '0.85rem', color: 'var(--text-muted)', cursor: 'pointer', userSelect: 'none' }}>
-                O pegar lista masiva (correo:contraseña)
+                {t('admin.prod.bulk')}
               </summary>
               <textarea 
                 name="accounts" 
@@ -246,16 +248,16 @@ export default function AdminProductForm() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
           <div>
-            <label style={labelStyle}>Color de Fondo</label>
+            <label style={labelStyle}>{t('admin.prod.color')}</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <input required name="color" type="color" defaultValue="#E50914" style={{ width: '50px', height: '45px', padding: '0', border: 'none', borderRadius: '8px', cursor: 'pointer', background: 'transparent' }} title="Elige un color" />
-              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>El icono se generará automáticamente.</span>
+              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{t('admin.prod.color_desc')}</span>
             </div>
           </div>
           
           {(selectedCategory === 'games' || selectedCategory === 'free_fire' || selectedCategory === 'recharges') && (
             <div>
-              <label style={labelStyle}>Imagen (Opcional)</label>
+              <label style={labelStyle}>{t('admin.prod.image')}</label>
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <input 
@@ -271,7 +273,7 @@ export default function AdminProductForm() {
                   name="imageUrl" 
                   type="url" 
                   disabled={!!imageBase64}
-                  placeholder={imageBase64 ? "Archivo seleccionado (Ignorando URL)" : "Pegar URL externa..."} 
+                  placeholder={imageBase64 ? t('admin.prod.image_file') : t('admin.prod.image_url')} 
                   style={{ ...inputStyle, opacity: imageBase64 ? 0.5 : 1 }} 
                 />
               </div>
@@ -280,7 +282,7 @@ export default function AdminProductForm() {
         </div>
 
         <button type="submit" disabled={loading} className="btn btn-primary" style={{ marginTop: '1rem', width: '100%' }}>
-          {loading ? 'Guardando...' : 'Guardar Producto'}
+          {loading ? t('admin.prod.saving') : t('admin.prod.save')}
         </button>
       </form>
     </div>
