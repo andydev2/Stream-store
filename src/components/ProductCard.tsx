@@ -262,15 +262,22 @@ export default function ProductCard({ product }: { product: Product }) {
               )}
 
               <button 
+                disabled={!hasStock}
                 style={{ 
-                  background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)', 
+                  background: hasStock ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : '#cbd5e1', 
                   color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '16px', 
-                  fontWeight: 700, cursor: 'pointer', fontSize: '1.2rem', width: '100%',
-                  boxShadow: '0 4px 15px rgba(62, 213, 204, 0.3)'
+                  fontWeight: 700, cursor: hasStock ? 'pointer' : 'not-allowed', fontSize: '1.2rem', width: '100%',
+                  boxShadow: hasStock ? '0 4px 15px rgba(62, 213, 204, 0.3)' : 'none'
                 }}
-                onClick={(e) => { handleAddToCart(e); setIsModalOpen(false); setCurrentImage(0); }}
+                onClick={(e) => { 
+                  if(hasStock) {
+                    handleAddToCart(e); 
+                    setIsModalOpen(false); 
+                    setCurrentImage(0); 
+                  }
+                }}
               >
-                {t('cart.add')}
+                {hasStock ? t('cart.add') : t('product.stock.none')}
               </button>
             </div>
           </div>

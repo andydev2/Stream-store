@@ -19,8 +19,22 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [isCatalogModalOpen, setIsCatalogModalOpen] = useState(false);
+  const [catalogProducts, setCatalogProducts] = useState<any[]>([]);
   const { cart, setIsCartOpen } = useCart();
   const { language, toggleLanguage, t } = useLanguage();
+
+  useEffect(() => {
+    if (isCatalogModalOpen && catalogProducts.length === 0) {
+      fetch('/api/products')
+        .then(res => res.json())
+        .then(result => {
+          if (result.success) {
+            setCatalogProducts(result.data);
+          }
+        })
+        .catch(err => console.error("Error fetching catalog for navbar:", err));
+    }
+  }, [isCatalogModalOpen]);
 
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -395,8 +409,8 @@ export default function Navbar() {
               maxWidth: '1200px',
               margin: '0 auto'
             }}>
-              {allProducts.map(product => (
-                <ProductCard key={product.id} product={product} />
+              {catalogProducts.map((product: any) => (
+                <ProductCard key={product.id || product._id} product={product} />
               ))}
             </div>
           </div>
