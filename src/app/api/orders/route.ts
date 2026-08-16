@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     // Verify payment based on gateway
     if (paymentGateway === 'stripe') {
       const Stripe = require('stripe');
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+      const stripe = new Stripe((process.env.STRIPE_SECRET_KEY || '').trim());
       const paymentIntent = await stripe.paymentIntents.retrieve(paymentId);
       if (paymentIntent.status !== 'succeeded') {
         return NextResponse.json({ success: false, error: "El pago en Stripe no fue exitoso." }, { status: 400 });
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
         headers: {
           'Accept': 'application/json',
           'Accept-Language': 'en_US',
-          'Authorization': `Basic ${Buffer.from(process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID + ':' + process.env.PAYPAL_SECRET).toString('base64')}`,
+          'Authorization': `Basic ${Buffer.from((process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '').trim() + ':' + (process.env.PAYPAL_SECRET || '').trim()).toString('base64')}`,
           'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: 'grant_type=client_credentials'
