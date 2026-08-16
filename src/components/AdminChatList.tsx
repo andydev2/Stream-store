@@ -45,7 +45,7 @@ export default function AdminChatList() {
 
   const fetchChats = async () => {
     try {
-      const res = await fetch('/api/admin/chats');
+      const res = await fetch(`/api/admin/chats?_t=${Date.now()}`);
       if (res.ok) {
         const data = await res.json();
         setChats(data);

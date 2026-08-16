@@ -58,7 +58,7 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
 
   const fetchChat = async (sid: string) => {
     try {
-      const res = await fetch(`/api/chat?sessionId=${sid}&productId=${product.id}`);
+      const res = await fetch(`/api/chat?sessionId=${sid}&productId=${product.id}&_t=${Date.now()}`);
       if (res.ok) {
         const data = await res.json();
         if (data && data.messages) {
