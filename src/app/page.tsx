@@ -58,12 +58,21 @@ export default function Home() {
   }, []);
 
   const filteredProducts = useMemo(() => {
-    return allProducts.filter(p => {
+    const filtered = allProducts.filter(p => {
       const matchesSearch = searchQuery === '' || 
                             p.name.toLowerCase().includes(searchQuery) || 
                             p.description.toLowerCase().includes(searchQuery);
       const matchesCategory = activeCategory === 'all' || p.category.toLowerCase() === activeCategory;
       return matchesSearch && matchesCategory;
+    });
+
+    return filtered.sort((a, b) => {
+      const aStock = a.stock || 0;
+      const bStock = b.stock || 0;
+      
+      if (aStock > 0 && bStock === 0) return -1;
+      if (aStock === 0 && bStock > 0) return 1;
+      return 0; // Keep relative order otherwise
     });
   }, [searchQuery, activeCategory, allProducts]);
 
