@@ -14,6 +14,7 @@ type Product = {
   stock?: number;
   details?: string[];
   images?: string[];
+  requiresIdVerification?: boolean;
 };
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -43,6 +44,12 @@ export default function ProductCard({ product }: { product: Product }) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation(); // Evitar que abra el modal
     addToCart(product);
+  };
+
+  const handleVerifyId = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const text = encodeURIComponent(`Hola, necesito verificar mi ID para una recarga de ${product.name}`);
+    window.open(`https://wa.me/1234567890?text=${text}`, '_blank');
   };
 
   const hasStock = product.stock !== undefined ? product.stock > 0 : true;
@@ -141,21 +148,21 @@ export default function ProductCard({ product }: { product: Product }) {
           </button>
           
           <button 
-            disabled={!hasStock}
+            disabled={!hasStock && !product.requiresIdVerification}
             style={{ 
-              background: hasStock ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : '#cbd5e1', 
+              background: (hasStock || product.requiresIdVerification) ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : '#cbd5e1', 
               color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '16px', 
               fontWeight: 700, 
-              cursor: hasStock ? 'pointer' : 'not-allowed',
+              cursor: (hasStock || product.requiresIdVerification) ? 'pointer' : 'not-allowed',
               fontSize: '1.1rem',
-              boxShadow: hasStock ? '0 4px 15px rgba(62, 213, 204, 0.3)' : 'none',
+              boxShadow: (hasStock || product.requiresIdVerification) ? '0 4px 15px rgba(62, 213, 204, 0.3)' : 'none',
               transition: 'transform 0.2s'
             }}
-            onClick={handleAddToCart}
-            onMouseDown={(e) => { if (hasStock) e.currentTarget.style.transform = 'scale(0.98)' }}
-            onMouseUp={(e) => { if (hasStock) e.currentTarget.style.transform = 'scale(1)' }}
+            onClick={product.requiresIdVerification ? handleVerifyId : handleAddToCart}
+            onMouseDown={(e) => { if (hasStock || product.requiresIdVerification) e.currentTarget.style.transform = 'scale(0.98)' }}
+            onMouseUp={(e) => { if (hasStock || product.requiresIdVerification) e.currentTarget.style.transform = 'scale(1)' }}
           >
-            {hasStock ? t('cart.add') : t('product.stock.none')}
+            {product.requiresIdVerification ? t('product.verify_id') : (hasStock ? t('cart.add') : t('product.stock.none'))}
           </button>
         </div>
       </div>
@@ -262,22 +269,24 @@ export default function ProductCard({ product }: { product: Product }) {
               )}
 
               <button 
-                disabled={!hasStock}
+                disabled={!hasStock && !product.requiresIdVerification}
                 style={{ 
-                  background: hasStock ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : '#cbd5e1', 
+                  background: (hasStock || product.requiresIdVerification) ? 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)' : '#cbd5e1', 
                   color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '16px', 
-                  fontWeight: 700, cursor: hasStock ? 'pointer' : 'not-allowed', fontSize: '1.2rem', width: '100%',
-                  boxShadow: hasStock ? '0 4px 15px rgba(62, 213, 204, 0.3)' : 'none'
+                  fontWeight: 700, cursor: (hasStock || product.requiresIdVerification) ? 'pointer' : 'not-allowed', fontSize: '1.2rem', width: '100%',
+                  boxShadow: (hasStock || product.requiresIdVerification) ? '0 4px 15px rgba(62, 213, 204, 0.3)' : 'none'
                 }}
                 onClick={(e) => { 
-                  if(hasStock) {
+                  if (product.requiresIdVerification) {
+                    handleVerifyId(e);
+                  } else if (hasStock) {
                     handleAddToCart(e); 
                     setIsModalOpen(false); 
                     setCurrentImage(0); 
                   }
                 }}
               >
-                {hasStock ? t('cart.add') : t('product.stock.none')}
+                {product.requiresIdVerification ? t('product.verify_id') : (hasStock ? t('cart.add') : t('product.stock.none'))}
               </button>
             </div>
           </div>

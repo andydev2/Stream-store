@@ -69,6 +69,7 @@ const translations = {
     'review.comment': 'Cuéntanos tu experiencia...',
     'review.submit': 'Publicar Opinión',
     'review.empty': 'Aún no hay opiniones. ¡Sé el primero en comentar!',
+    'product.verify_id': 'Verificar ID con Admin',
   },
   EN: {
     'nav.search': 'Discover your next subscription...',
@@ -128,6 +129,7 @@ const translations = {
     'review.comment': 'Tell us about your experience...',
     'review.submit': 'Post Review',
     'review.empty': 'No reviews yet. Be the first to comment!',
+    'product.verify_id': 'Verify ID with Admin',
   }
 };
 

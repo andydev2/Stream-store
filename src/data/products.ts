@@ -9,6 +9,7 @@ export type Product = {
   details?: string[];
   images?: string[];
   stock?: number;
+  requiresIdVerification?: boolean;
 };
 
 export const allProducts: Product[] = [
@@ -127,5 +128,27 @@ export const allProducts: Product[] = [
     color: '#FA243C',
     category: 'music',
     details: ['Audio Lossless', 'Audio Espacial con Dolby Atmos', 'Sin anuncios', 'Suscripción privada']
+  },
+  { 
+    id: 'freefire-recharge', 
+    name: 'Free Fire - Recarga 1060 Diamantes', 
+    description: 'Recarga de 1060 diamantes directamente a tu cuenta mediante ID.', 
+    price: 9.99, 
+    icon: '💎', 
+    color: '#FFB800',
+    category: 'games',
+    requiresIdVerification: true,
+    details: ['Recarga mediante Player ID', 'Requiere verificación del Admin', 'Proceso 100% legal y seguro']
+  },
+  { 
+    id: 'fortnite-recharge', 
+    name: 'Fortnite - Recarga 1000 Pavos', 
+    description: 'Recarga de 1000 Pavos (V-Bucks) directamente a tu cuenta de Epic Games.', 
+    price: 8.99, 
+    icon: '⛏️', 
+    color: '#0078F2',
+    category: 'games',
+    requiresIdVerification: true,
+    details: ['Recarga mediante ID/Tag', 'Requiere verificación del Admin', 'Proceso 100% legal y seguro']
   }
 ];
