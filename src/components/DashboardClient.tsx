@@ -98,6 +98,12 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
                       <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', flexShrink: 0 }}>Contraseña:</span>
                       <strong style={{ color: 'var(--text-main)', letterSpacing: '1px', wordBreak: 'break-all', textAlign: 'right' }}>{order.accountPassword}</strong>
                     </div>
+                    {order.accountProfile && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', background: 'rgba(62, 213, 204, 0.1)', padding: '0.5rem', borderRadius: '8px', border: '1px solid rgba(62, 213, 204, 0.3)' }}>
+                        <span style={{ color: 'var(--primary)', fontSize: '0.9rem', flexShrink: 0, fontWeight: 'bold' }}>Perfil/PIN:</span>
+                        <strong style={{ color: 'var(--text-main)', letterSpacing: '1px', wordBreak: 'break-all', textAlign: 'right' }}>{order.accountProfile}</strong>
+                      </div>
+                    )}
                   </>
                 )}
               </div>

@@ -9,8 +9,11 @@ export default function AdminOrderList() {
   const [processingId, setProcessingId] = useState<string | null>(null);
 
   // Modal states
-  const [confirmModal, setConfirmModal] = useState<{ isOpen: boolean; id: string; action: 'approve' | 'reject' | null }>({ isOpen: false, id: '', action: null });
+  const [confirmModal, setConfirmModal] = useState<{ isOpen: boolean; id: string; action: 'approve' | 'reject' | null; category?: string }>({ isOpen: false, id: '', action: null });
   const [alertModal, setAlertModal] = useState<{ isOpen: boolean; title: string; message: string; type: 'success' | 'error' }>({ isOpen: false, title: '', message: '', type: 'success' });
+  
+  // Streaming credentials state
+  const [manualCreds, setManualCreds] = useState({ email: '', password: '', profile: '' });
 
   const fetchOrders = async () => {
     try {
@@ -33,13 +36,26 @@ export default function AdminOrderList() {
     fetchOrders();
   }, []);
 
-  const handleActionClick = (id: string, action: 'approve' | 'reject') => {
-    setConfirmModal({ isOpen: true, id, action });
+  const handleActionClick = (id: string, action: 'approve' | 'reject', category?: string) => {
+    setManualCreds({ email: '', password: '', profile: '' });
+    setConfirmModal({ isOpen: true, id, action, category });
   };
 
   const executeAction = async () => {
-    const { id, action } = confirmModal;
+    const { id, action, category } = confirmModal;
     if (!id || !action) return;
+    
+    const payload: any = { action };
+    
+    if (action === 'approve' && category === 'streaming') {
+      if (!manualCreds.email || !manualCreds.password) {
+        setAlertModal({ isOpen: true, title: 'Datos Incompletos', message: 'Debes rellenar el correo y la contraseña de la cuenta.', type: 'error' });
+        return;
+      }
+      payload.email = manualCreds.email;
+      payload.password = manualCreds.password;
+      payload.profile = manualCreds.profile;
+    }
     
     setConfirmModal({ isOpen: false, id: '', action: null });
     setProcessingId(id);
@@ -48,7 +64,7 @@ export default function AdminOrderList() {
       const res = await fetch(`/api/admin/orders/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action }),
+        body: JSON.stringify(payload),
       });
       const result = await res.json();
       if (result.success) {
@@ -107,14 +123,14 @@ export default function AdminOrderList() {
                 
                 <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
                   <button 
-                    onClick={() => handleActionClick(order._id, 'reject')}
+                    onClick={() => handleActionClick(order._id, 'reject', order.productCategory)}
                     disabled={processingId === order._id}
                     style={{ flex: 1, padding: '0.75rem', background: '#fee2e2', color: '#ef4444', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
                   >
                     Rechazar
                   </button>
                   <button 
-                    onClick={() => handleActionClick(order._id, 'approve')}
+                    onClick={() => handleActionClick(order._id, 'approve', order.productCategory)}
                     disabled={processingId === order._id}
                     style={{ flex: 1, padding: '0.75rem', background: '#dcfce7', color: '#16a34a', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
                   >
@@ -146,11 +162,25 @@ export default function AdminOrderList() {
             <h3 style={{ fontSize: '1.4rem', marginBottom: '1rem', color: 'var(--text-main)' }}>
               {confirmModal.action === 'approve' ? '¿Aprobar transferencia?' : '¿Rechazar transferencia?'}
             </h3>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: 1.5 }}>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: 1.5 }}>
               {confirmModal.action === 'approve' 
                 ? 'Si apruebas, la orden se marcará como pagada y el comprador verá sus contraseñas inmediatamente.'
                 : 'Si rechazas, esta orden será eliminada permanentemente del sistema.'}
             </p>
+            
+            {confirmModal.action === 'approve' && confirmModal.category === 'streaming' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', marginBottom: '1.5rem', textAlign: 'left' }}>
+                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Correo de la cuenta</label>
+                <input type="email" value={manualCreds.email} onChange={(e) => setManualCreds({...manualCreds, email: e.target.value})} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} placeholder="ejemplo@gmail.com" />
+                
+                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Contraseña</label>
+                <input type="text" value={manualCreds.password} onChange={(e) => setManualCreds({...manualCreds, password: e.target.value})} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} placeholder="contraseña123" />
+                
+                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Nombre del Perfil o PIN</label>
+                <input type="text" value={manualCreds.profile} onChange={(e) => setManualCreds({...manualCreds, profile: e.target.value})} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} placeholder="Ej: Perfil 1 / PIN: 1234" />
+              </div>
+            )}
+
             <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
               <button 
                 onClick={() => setConfirmModal({ isOpen: false, id: '', action: null })}

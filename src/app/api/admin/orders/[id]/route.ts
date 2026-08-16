@@ -11,7 +11,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ success: false, error: "No autorizado" }, { status: 401 });
     }
 
-    const { action } = await request.json();
+    const { action, email, password, profile } = await request.json();
     
     if (action !== 'approve' && action !== 'reject') {
       return NextResponse.json({ success: false, error: "Acción inválida" }, { status: 400 });
@@ -29,6 +29,14 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     if (action === 'approve') {
       order.status = 'completed';
+      
+      // Save manually entered credentials for streaming products
+      if (email && password) {
+        order.accountUsername = email;
+        order.accountPassword = password;
+        if (profile) order.accountProfile = profile;
+      }
+      
       await order.save();
     } else if (action === 'reject') {
       // Si se rechaza, podríamos devolver la cuenta al inventario, pero por ahora solo borramos la orden

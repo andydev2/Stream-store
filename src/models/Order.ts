@@ -29,6 +29,9 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  accountProfile: {
+    type: String, // E.g., 'Perfil 3', 'PIN 1234', optional since not all products use it
+  },
   price: {
     type: Number,
     required: true,

@@ -192,15 +192,23 @@ export default function AdminProductList() {
                   </div>
                   <div>
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Stock</div>
-                    <div style={{ color: product.stock > 0 ? '#16a34a' : '#dc2626', fontWeight: '800' }}>
-                      {product.stock !== undefined ? `${product.stock} disp.` : 'N/A'}
-                    </div>
+                    {product.category === 'streaming' ? (
+                      <div style={{ color: '#334155', fontWeight: '800' }}>∞ (Manual)</div>
+                    ) : (
+                      <div style={{ color: product.stock > 0 ? '#16a34a' : '#dc2626', fontWeight: '800' }}>
+                        {product.stock !== undefined ? `${product.stock} disp.` : 'N/A'}
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Acciones */}
                 <div style={{ display: 'flex', gap: '0.5rem', flex: '1 1 100%', justifyContent: 'flex-end' }}>
-                  {product.category === 'recharges' || product.category === 'free_fire' ? (
+                  {product.category === 'streaming' ? (
+                    <div style={{ padding: '0.6rem 1rem', flex: 1, maxWidth: '150px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      Bajo pedido
+                    </div>
+                  ) : product.category === 'recharges' || product.category === 'free_fire' ? (
                     <button 
                       onClick={() => handleAddRechargeStock(product.id || product._id)}
                       style={{ background: '#dcfce7', color: '#166534', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: '800', flex: 1, maxWidth: '150px', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
