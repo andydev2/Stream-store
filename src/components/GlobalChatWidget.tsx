@@ -97,14 +97,20 @@ export default function GlobalChatWidget({ isAdmin = false }: { isAdmin?: boolea
 
         {/* Main FAB */}
         <button
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={() => {
+            if (isOpen) {
+              setIsOpen(false);
+            } else {
+              setMenuOpen(!menuOpen);
+            }
+          }}
           style={{ 
             background: 'var(--primary)', color: '#1C5F5C', border: 'none',
             width: '64px', height: '64px', borderRadius: '50%',
             display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
             boxShadow: '0 4px 15px rgba(62, 213, 204, 0.4)',
             transition: 'transform 0.3s ease',
-            transform: menuOpen ? 'rotate(45deg)' : 'rotate(0deg)'
+            transform: (menuOpen || isOpen) ? 'rotate(45deg)' : 'rotate(0deg)'
           }}
           className={!isAdmin && unreadAdminMessages && !isOpen && !menuOpen ? 'fab-unread' : ''}
         >
