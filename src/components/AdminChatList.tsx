@@ -14,6 +14,8 @@ interface Chat {
   sessionId: string;
   productId: string;
   productName?: string;
+  userEmail?: string;
+  userName?: string;
   status: 'open' | 'closed';
   messages: Message[];
   updatedAt: string;
@@ -156,7 +158,9 @@ export default function AdminChatList() {
           <div style={{ padding: '1rem', borderBottom: '1px solid rgba(0,0,0,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ fontWeight: 'bold' }}>{selectedChat.productName || selectedChat.productId}</div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Sesión: {selectedChat.sessionId.substring(0, 15)}...</div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                Cliente: {selectedChat.userName ? `${selectedChat.userName} (${selectedChat.userEmail})` : (selectedChat.userEmail || 'Invitado')} | Sesión: {selectedChat.sessionId.substring(0, 10)}...
+              </div>
             </div>
             {selectedChat.status === 'open' && (
               <button 
@@ -185,7 +189,7 @@ export default function AdminChatList() {
               }}>
                 <div style={{ lineHeight: 1.5 }}>{msg.text}</div>
                 <div style={{ fontSize: '0.7rem', opacity: 0.7, marginTop: '5px', textAlign: 'right' }}>
-                  {msg.sender === 'admin' ? 'Tú' : 'Usuario'} - {new Date(msg.createdAt).toLocaleTimeString()}
+                  {msg.sender === 'admin' ? 'Tú' : (selectedChat.userName || 'Usuario')} - {new Date(msg.createdAt).toLocaleTimeString()}
                 </div>
               </div>
             ))}

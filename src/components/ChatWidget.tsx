@@ -110,6 +110,7 @@ export default function ChatWidget({ product, onClose, forceOpen }: ChatWidgetPr
           productId: product.id,
           productName: product.name,
           userEmail: session?.user?.email || undefined,
+          userName: session?.user?.name || undefined,
           text
         })
       });

@@ -33,7 +33,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const { sessionId, productId, productName, text, userEmail } = await request.json();
+    const { sessionId, productId, productName, text, userEmail, userName } = await request.json();
 
     if (!sessionId || !productId || !text) {
       return NextResponse.json({ success: false, error: 'Faltan datos' }, { status: 400 });
@@ -60,6 +60,7 @@ export async function POST(request: Request) {
         productId,
         productName,
         userEmail,
+        userName,
         messages: [{ sender: 'user', text }]
       });
     } else {

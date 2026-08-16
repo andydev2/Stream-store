@@ -12,6 +12,7 @@ export interface IChat extends Document {
   productId: string;
   productName?: string;
   userEmail?: string;
+  userName?: string;
   status: 'open' | 'closed';
   messages: IMessage[];
   createdAt: Date;
@@ -28,6 +29,7 @@ const ChatSchema = new Schema({
   productId: { type: String, required: true },
   productName: { type: String },
   userEmail: { type: String },
+  userName: { type: String },
   status: { type: String, enum: ['open', 'closed'], default: 'open' },
   messages: { type: [MessageSchema], default: [] }
 }, {
