@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import connectMongo from '@/lib/mongodb';
 import Chat from '@/models/Chat';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     await connectMongo();
