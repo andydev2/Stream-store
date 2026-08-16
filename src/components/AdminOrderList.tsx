@@ -81,37 +81,37 @@ export default function AdminOrderList() {
     }
   };
 
-  if (loading) return <div style={{ marginTop: '2rem', textAlign: 'center' }}>Cargando órdenes pendientes...</div>;
+  if (loading) return <div style={{ marginTop: '2rem', textAlign: 'center' }}>{t('admin.orders.loading')}</div>;
   if (error) return <div style={{ marginTop: '2rem', color: 'red', textAlign: 'center' }}>{error}</div>;
 
   return (
     <div style={{ background: 'var(--card-bg)', padding: 'clamp(1rem, 3vw, 2rem)', borderRadius: '12px', border: '1px solid var(--border)', marginTop: '2rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)' }}>Transferencias Pendientes ({orders.length})</h3>
+        <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)' }}>{t('admin.orders.title')} ({orders.length})</h3>
         <button onClick={fetchOrders} className="btn" style={{ padding: '0.5rem 1rem', background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1' }}>
-          ↻ Actualizar
+          ↻ {t('admin.orders.refresh')}
         </button>
       </div>
 
       {orders.length === 0 ? (
-        <p style={{ color: 'var(--text-muted)' }}>No hay transferencias pendientes de verificación.</p>
+        <p style={{ color: 'var(--text-muted)' }}>{t('admin.orders.empty')}</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {orders.map((order) => (
             <div key={order._id} style={{ padding: '1.5rem', background: 'var(--search-bg)', borderRadius: '12px', border: '1px solid var(--border)', display: 'flex', flexWrap: 'wrap', gap: '1.5rem' }}>
               <div style={{ flex: '1 1 300px' }}>
                 <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-main)', fontSize: '1.2rem' }}>{order.productName}</h4>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.2rem' }}>Comprador: <strong>{order.userEmail}</strong></div>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.2rem' }}>Precio: <strong>${order.price}</strong></div>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.2rem' }}>Fecha: {new Date(order.createdAt).toLocaleString()}</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.2rem' }}>{t('admin.orders.buyer')} <strong>{order.userEmail}</strong></div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.2rem' }}>{t('admin.orders.price')} <strong>${order.price}</strong></div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.2rem' }}>{t('admin.orders.date')} {new Date(order.createdAt).toLocaleString()}</div>
                 <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.05)', borderRadius: '8px' }}>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Cuenta Reservada (Oculta al usuario):</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('admin.orders.reserved')}</div>
                   <div style={{ color: 'var(--text-main)', fontWeight: 'bold' }}>{order.accountUsername} : {order.accountPassword}</div>
                 </div>
               </div>
 
               <div style={{ flex: '1 1 200px', display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
-                <div style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 'bold' }}>Comprobante Adjunto:</div>
+                <div style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 'bold' }}>{t('admin.orders.receipt')}</div>
                 {order.receiptBase64 ? (
                   <img 
                     src={order.receiptBase64} 
@@ -119,7 +119,7 @@ export default function AdminOrderList() {
                     style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '8px', border: '2px solid var(--border)', objectFit: 'contain', background: '#000' }} 
                   />
                 ) : (
-                  <div style={{ color: '#ef4444' }}>Sin comprobante</div>
+                  <div style={{ color: '#ef4444' }}>{t('admin.orders.no_receipt')}</div>
                 )}
                 
                 <div style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
@@ -128,14 +128,14 @@ export default function AdminOrderList() {
                     disabled={processingId === order._id}
                     style={{ flex: 1, padding: '0.75rem', background: '#fee2e2', color: '#ef4444', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
                   >
-                    Rechazar
+                    {t('admin.orders.reject')}
                   </button>
                   <button 
                     onClick={() => handleActionClick(order._id, 'approve', order.productCategory)}
                     disabled={processingId === order._id}
                     style={{ flex: 1, padding: '0.75rem', background: '#dcfce7', color: '#16a34a', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
                   >
-                    {processingId === order._id ? 'Procesando...' : 'Aprobar Pago'}
+                    {processingId === order._id ? t('admin.orders.processing') : t('admin.orders.approve')}
                   </button>
                 </div>
               </div>
@@ -160,27 +160,27 @@ export default function AdminOrderList() {
             }}>
               {confirmModal.action === 'approve' ? '✅' : '⚠️'}
             </div>
-            <h3 style={{ fontSize: '1.4rem', marginBottom: '1rem', color: 'var(--text-main)' }}>
-              {confirmModal.action === 'approve' ? '¿Aprobar transferencia?' : '¿Rechazar transferencia?'}
+            <h3 style={{ margin: '0 0 1rem 0', color: 'var(--text-main)' }}>
+              {confirmModal.action === 'approve' ? t('admin.orders.approve_title') : t('admin.orders.reject_title')}
             </h3>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: 1.5 }}>
               {confirmModal.action === 'approve' 
-                ? 'Si apruebas, la orden se marcará como pagada y el comprador verá sus contraseñas inmediatamente.'
-                : 'Si rechazas, esta orden será eliminada permanentemente del sistema.'}
+                ? t('admin.orders.approve_desc')
+                : t('admin.orders.reject_desc')}
             </p>
             
             {confirmModal.action === 'approve' && (confirmModal.category === 'streaming' || confirmModal.category === 'music') && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', marginBottom: '1.5rem', textAlign: 'left' }}>
-                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Correo de la cuenta</label>
+                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>{t('admin.orders.email')}</label>
                 <input type="email" value={manualCreds.email} onChange={(e) => setManualCreds({...manualCreds, email: e.target.value})} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} placeholder="ejemplo@gmail.com" />
                 
-                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Contraseña</label>
+                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>{t('admin.orders.password')}</label>
                 <input type="text" value={manualCreds.password} onChange={(e) => setManualCreds({...manualCreds, password: e.target.value})} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} placeholder="contraseña123" />
                 
-                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Perfil</label>
+                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>{t('admin.orders.profile')}</label>
                 <input type="text" value={manualCreds.profile} onChange={(e) => setManualCreds({...manualCreds, profile: e.target.value})} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} placeholder="Ej: 2" />
                 
-                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>PIN</label>
+                <label style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--text-main)' }}>{t('admin.orders.pin')}</label>
                 <input type="text" value={manualCreds.pin} onChange={(e) => setManualCreds({...manualCreds, pin: e.target.value})} style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)' }} placeholder="Ej: 4567" />
               </div>
             )}
