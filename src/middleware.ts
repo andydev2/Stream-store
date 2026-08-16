@@ -9,13 +9,7 @@ export default withAuth({
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api/auth (NextAuth API routes must be accessible)
-     * - _next/static (Static files)
-     * - _next/image (Image optimization)
-     * - favicon.ico (Favicon)
-     */
-    "/((?!api/auth|_next/static|_next/image|favicon.ico).*)",
+    "/dashboard/:path*",
+    "/admin/:path*",
   ],
 };

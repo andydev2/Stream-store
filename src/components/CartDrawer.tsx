@@ -5,12 +5,16 @@ import { useLanguage } from "../context/LanguageContext";
 import { X, Trash2, ShoppingCart } from "lucide-react";
 import { useState, useEffect } from "react";
 import CheckoutModal from "./CheckoutModal";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function CartDrawer() {
   const { cart, removeFromCart, isCartOpen, setIsCartOpen, cartTotal } = useCart();
   const { t, language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     if (isCartOpen) {
@@ -34,6 +38,13 @@ export default function CartDrawer() {
 
   const handleCheckoutClick = () => {
     if (cart.length === 0) return;
+    if (!session) {
+      if (confirm('Debes iniciar sesión para proceder al pago. ¿Ir a iniciar sesión?')) {
+        setIsCartOpen(false);
+        router.push('/login');
+      }
+      return;
+    }
     setIsCheckoutOpen(true);
   };
 

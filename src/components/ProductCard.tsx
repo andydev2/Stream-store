@@ -3,6 +3,8 @@
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 type Product = {
   id: string;
@@ -26,6 +28,8 @@ export default function ProductCard({ product }: { product: Product }) {
   const { t, language } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     if (isModalOpen) {
@@ -47,12 +51,24 @@ export default function ProductCard({ product }: { product: Product }) {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation(); // Evitar que abra el modal
+    if (!session) {
+      if (confirm('Debes iniciar sesión para comprar productos. ¿Ir a iniciar sesión?')) {
+        router.push('/login');
+      }
+      return;
+    }
     addToCart(product);
   };
 
   const handleSupportClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!session) {
+      if (confirm('Debes iniciar sesión para contactar a soporte. ¿Ir a iniciar sesión?')) {
+        router.push('/login');
+      }
+      return;
+    }
     window.dispatchEvent(new CustomEvent('open-chat', { detail: { id: product.id, name: product.name } }));
   };
 
