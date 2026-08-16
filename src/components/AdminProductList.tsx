@@ -12,6 +12,7 @@ export default function AdminProductList() {
   const [selectedProduct, setSelectedProduct] = useState<{id: string, name: string} | null>(null);
   const [accountsText, setAccountsText] = useState('');
   const [savingInventory, setSavingInventory] = useState(false);
+  const [inventoryError, setInventoryError] = useState('');
 
   const fetchProducts = async () => {
     try {
@@ -64,19 +65,20 @@ export default function AdminProductList() {
 
   const handleSaveInventory = async () => {
     if (!selectedProduct) return;
+    setInventoryError('');
     
     // Separar por líneas y quitar vacías
     const rawAccounts = accountsText.split('\n').map(a => a.trim()).filter(a => a !== '');
     
     if (rawAccounts.length === 0) {
-      alert('Por favor, ingresa al menos una cuenta.');
+      setInventoryError('Por favor, ingresa al menos una cuenta.');
       return;
     }
 
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}:.+$/;
     for (const line of rawAccounts) {
       if (!emailRegex.test(line)) {
-        alert(`Error: La cuenta "${line}" no tiene el formato correcto (correo@valido.com:contraseña)`);
+        setInventoryError(`Error de formato en: "${line}" (Usa correo@valido.com:contraseña)`);
         return;
       }
     }
@@ -186,6 +188,12 @@ export default function AdminProductList() {
             <h3 style={{ fontSize: '1.4rem', marginBottom: '0.5rem', color: 'var(--text-main)' }}>Añadir Stock</h3>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Agregando cuentas a: <strong>{selectedProduct.name}</strong></p>
             
+            {inventoryError && (
+              <div style={{ padding: '0.75rem', marginBottom: '1.5rem', borderRadius: '8px', background: '#fee2e2', color: '#991b1b', fontSize: '0.9rem', border: '1px solid #fecaca' }}>
+                {inventoryError}
+              </div>
+            )}
+
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, color: 'var(--text-main)' }}>
               Pega los datos de las cuentas (Formato estricto)
             </label>

@@ -312,34 +312,53 @@ export default function Navbar() {
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div style={{
-          position: 'fixed', top: '70px', left: 0, right: 0, bottom: 0,
-          backgroundColor: 'var(--card-bg)', zIndex: 40,
-          padding: '2rem 5%', display: 'flex', flexDirection: 'column', gap: '2rem',
-          animation: 'fadeInDown 0.3s ease'
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'var(--background)', zIndex: 100, // Covers everything, opaque
+          display: 'flex', flexDirection: 'column',
+          animation: 'fadeInDown 0.3s ease',
+          overflowY: 'auto'
         }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', fontSize: '1.2rem', fontWeight: 600 }}>
-            <button onClick={() => { setIsCatalogModalOpen(true); setIsMobileMenuOpen(false); }} style={{ textAlign: 'left', background: 'none', border: 'none', fontSize: '1.2rem', fontWeight: 600, color: 'var(--text-muted)', cursor: 'pointer' }}>{t('nav.catalog')}</button>
-            <Link href="/#sobre-mi" onClick={() => setIsMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>{t('nav.about')}</Link>
-            <Link href="/support" onClick={() => setIsMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>{t('nav.support')}</Link>
-            <hr style={{ borderTop: '1px solid var(--border)', margin: '0.5rem 0' }} />
-            
-            {session ? (
-              <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-main)', textDecoration: 'none' }}>
-                <img 
-                  src={session.user?.image || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} 
-                  alt="Profile" 
-                  style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid var(--primary)' }}
-                />
-                <span>{t('nav.dashboard')}</span>
-              </Link>
-            ) : (
-              <button 
-                onClick={() => { setIsMobileMenuOpen(false); signIn('google', { callbackUrl: '/dashboard' }); }}
-                style={{ textAlign: 'left', background: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '12px', fontSize: '1.2rem', fontWeight: 700, cursor: 'pointer' }}
-              >
-                {t('nav.login')}
-              </button>
-            )}
+          {/* Menu Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 5%', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <img src="/logo.svg" alt="Logo" style={{ height: '32px', width: 'auto', borderRadius: '8px' }} />
+              <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.5px' }}>
+                Diego Ventas
+              </span>
+            </div>
+            <button 
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{ background: 'none', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex' }}
+            >
+              <X size={28} />
+            </button>
+          </div>
+
+          <div style={{ padding: '2rem 5%', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', fontSize: '1.2rem', fontWeight: 600 }}>
+              <button onClick={() => { setIsCatalogModalOpen(true); setIsMobileMenuOpen(false); }} style={{ textAlign: 'left', background: 'none', border: 'none', fontSize: '1.2rem', fontWeight: 600, color: 'var(--text-muted)', cursor: 'pointer' }}>{t('nav.catalog')}</button>
+              <Link href="/#sobre-mi" onClick={() => setIsMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>{t('nav.about')}</Link>
+              <Link href="/support" onClick={() => setIsMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>{t('nav.support')}</Link>
+              <hr style={{ borderTop: '1px solid var(--border)', margin: '0.5rem 0' }} />
+              
+              {session ? (
+                <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-main)', textDecoration: 'none' }}>
+                  <img 
+                    src={session.user?.image || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} 
+                    alt="Profile" 
+                    style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid var(--primary)' }}
+                  />
+                  <span>{t('nav.dashboard')}</span>
+                </Link>
+              ) : (
+                <button 
+                  onClick={() => { setIsMobileMenuOpen(false); signIn('google', { callbackUrl: '/dashboard' }); }}
+                  style={{ textAlign: 'left', background: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '1rem', borderRadius: '12px', fontSize: '1.2rem', fontWeight: 700, cursor: 'pointer', display: 'flex', justifyContent: 'center' }}
+                >
+                  {t('nav.login')}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
