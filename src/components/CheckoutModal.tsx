@@ -69,7 +69,7 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
   const { t, language } = useLanguage();
   const { cart } = useCart();
   const [step, setStep] = useState<'form' | 'processing' | 'success'>('form');
-  const [paymentMethod, setPaymentMethod] = useState<'transfer'>('transfer');
+  const [paymentMethod, setPaymentMethod] = useState<'transfer' | 'paypal'>('transfer');
   const [email, setEmail] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   
@@ -220,15 +220,33 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
                 <div style={{ display: 'flex', gap: '1rem' }}>
                   <button 
                     type="button"
+                    onClick={() => setPaymentMethod('transfer')}
                     style={{ 
-                      flex: 1, padding: '1rem', borderRadius: '12px', border: `2px solid #10b981`, 
-                      background: 'rgba(16, 185, 129, 0.05)',
-                      color: '#10b981',
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'default', fontWeight: 600
+                      flex: 1, padding: '1rem', borderRadius: '12px', 
+                      border: `2px solid ${paymentMethod === 'transfer' ? '#10b981' : 'var(--border)'}`, 
+                      background: paymentMethod === 'transfer' ? 'rgba(16, 185, 129, 0.05)' : 'var(--search-bg)',
+                      color: paymentMethod === 'transfer' ? '#10b981' : 'var(--text-muted)',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 600,
+                      transition: 'all 0.2s ease'
                     }}
                   >
                     <Landmark size={24} />
                     Transferencia Bancaria
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => setPaymentMethod('paypal')}
+                    style={{ 
+                      flex: 1, padding: '1rem', borderRadius: '12px', 
+                      border: `2px solid ${paymentMethod === 'paypal' ? '#3b82f6' : 'var(--border)'}`, 
+                      background: paymentMethod === 'paypal' ? 'rgba(59, 130, 246, 0.05)' : 'var(--search-bg)',
+                      color: paymentMethod === 'paypal' ? '#3b82f6' : 'var(--text-muted)',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 600,
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <CreditCard size={24} />
+                    PayPal
                   </button>
                 </div>
               </div>
@@ -301,6 +319,45 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
                   >
                     Enviar Comprobante
                   </button>
+                </div>
+              )}
+
+              {paymentMethod === 'paypal' && (
+                <div style={{ marginTop: '1rem', animation: 'fadeIn 0.3s ease' }}>
+                  <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '1rem', borderRadius: '12px', marginBottom: '1rem', color: 'var(--text-main)', fontSize: '0.9rem' }}>
+                    <strong>Nota sobre comisiones:</strong> PayPal cobra una comisión internacional (aprox. 5.4% + $0.30). Para que el monto llegue exacto, el precio ha sido ajustado de <strong>${cartTotal.toFixed(2)}</strong> a <strong>${((cartTotal + 0.30) / (1 - 0.054)).toFixed(2)}</strong>.
+                  </div>
+                  
+                  <PayPalScriptProvider options={{ "clientId": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "test", currency: "USD" }}>
+                    <PayPalButtons 
+                      style={{ layout: "vertical", shape: "rect" }}
+                      createOrder={(data, actions) => {
+                        const finalTotal = ((cartTotal + 0.30) / (1 - 0.054)).toFixed(2);
+                        return actions.order.create({
+                          intent: "CAPTURE",
+                          purchase_units: [
+                            {
+                              amount: {
+                                currency_code: "USD",
+                                value: finalTotal,
+                              },
+                              description: "Compra en Stream Store"
+                            },
+                          ],
+                        });
+                      }}
+                      onApprove={async (data, actions) => {
+                        if (actions.order) {
+                          const details = await actions.order.capture();
+                          await handlePaymentSuccess(details.id, 'paypal');
+                        }
+                      }}
+                      onError={(err) => {
+                        console.error("PayPal Error:", err);
+                        setErrorMsg("Error al procesar el pago con PayPal.");
+                      }}
+                    />
+                  </PayPalScriptProvider>
                 </div>
               )}
 
