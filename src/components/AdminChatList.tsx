@@ -267,6 +267,7 @@ export default function AdminChatList() {
                 Enviar
               </button>
             </div>
+            </div>
           ) : (
             <div style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)', backgroundColor: 'var(--card-bg)', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
               Este chat ha sido cerrado.
