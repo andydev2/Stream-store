@@ -35,18 +35,16 @@ export default function Navbar() {
 
   useEffect(() => {
     if (isCatalogModalOpen || isMobileMenuOpen) {
-      const count = parseInt(document.body.dataset.modalCount || '0') + 1;
-      document.body.dataset.modalCount = count.toString();
-      document.body.style.setProperty('overflow', 'hidden', 'important');
-      document.documentElement.style.setProperty('overflow', 'hidden', 'important');
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
 
       return () => {
-        const newCount = Math.max(0, parseInt(document.body.dataset.modalCount || '0') - 1);
-        document.body.dataset.modalCount = newCount.toString();
-        if (newCount === 0) {
-          document.body.style.overflow = '';
-          document.documentElement.style.overflow = '';
-        }
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY);
       };
     }
   }, [isCatalogModalOpen, isMobileMenuOpen]);
