@@ -154,7 +154,7 @@ export default function Home() {
       <div className={styles.grid} style={{ marginTop: '2rem' }}>
         {loading ? (
           <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-            Cargando productos...
+            {t('catalog.loading')}
           </div>
         ) : filteredProducts.length > 0 ? (
           filteredProducts.slice(0, visibleCount).map((product) => (
@@ -182,7 +182,7 @@ export default function Home() {
             onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-3px)'}
             onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}
           >
-            Ver más
+            {t('catalog.load_more')}
           </button>
         </div>
       )}

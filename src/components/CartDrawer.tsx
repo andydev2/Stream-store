@@ -8,7 +8,7 @@ import CheckoutModal from "./CheckoutModal";
 
 export default function CartDrawer() {
   const { cart, removeFromCart, isCartOpen, setIsCartOpen, cartTotal } = useCart();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
@@ -113,7 +113,9 @@ export default function CartDrawer() {
                   {item.icon}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)' }}>{item.name}</h4>
+                  <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                    {language === 'EN' && item.nameEn ? item.nameEn : item.name}
+                  </h4>
                   <div style={{ color: 'var(--primary)', fontWeight: 600 }}>${item.price.toFixed(2)} <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem', fontWeight: 400 }}>x {item.quantity}</span></div>
                 </div>
                 <button 
@@ -148,7 +150,7 @@ export default function CartDrawer() {
                 opacity: loading ? 0.7 : 1
               }}
             >
-              Finalizar Compra
+              {t('cart.checkout.finalize')}
             </button>
           </div>
         )}

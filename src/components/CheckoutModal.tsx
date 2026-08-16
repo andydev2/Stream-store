@@ -28,7 +28,7 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
         setStep('success');
       } catch (err) {
         setStep('form');
-        alert("Error al procesar el pago");
+        alert(t('checkout.error'));
       }
     }, 2000);
   };
@@ -52,7 +52,7 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
         <div style={{ padding: '1.5rem 1.5rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Lock size={20} color="var(--primary)" />
-            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-main)', fontWeight: 700 }}>Pago Seguro</h3>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-main)', fontWeight: 700 }}>{t('checkout.title')}</h3>
           </div>
           {step === 'form' && (
             <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
@@ -65,13 +65,13 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
         <div style={{ padding: '1.5rem' }}>
           {step === 'form' && (
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
-                <p style={{ color: 'var(--text-muted)', margin: '0 0 0.5rem 0' }}>Total a pagar</p>
+              <div style={{ textAlign: 'center', margin: '0.5rem 0 1rem 0' }}>
+                <p style={{ color: 'var(--text-muted)', margin: '0 0 0.5rem 0' }}>{t('checkout.total')}</p>
                 <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary)' }}>${cartTotal.toFixed(2)}</div>
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>Correo electrónico para entrega</label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>{t('checkout.email')}</label>
                 <div style={{ position: 'relative' }}>
                   <Mail size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
                   <input 
@@ -79,14 +79,14 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
                     required 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="tu@correo.com"
+                    placeholder={t('checkout.email.placeholder')}
                     style={{ width: '100%', padding: '0.8rem 1rem 0.8rem 2.5rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)', fontSize: '1rem' }}
                   />
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>Método de pago</label>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>{t('checkout.method')}</label>
                 <div style={{ display: 'flex', gap: '1rem' }}>
                   <button 
                     type="button"
@@ -98,7 +98,7 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
                       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 600
                     }}
                   >
-                    <CreditCard size={24} /> Tarjeta
+                    <CreditCard size={24} /> {t('checkout.card')}
                   </button>
                   <button 
                     type="button"
@@ -119,16 +119,16 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
               {paymentMethod === 'card' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', animation: 'fadeIn 0.3s ease' }}>
                   <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>Número de Tarjeta</label>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>{t('checkout.card.number')}</label>
                     <input type="text" placeholder="0000 0000 0000 0000" maxLength={19} required style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)', fontSize: '1rem', letterSpacing: '1px' }} />
                   </div>
                   <div style={{ display: 'flex', gap: '1rem' }}>
                     <div style={{ flex: 1 }}>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>Vencimiento</label>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>{t('checkout.card.expiry')}</label>
                       <input type="text" placeholder="MM/AA" maxLength={5} required style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)', fontSize: '1rem' }} />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>CVV</label>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>{t('checkout.card.cvv')}</label>
                       <input type="text" placeholder="123" maxLength={4} required style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)', fontSize: '1rem' }} />
                     </div>
                   </div>
@@ -146,11 +146,11 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
                   display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem'
                 }}
               >
-                Pagar ${cartTotal.toFixed(2)}
+                {t('checkout.pay_btn')} ${cartTotal.toFixed(2)}
               </button>
               
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.5rem' }}>
-                <ShieldCheck size={16} /> Pagos encriptados de forma segura
+                <ShieldCheck size={16} /> {t('checkout.secure')}
               </div>
             </form>
           )}
@@ -159,8 +159,8 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 1rem', gap: '1.5rem', animation: 'fadeIn 0.3s ease' }}>
               <div className="spinner" style={{ width: '60px', height: '60px', border: '4px solid rgba(62, 213, 204, 0.2)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
               <div style={{ textAlign: 'center' }}>
-                <h3 style={{ fontSize: '1.4rem', color: 'var(--text-main)', margin: '0 0 0.5rem 0' }}>Procesando pago...</h3>
-                <p style={{ color: 'var(--text-muted)', margin: 0 }}>Por favor no cierres esta ventana</p>
+                <h3 style={{ fontSize: '1.4rem', color: 'var(--text-main)', margin: '0 0 0.5rem 0' }}>{t('checkout.processing.title')}</h3>
+                <p style={{ color: 'var(--text-muted)', margin: 0 }}>{t('checkout.processing.desc')}</p>
               </div>
             </div>
           )}
@@ -170,9 +170,9 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
               <div style={{ width: '80px', height: '80px', background: '#dcfce7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#16a34a', marginBottom: '1rem' }}>
                 <CheckCircle size={48} />
               </div>
-              <h3 style={{ fontSize: '1.6rem', color: 'var(--text-main)', margin: 0, fontWeight: 800 }}>¡Pago Exitoso!</h3>
+              <h3 style={{ fontSize: '1.6rem', color: 'var(--text-main)', margin: 0, fontWeight: 800 }}>{t('checkout.success.title')}</h3>
               <p style={{ color: 'var(--text-muted)', textAlign: 'center', margin: '0 0 2rem 0', lineHeight: 1.5 }}>
-                Tu compra se ha procesado correctamente. Te estamos redirigiendo a tu Dashboard donde podrás ver tus cuentas.
+                {t('checkout.success.desc')}
               </p>
             </div>
           )}

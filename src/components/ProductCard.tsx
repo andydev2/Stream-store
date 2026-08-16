@@ -7,12 +7,15 @@ import { useState, useEffect } from 'react';
 type Product = {
   id: string;
   name: string;
+  nameEn?: string;
   description: string;
+  descriptionEn?: string;
   price: number;
   icon: string;
   color: string;
   stock?: number;
   details?: string[];
+  detailsEn?: string[];
   images?: string[];
   requiresIdVerification?: boolean;
   category?: string;
@@ -20,7 +23,7 @@ type Product = {
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useCart();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -108,7 +111,9 @@ export default function ProductCard({ product }: { product: Product }) {
               {product.icon}
             </div>
             <div>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>{product.name}</h3>
+              <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
+                {language === 'EN' && product.nameEn ? product.nameEn : product.name}
+              </h3>
               <div style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '1.1rem' }}>
                 ${product.price.toFixed(2)} {(product.category !== 'recharges' && product.category !== 'free_fire') && <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>{t('product.month')}</span>}
               </div>
@@ -119,14 +124,14 @@ export default function ProductCard({ product }: { product: Product }) {
         {/* Stock Indicator */}
         <div style={{ zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem', fontWeight: 600, color: hasStock ? '#16a34a' : '#dc2626', background: hasStock ? '#dcfce7' : '#fee2e2', padding: '0.3rem 0.6rem', borderRadius: '20px', width: 'fit-content' }}>
           {isRecharge ? (
-            hasStock ? `🟢 Disponible para Recarga` : `🔴 Sin Stock`
+            hasStock ? `🟢 ${t('product.recharge.available')}` : `🔴 ${t('product.stock.none')}`
           ) : (
             hasStock ? `🟢 ${product.stock} ${t('product.stock.available')}` : `🔴 ${t('product.stock.out')}`
           )}
         </div>
 
         <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.6, zIndex: 1, flex: 1 }}>
-          {product.description}
+          {language === 'EN' && product.descriptionEn ? product.descriptionEn : product.description}
         </p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', zIndex: 1, marginTop: 'auto' }}>
@@ -168,7 +173,7 @@ export default function ProductCard({ product }: { product: Product }) {
             onMouseDown={(e) => { if (hasStock || isRecharge) e.currentTarget.style.transform = 'scale(0.98)' }}
             onMouseUp={(e) => { if (hasStock || isRecharge) e.currentTarget.style.transform = 'scale(1)' }}
           >
-            {isRecharge ? (hasStock ? 'Solicitar Recarga' : t('product.stock.none')) : (hasStock ? t('cart.add') : t('product.stock.none'))}
+            {isRecharge ? (hasStock ? t('product.recharge.request') : t('product.stock.none')) : (hasStock ? t('cart.add') : t('product.stock.none'))}
           </button>
         </div>
       </div>
@@ -242,14 +247,18 @@ export default function ProductCard({ product }: { product: Product }) {
                   {product.icon}
                 </div>
                 <div>
-                  <h2 style={{ margin: 0, fontSize: '1.8rem', color: 'var(--text-main)', fontWeight: 800 }}>{product.name}</h2>
+                  <h2 style={{ margin: 0, fontSize: '1.8rem', color: 'var(--text-main)', fontWeight: 800 }}>
+                    {language === 'EN' && product.nameEn ? product.nameEn : product.name}
+                  </h2>
                 </div>
               </div>
             )}
 
             <div className="hide-scrollbar" style={{ padding: product.images ? '1.5rem 2.5rem 2.5rem 2.5rem' : '0 2.5rem 2.5rem 2.5rem', overflowY: 'auto', flex: 1 }}>
               {product.images && (
-                 <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.8rem', color: 'var(--text-main)', fontWeight: 800 }}>{product.name}</h2>
+                 <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.8rem', color: 'var(--text-main)', fontWeight: 800 }}>
+                   {language === 'EN' && product.nameEn ? product.nameEn : product.name}
+                 </h2>
               )}
               
               <div style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.6rem', marginBottom: '1.5rem' }}>
@@ -257,14 +266,14 @@ export default function ProductCard({ product }: { product: Product }) {
               </div>
 
               <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '2rem', lineHeight: 1.6 }}>
-                {product.description}
+                {language === 'EN' && product.descriptionEn ? product.descriptionEn : product.description}
               </p>
 
               {product.details && product.details.length > 0 && (
                 <div style={{ marginBottom: '2rem' }}>
                   <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '1rem' }}>{t('modal.includes')}</h4>
                   <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    {product.details.map((detail, idx) => (
+                    {(language === 'EN' && product.detailsEn ? product.detailsEn : product.details).map((detail, idx) => (
                       <li key={idx} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', color: 'var(--text-muted)' }}>
                         <span style={{ color: 'var(--secondary)' }}>✓</span>
                         {detail}
@@ -293,7 +302,7 @@ export default function ProductCard({ product }: { product: Product }) {
                   }
                 }}
               >
-                {isRecharge ? (hasStock ? 'Solicitar Recarga' : t('product.stock.none')) : (hasStock ? t('cart.add') : t('product.stock.none'))}
+                {isRecharge ? (hasStock ? t('product.recharge.request') : t('product.stock.none')) : (hasStock ? t('cart.add') : t('product.stock.none'))}
               </button>
             </div>
           </div>
