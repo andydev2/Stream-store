@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 type CartItem = {
   id: string;
@@ -31,19 +32,50 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { data: session, status } = useSession();
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Cargar carrito desde localStorage al iniciar
+  // Cargar carrito desde la base de datos al iniciar sesión o cargar la página
   useEffect(() => {
-    const savedCart = localStorage.getItem("streamstore_cart");
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
+    const fetchCart = async () => {
+      if (status === 'authenticated') {
+        try {
+          const res = await fetch('/api/user/cart');
+          if (res.ok) {
+            const data = await res.json();
+            setCart(data.cart || []);
+          }
+        } catch (error) {
+          console.error("Error fetching cart:", error);
+        }
+      } else if (status === 'unauthenticated') {
+        setCart([]); // Limpiar carrito si no hay sesión
+      }
+      setIsInitialized(true);
+    };
+
+    fetchCart();
+  }, [status]);
+
+  // Guardar carrito en la base de datos cada vez que cambia
+  useEffect(() => {
+    if (isInitialized && status === 'authenticated') {
+      const syncCart = async () => {
+        try {
+          await fetch('/api/user/cart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cart })
+          });
+        } catch (error) {
+          console.error("Error saving cart:", error);
+        }
+      };
+      
+      const timer = setTimeout(syncCart, 500); // Debounce de 500ms
+      return () => clearTimeout(timer);
     }
-  }, []);
-
-  // Guardar carrito cada vez que cambia
-  useEffect(() => {
-    localStorage.setItem("streamstore_cart", JSON.stringify(cart));
-  }, [cart]);
+  }, [cart, isInitialized, status]);
 
   const addToCart = (product: Omit<CartItem, 'quantity'>) => {
     setCart((prevCart) => {

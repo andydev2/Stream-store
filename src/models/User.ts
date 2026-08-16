@@ -10,6 +10,19 @@ export interface IUser extends Document {
   role: 'user' | 'admin';
 }
 
+const CartItemSchema = new Schema({
+  id: { type: String, required: true },
+  name: { type: String, required: true },
+  nameEn: { type: String },
+  description: { type: String },
+  price: { type: Number, required: true },
+  icon: { type: String },
+  color: { type: String },
+  quantity: { type: Number, default: 1 },
+  details: [{ type: String }],
+  images: [{ type: String }],
+}, { _id: false });
+
 const UserSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String },
@@ -18,6 +31,7 @@ const UserSchema: Schema = new Schema({
   verificationCodeExpiresAt: { type: Date },
   provider: { type: String, enum: ['credentials', 'google'], default: 'credentials' },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  cart: { type: [CartItemSchema], default: [] },
 }, {
   timestamps: true,
 });
