@@ -363,8 +363,7 @@ export default function Navbar() {
       {isCatalogModalOpen && (
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.8)',
-          backdropFilter: 'blur(8px)',
+          backgroundColor: 'var(--background)',
           zIndex: 100,
           display: 'flex', flexDirection: 'column',
           animation: 'fadeIn 0.3s ease',
@@ -373,10 +372,10 @@ export default function Navbar() {
         }}>
           {/* Header fijo */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '2rem 5%', flexShrink: 0 }}>
-            <h2 style={{ color: 'white', fontSize: '2rem', fontWeight: 900, margin: 0 }}>{t('nav.catalog')}</h2>
+            <h2 style={{ color: 'var(--text-main)', fontSize: '2rem', fontWeight: 900, margin: 0 }}>{t('nav.catalog')}</h2>
             <button 
               onClick={() => setIsCatalogModalOpen(false)}
-              style={{ background: 'var(--card-bg)', color: 'var(--text-main)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+              style={{ background: 'var(--card-glass)', color: 'var(--text-main)', border: '1px solid var(--border)', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
             >
               <X size={24} />
             </button>
