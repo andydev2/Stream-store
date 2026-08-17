@@ -23,52 +23,56 @@ export default function SupportPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', width: '100%', maxWidth: '1000px', marginBottom: '4rem' }}>
         
         {/* WhatsApp */}
-        <div style={{ 
-          backgroundColor: 'var(--card-bg)', borderRadius: '24px', padding: '2rem', 
-          boxShadow: '0 10px 40px rgba(0,0,0,0.05)', textAlign: 'center',
-          transition: 'transform 0.3s ease', cursor: 'pointer'
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-        >
-          <div style={{ width: '60px', height: '60px', backgroundColor: '#25D366', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto', color: 'white' }}>
-            <MessageCircle size={32} />
+        <a href="https://wa.me/593990730162" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+          <div style={{ 
+            backgroundColor: 'var(--card-bg)', borderRadius: '24px', padding: '2rem', 
+            boxShadow: '0 10px 40px rgba(0,0,0,0.05)', textAlign: 'center',
+            transition: 'transform 0.3s ease', cursor: 'pointer', height: '100%'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+          >
+            <div style={{ width: '60px', height: '60px', backgroundColor: '#25D366', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto', color: 'white' }}>
+              <MessageCircle size={32} />
+            </div>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--text-main)' }}>{t('support.whatsapp.title')}</h2>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+              {t('support.whatsapp.desc')}
+            </p>
+            <button style={{ 
+              backgroundColor: '#25D366', color: 'white', border: 'none', padding: '0.8rem 1.5rem', 
+              borderRadius: '12px', fontWeight: 700, fontSize: '1rem', cursor: 'pointer', width: '100%'
+            }}>
+              {t('support.whatsapp.btn')}
+            </button>
           </div>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--text-main)' }}>{t('support.whatsapp.title')}</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: 1.5 }}>
-            {t('support.whatsapp.desc')}
-          </p>
-          <button style={{ 
-            backgroundColor: '#25D366', color: 'white', border: 'none', padding: '0.8rem 1.5rem', 
-            borderRadius: '12px', fontWeight: 700, fontSize: '1rem', cursor: 'pointer', width: '100%'
-          }}>
-            {t('support.whatsapp.btn')}
-          </button>
-        </div>
+        </a>
 
         {/* Correo Electrónico */}
-        <div style={{ 
-          backgroundColor: 'var(--card-bg)', borderRadius: '24px', padding: '2rem', 
-          boxShadow: '0 10px 40px rgba(0,0,0,0.05)', textAlign: 'center',
-          transition: 'transform 0.3s ease', cursor: 'pointer'
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-        >
-          <div style={{ width: '60px', height: '60px', backgroundColor: 'var(--primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto', color: 'white' }}>
-            <Mail size={32} />
+        <a href="mailto:bonejohao60@gmail.com" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+          <div style={{ 
+            backgroundColor: 'var(--card-bg)', borderRadius: '24px', padding: '2rem', 
+            boxShadow: '0 10px 40px rgba(0,0,0,0.05)', textAlign: 'center',
+            transition: 'transform 0.3s ease', cursor: 'pointer', height: '100%'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+          >
+            <div style={{ width: '60px', height: '60px', backgroundColor: 'var(--primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto', color: 'white' }}>
+              <Mail size={32} />
+            </div>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--text-main)' }}>{t('support.email.title')}</h2>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+              {t('support.email.desc')}
+            </p>
+            <button style={{ 
+              backgroundColor: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '0.8rem 1.5rem', 
+              borderRadius: '12px', fontWeight: 700, fontSize: '1rem', cursor: 'pointer', width: '100%'
+            }}>
+              {t('support.email.btn')}
+            </button>
           </div>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--text-main)' }}>{t('support.email.title')}</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: 1.5 }}>
-            {t('support.email.desc')}
-          </p>
-          <button style={{ 
-            backgroundColor: 'var(--primary)', color: '#1C5F5C', border: 'none', padding: '0.8rem 1.5rem', 
-            borderRadius: '12px', fontWeight: 700, fontSize: '1rem', cursor: 'pointer', width: '100%'
-          }}>
-            {t('support.email.btn')}
-          </button>
-        </div>
+        </a>
 
       </div>
 
