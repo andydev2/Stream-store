@@ -148,6 +148,7 @@ export default function Login() {
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: 'var(--text-main)', fontSize: '0.9rem' }}>Correo Electrónico</label>
                 <input 
                   type="email" 
+                  aria-label="Correo Electrónico"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="tu@correo.com" 
@@ -159,6 +160,7 @@ export default function Login() {
                 <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: 'var(--text-main)', fontSize: '0.9rem' }}>Contraseña</label>
                 <input 
                   type="password" 
+                  aria-label="Contraseña"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••" 
@@ -174,6 +176,7 @@ export default function Login() {
               <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, color: 'var(--text-main)', fontSize: '0.9rem', textAlign: 'center' }}>Código de 6 dígitos</label>
               <input 
                 type="text" 
+                aria-label="Código de verificación"
                 maxLength={6}
                 value={code}
                 onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, ''))}
@@ -254,7 +257,7 @@ export default function Login() {
             transition: 'background 0.2s'
           }}
         >
-          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: '22px' }} />
+          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: '22px' }} width={22} height={22} />
           Google
         </button>
       </div>

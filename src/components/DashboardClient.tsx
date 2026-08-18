@@ -50,6 +50,7 @@ export default function DashboardClient({ user, isAdmin }: DashboardClientProps)
             src={user.image || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} 
             alt="Avatar" 
             style={{ width: 'clamp(50px, 15vw, 80px)', height: 'clamp(50px, 15vw, 80px)', borderRadius: '50%', border: '3px solid var(--primary)' }} 
+            width={80} height={80}
           />
           <div style={{ maxWidth: '100%' }}>
             <h1 style={{ fontSize: 'clamp(1.5rem, 6vw, 2.5rem)', color: 'var(--text-main)', wordBreak: 'break-word', lineHeight: 1.2 }}>¡Hola, {user.name}!</h1>

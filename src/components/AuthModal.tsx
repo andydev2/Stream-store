@@ -38,7 +38,7 @@ export default function AuthModal() {
         <button onClick={() => setIsOpen(false)} style={{
           position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none',
           fontSize: '1.5rem', color: 'var(--text-muted)', cursor: 'pointer'
-        }}>×</button>
+        }} aria-label="Cerrar modal">×</button>
 
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
           <div style={{ width: '60px', height: '60px', borderRadius: '16px', background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', color: 'white', boxShadow: '0 8px 20px rgba(62, 213, 204, 0.4)' }}>
@@ -72,7 +72,7 @@ export default function AuthModal() {
             e.currentTarget.style.borderColor = 'var(--border)';
           }}
         >
-          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: '24px' }} />
+          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: '24px' }} width={24} height={24} />
           Continuar con Google
         </button>
       </div>

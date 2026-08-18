@@ -218,6 +218,7 @@ export default function ProductCard({ product }: { product: Product }) {
                   src={product.images[currentImage]} 
                   alt={`${product.name} screenshot ${currentImage + 1}`} 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  width={800} height={450}
                 />
                 {product.images.length > 1 && (
                   <>

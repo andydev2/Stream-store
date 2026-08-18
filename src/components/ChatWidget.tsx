@@ -360,21 +360,22 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
         )}
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <input 
-          type="text" 
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder={t('chat.placeholder')}
-          style={{
-            flex: 1,
-            padding: '0.8rem 1rem',
-            borderRadius: '20px',
-            border: '1px solid rgba(255,255,255,0.1)',
-            background: 'rgba(255,255,255,0.03)',
-            color: 'var(--text-main)',
-            outline: 'none'
-          }}
-        />
+            type="text" 
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+            placeholder={t('chat.placeholder')}
+            aria-label="Mensaje"
+            style={{
+              flex: 1,
+              padding: '0.8rem 1rem',
+              borderRadius: '20px',
+              border: '1px solid rgba(255,255,255,0.1)',
+              background: 'rgba(255,255,255,0.03)',
+              color: 'var(--text-main)',
+              outline: 'none'
+            }}
+          />
         <button 
           onClick={handleSend}
           disabled={!inputText.trim()}

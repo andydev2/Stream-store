@@ -222,6 +222,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                   onChange={(e) => setReplyText(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSendReply()}
                   placeholder={t('admin.chats.reply_placeholder')}
+                  aria-label={t('admin.chats.reply_placeholder')}
                   style={{
                     flex: 1, padding: '0.6rem 0.8rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--bg-main)', color: 'var(--text-main)', outline: 'none'
                   }}

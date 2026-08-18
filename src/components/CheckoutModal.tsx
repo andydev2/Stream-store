@@ -144,10 +144,11 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
               )}
 
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>{t('checkout.email')}</label>
+                <label htmlFor="checkout-email" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>{t('checkout.email')}</label>
                 <div style={{ position: 'relative' }}>
                   <Mail size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
                   <input 
+                    id="checkout-email"
                     type="email" 
                     required 
                     value={email}
@@ -196,8 +197,9 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
 
               {paymentMethod === 'transfer' && (
                 <div style={{ marginTop: '0.5rem', animation: 'fadeIn 0.3s ease' }}>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>Selecciona tu País</label>
+                  <label htmlFor="country-select" style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>Selecciona tu País</label>
                   <select 
+                    id="country-select"
                     value={transferCountry}
                     onChange={(e) => setTransferCountry(e.target.value)}
                     style={{ width: '100%', padding: '0.8rem 1rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'var(--search-bg)', color: 'var(--text-main)', fontSize: '1rem', marginBottom: '1rem' }}

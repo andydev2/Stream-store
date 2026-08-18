@@ -12,15 +12,15 @@ export default function Register() {
         <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Nombre Completo</label>
-            <input type="text" placeholder="Ej. Juan Pérez" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} required />
+            <input type="text" aria-label="Nombre completo" placeholder="Ej. Juan Pérez" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} required />
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Correo Electrónico</label>
-            <input type="email" placeholder="tu@correo.com" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} required />
+            <input type="email" aria-label="Correo electrónico" placeholder="tu@correo.com" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} required />
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Contraseña</label>
-            <input type="password" placeholder="••••••••" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} required />
+            <input type="password" aria-label="Contraseña" placeholder="••••••••" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} required />
           </div>
           
           <button className="btn btn-primary" type="button" onClick={() => alert('Para que este registro funcione de verdad y guarde tus datos, debemos aprobar y configurar la Base de Datos.')} style={{ marginTop: '1rem' }}>

@@ -104,6 +104,7 @@ export default function Navbar() {
             src="/logo.svg" 
             alt="Diego Ventas Logo" 
             style={{ height: '40px', width: 'auto', borderRadius: '8px' }} 
+            width={150} height={40}
           />
           <span className="desktop-only-text" style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.5px' }}>
             Diego Ventas
@@ -122,6 +123,7 @@ export default function Navbar() {
           <input 
             type="text" 
             placeholder={t('nav.search')}
+            aria-label={t('nav.search')}
             value={searchQuery}
             onChange={handleSearchChange}
             style={{
@@ -171,6 +173,7 @@ export default function Navbar() {
                 src={session.user?.image || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} 
                 alt="Profile" 
                 style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid var(--primary)' }}
+                width={32} height={32}
               />
             </Link>
           ) : (
@@ -215,6 +218,7 @@ export default function Navbar() {
               <input 
                 type="text" 
                 placeholder={t('nav.search')}
+                aria-label={t('nav.search')}
                 value={searchQuery}
                 onChange={handleSearchChange}
                 style={{
@@ -319,7 +323,7 @@ export default function Navbar() {
           {/* Menu Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 5%', borderBottom: '1px solid var(--border)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <img src="/logo.svg" alt="Logo" style={{ height: '32px', width: 'auto', borderRadius: '8px' }} />
+              <img src="/logo.svg" alt="Logo" style={{ height: '32px', width: 'auto', borderRadius: '8px' }} width={120} height={32} />
               <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.5px' }}>
                 Diego Ventas
               </span>
@@ -346,6 +350,7 @@ export default function Navbar() {
                     src={session.user?.image || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"} 
                     alt="Profile" 
                     style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid var(--primary)' }}
+                    width={40} height={40}
                   />
                   <span>{t('nav.dashboard')}</span>
                 </Link>

@@ -119,6 +119,7 @@ export default function AdminOrderList() {
                     src={order.receiptBase64} 
                     alt="Comprobante" 
                     style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '8px', border: '2px solid var(--border)', objectFit: 'contain', background: '#000' }} 
+                    width={400} height={200}
                   />
                 ) : (
                   <div style={{ color: '#ef4444' }}>{t('admin.orders.no_receipt')}</div>
