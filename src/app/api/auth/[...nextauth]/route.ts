@@ -8,9 +8,8 @@ import User from "@/models/User";
 const ADMIN_EMAILS = [
   'bonejohao60@gmail.com',
   'andyz1238@gmail.com',
-  // Puedes agregar tu correo aquí abajo para que ambos tengan admin, por ejemplo:
-  // 'tu_correo_de_desarrollador@gmail.com'
-];
+  process.env.ADMIN_EMAIL || '',
+].filter(Boolean);
 
 export const authOptions: NextAuthOptions = {
   providers: [

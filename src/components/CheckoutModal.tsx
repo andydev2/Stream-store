@@ -2,68 +2,15 @@ import { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
 import { X, CreditCard, Mail, Lock, ShieldCheck, CheckCircle, Landmark, Upload } from 'lucide-react';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
 type CheckoutModalProps = {
   isOpen: boolean;
   onClose: () => void;
   cartTotal: number;
-  onConfirmPayment: (paymentId: string, gateway: 'stripe' | 'paypal' | 'transfer', receiptBase64?: string) => Promise<void>;
+  onConfirmPayment: (paymentId: string, gateway: 'paypal' | 'transfer', receiptBase64?: string) => Promise<void>;
 };
 
-function StripeForm({ cartTotal, onSuccess, onError }: { cartTotal: number, onSuccess: (id: string) => void, onError: (err: any) => void }) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const { t } = useLanguage();
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
-
-    setIsProcessing(true);
-
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      redirect: 'if_required',
-    });
-
-    if (error) {
-      onError(error.message);
-      setIsProcessing(false);
-    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-      onSuccess(paymentIntent.id);
-    } else {
-      onError('Payment failed');
-      setIsProcessing(false);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', animation: 'fadeIn 0.3s ease', paddingBottom: '1rem' }}>
-      <PaymentElement options={{ terms: { card: 'never' }, wallets: { applePay: 'never', googlePay: 'never' } }} />
-      <button 
-        type="submit"
-        disabled={!stripe || isProcessing}
-        style={{ 
-          marginTop: '1rem', width: '100%', padding: '1.2rem', 
-          background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)', 
-          color: '#1C5F5C', border: 'none', borderRadius: '16px', 
-          fontWeight: 800, fontSize: '1.1rem', cursor: isProcessing ? 'not-allowed' : 'pointer',
-          boxShadow: '0 10px 20px rgba(62, 213, 204, 0.2)',
-          display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem',
-          opacity: isProcessing ? 0.7 : 1
-        }}
-      >
-        {isProcessing ? 'Procesando...' : `${t('checkout.pay_btn')} $${cartTotal.toFixed(2)}`}
-      </button>
-    </form>
-  );
-}
 
 export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPayment }: CheckoutModalProps) {
   const { t, language } = useLanguage();
@@ -121,7 +68,7 @@ export default function CheckoutModal({ isOpen, onClose, cartTotal, onConfirmPay
 
   if (!isOpen) return null;
 
-  const handlePaymentSuccess = async (paymentId: string, gateway: 'stripe' | 'paypal' | 'transfer') => {
+  const handlePaymentSuccess = async (paymentId: string, gateway: 'paypal' | 'transfer') => {
     setStep('processing');
     setErrorMsg(null);
     try {

@@ -270,8 +270,8 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
                            // Emitir un evento para que el botón de pago sea "Comprar",
                            // la lógica principal ahora es usar el carrito (ya que stripe se eliminó).
                            // El usuario debe cerrar el chat y agregar al carrito.
-                           alert("Stripe se ha eliminado. Por favor, compra el producto agregándolo al carrito y pagando por transferencia bancaria.");
-                           if (btn) btn.innerHTML = 'Pagos por Carrito';
+                           alert("Por favor, compra el producto agregándolo al carrito y seleccionando un método de pago disponible.");
+                           if (btn) btn.innerHTML = 'Agrega al carrito';
                         })
                         .catch(err => {
                           console.error(err);

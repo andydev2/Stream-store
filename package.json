@@ -10,8 +10,6 @@
   },
   "dependencies": {
     "@paypal/react-paypal-js": "^10.3.0",
-    "@stripe/react-stripe-js": "^6.8.1",
-    "@stripe/stripe-js": "^9.13.0",
     "bcryptjs": "^3.0.3",
     "lucide-react": "^1.31.0",
     "mongoose": "^9.9.2",
@@ -20,8 +18,7 @@
     "next-themes": "^0.4.6",
     "nodemailer": "^7.0.13",
     "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "stripe": "^22.5.0"
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

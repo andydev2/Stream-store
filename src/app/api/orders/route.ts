@@ -46,15 +46,7 @@ export async function POST(request: Request) {
     }
 
     // Verify payment based on gateway
-    if (paymentGateway === 'stripe') {
-      if (!paymentId) return NextResponse.json({ success: false, error: "Falta paymentId" }, { status: 400 });
-      const Stripe = require('stripe');
-      const stripe = new Stripe((process.env.STRIPE_SECRET_KEY || '').trim());
-      const paymentIntent = await stripe.paymentIntents.retrieve(paymentId);
-      if (paymentIntent.status !== 'succeeded') {
-        return NextResponse.json({ success: false, error: "El pago en Stripe no fue exitoso." }, { status: 400 });
-      }
-    } else if (paymentGateway === 'paypal') {
+    if (paymentGateway === 'paypal') {
       if (!paymentId) return NextResponse.json({ success: false, error: "Falta paymentId" }, { status: 400 });
       const paypalUrl = process.env.NODE_ENV === 'production' 
         ? 'https://api-m.paypal.com' 
