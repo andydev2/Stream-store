@@ -101,6 +101,7 @@ export default function CartDrawer() {
           <button 
             style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem' }}
             onClick={() => setIsCartOpen(false)}
+            aria-label="Cerrar carrito"
           >
             <X size={28} color="var(--text-muted)" />
           </button>
@@ -129,6 +130,7 @@ export default function CartDrawer() {
                   style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ff4757', padding: '0.5rem' }}
                   onClick={() => removeFromCart(item.id)}
                   title="Eliminar"
+                  aria-label="Eliminar del carrito"
                 >
                   <Trash2 size={20} />
                 </button>

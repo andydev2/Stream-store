@@ -206,6 +206,7 @@ export default function ProductCard({ product }: { product: Product }) {
             <button 
               onClick={() => { setIsModalOpen(false); setCurrentImage(0); }}
               style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'rgba(0,0,0,0.5)', border: 'none', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', cursor: 'pointer', color: 'white', zIndex: 10 }}
+              aria-label="Cerrar modal"
             >
               ✕
             </button>
@@ -223,12 +224,14 @@ export default function ProductCard({ product }: { product: Product }) {
                     <button 
                       onClick={(e) => { e.stopPropagation(); setCurrentImage(prev => prev === 0 ? product.images!.length - 1 : prev - 1); }}
                       style={{ position: 'absolute', top: '50%', left: '10px', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}
+                      aria-label="Imagen anterior"
                     >
                       ❮
                     </button>
                     <button 
                       onClick={(e) => { e.stopPropagation(); setCurrentImage(prev => prev === product.images!.length - 1 ? 0 : prev + 1); }}
                       style={{ position: 'absolute', top: '50%', right: '10px', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', color: 'white', border: 'none', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}
+                      aria-label="Imagen siguiente"
                     >
                       ❯
                     </button>

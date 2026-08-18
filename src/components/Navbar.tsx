@@ -144,6 +144,7 @@ export default function Navbar() {
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', padding: 0 }}
+              aria-label={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
             >
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
             </button>
@@ -187,6 +188,7 @@ export default function Navbar() {
           <button 
             onClick={() => setIsCartOpen(true)}
             style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', color: 'var(--text-muted)', padding: 0 }}
+            aria-label="Carrito"
           >
             <ShoppingCart size={22} />
             {totalItems > 0 && (
@@ -222,7 +224,7 @@ export default function Navbar() {
                 }}
                 autoFocus
               />
-              <button type="button" onClick={() => setIsMobileSearchOpen(false)} style={{ position: 'absolute', right: '0.5rem', background: 'none', border: 'none', color: 'var(--text-muted)', display: 'flex' }}>
+              <button type="button" onClick={() => setIsMobileSearchOpen(false)} style={{ position: 'absolute', right: '0.5rem', background: 'none', border: 'none', color: 'var(--text-muted)', display: 'flex' }} aria-label="Cerrar búsqueda">
                 <X size={20} />
               </button>
             </form>
@@ -325,6 +327,7 @@ export default function Navbar() {
             <button 
               onClick={() => setIsMobileMenuOpen(false)}
               style={{ background: 'none', border: 'none', color: 'var(--text-main)', cursor: 'pointer', display: 'flex' }}
+              aria-label="Cerrar menú"
             >
               <X size={28} />
             </button>
@@ -376,6 +379,7 @@ export default function Navbar() {
             <button 
               onClick={() => setIsCatalogModalOpen(false)}
               style={{ background: 'var(--card-glass)', color: 'var(--text-main)', border: '1px solid var(--border)', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+              aria-label="Cerrar catálogo"
             >
               <X size={24} />
             </button>

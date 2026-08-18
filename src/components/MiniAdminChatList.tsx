@@ -132,6 +132,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
               <button 
                 onClick={() => setSelectedChatId(null)}
                 style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer', padding: '0 0.5rem 0 0' }}
+                aria-label="Volver a la lista"
               >
                 ←
               </button>
@@ -148,7 +149,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                   {t('admin.chats.close_chat')}
                 </button>
               )}
-              <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+              <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer' }} aria-label="Cerrar panel de chat">✕</button>
             </div>
           </div>
           
@@ -232,6 +233,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                     background: 'var(--primary)', color: '#1C5F5C', border: 'none', borderRadius: '50%', width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     cursor: replyText.trim() ? 'pointer' : 'not-allowed', opacity: replyText.trim() ? 1 : 0.5
                   }}
+                  aria-label="Enviar respuesta"
                 >
                   ➤
                 </button>
@@ -251,7 +253,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
             fontWeight: 'bold', borderBottom: '1px solid var(--border)'
           }}>
             <span>{t('admin.chats.active')}</span>
-            <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+            <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#1C5F5C', fontSize: '1.2rem', cursor: 'pointer' }} aria-label="Cerrar panel de chat">✕</button>
           </div>
           <div className="hide-scrollbar" style={{ flex: 1, overflowY: 'auto', overscrollBehavior: 'contain', padding: '0.5rem', backgroundColor: 'var(--background)' }}>
             {loading ? (
@@ -276,6 +278,7 @@ export default function MiniAdminChatList({ onClose }: { onClose: () => void }) 
                           onClick={(e) => handleDeleteClick(chat._id, e)}
                           style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '0.2rem' }}
                           title="Eliminar chat"
+                          aria-label="Eliminar chat"
                         >
                           <Trash2 size={16} />
                         </button>

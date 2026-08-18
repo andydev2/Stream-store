@@ -10,7 +10,7 @@ export default async function Dashboard() {
     redirect("/api/auth/signin");
   }
 
-  const isAdmin = session.user.email === process.env.ADMIN_EMAIL;
+  const isAdmin = (session.user as any).role === 'admin';
 
   return (
     <DashboardClient 

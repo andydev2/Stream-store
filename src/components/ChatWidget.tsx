@@ -176,6 +176,7 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
             marginRight: '0.5rem'
           }}
           title="Minimizar"
+          aria-label="Minimizar widget"
         >
           _
         </button>
@@ -190,6 +191,7 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
             padding: '0.2rem 0.5rem'
           }}
           title="Minimizar chat"
+          aria-label="Cerrar chat"
         >
           ✕
         </button>
@@ -389,6 +391,7 @@ export default function ChatWidget({ product, onClose, forceOpen, isOpen = true,
             cursor: inputText.trim() ? 'pointer' : 'not-allowed',
             opacity: inputText.trim() ? 1 : 0.5
           }}
+          aria-label="Enviar mensaje"
         >
           ➤
         </button>

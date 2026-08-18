@@ -25,7 +25,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession(authOptions);
-  const isAdmin = session?.user?.email === process.env.ADMIN_EMAIL;
+  const isAdmin = (session?.user as any)?.role === 'admin';
   return (
     <html lang="es" suppressHydrationWarning>
       <body suppressHydrationWarning className={outfit.className} style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
